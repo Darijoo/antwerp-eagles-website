@@ -1,0 +1,86 @@
+.team-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+h2 {
+  text-align: center;
+  color: var(--eagle-blue);
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+}
+
+.team-photo {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Mooie schaduw achter de foto */
+  border: 5px solid var(--eagle-blue); /* Blauwe rand om de foto */
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.info-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid var(--eagle-blue);
+
+  h3 {
+    color: var(--eagle-blue);
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.2rem;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 1rem 0;
+  }
+
+  a {
+    color: var(--eagle-red);
+    text-decoration: none;
+    font-weight: bold;
+
+    /* VOEG DEZE TWEE REGELS TOE: */
+    overflow-wrap: break-word;
+    word-break: break-all;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+/* We geven de kaart over het lidgeld een rode rand zodat het extra opvalt */
+.highlight-card {
+  border-top: 5px solid var(--eagle-red);
+  background-color: #fff9f9; /* Heel licht rood achtergrondje */
+}
