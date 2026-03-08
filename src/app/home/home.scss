@@ -1,0 +1,53 @@
+.hero-sectie {
+  /* Een donkerblauwe transparante laag (gradient) over de foto, zodat de witte tekst altijd goed leesbaar blijft */
+  background-image:
+    linear-gradient(rgba(21, 34, 105, 0.8), rgba(21, 34, 105, 0.8)),
+    url('https://images.unsplash.com/photo-1508344928928-7105b67de451?q=80&w=2000&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+
+  /* We maken deze sectie lekker hoog */
+  height: 500px;
+
+  /* Flexbox om alles perfect in het midden te zetten */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-light);
+  padding: 2rem;
+}
+
+.hero-sectie h2 {
+  font-size: 4rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.hero-sectie p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* De Word Lid knop in de rode clubkleur */
+.cta-knop {
+  background-color: var(--eagle-red);
+  color: var(--text-light);
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px; /* Kleine afronding van de hoekjes */
+  transition: all 0.3s ease; /* Zorgt voor een soepele animatie */
+
+  /* Wat er gebeurt als je met de muis over de knop gaat */
+  &:hover {
+    background-color: #7a1414; /* Een iets donkerdere rode kleur */
+    transform: scale(1.05); /* Maakt de knop 5% groter */
+  }
+}

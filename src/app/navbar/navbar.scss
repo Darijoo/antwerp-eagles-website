@@ -1,0 +1,35 @@
+.navbar {
+  background-color: var(--eagle-blue);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  border-bottom: 5px solid var(--eagle-red);
+}
+
+.logo {
+  color: var(--text-light);
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+
+  a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+
+    /* Als je met je muis over de link gaat, wordt hij club-rood! */
+    &:hover {
+      color: var(--eagle-red);
+    }
+  }
+}
