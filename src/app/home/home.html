@@ -3,3 +3,21 @@
   <p>Welkom op de officiële website van de Antwerp Eagles.</p>
   <button class="cta-knop">Word Lid</button>
 </div>
+<section class="nieuws-sectie">
+  <div class="container">
+    <h2 class="sectie-titel">Laatste Nieuws</h2>
+
+    <div class="nieuws-grid">
+      @for (bericht of laatsteNieuws; track bericht.id) {
+        <article class="nieuws-kaart">
+          <div class="nieuws-datum">{{ bericht.datum }}</div>
+          <div class="nieuws-inhoud">
+            <h3>{{ bericht.titel }}</h3>
+            <p>{{ bericht.samenvatting }}</p>
+            <a href="#" class="lees-meer">Lees verder &rarr;</a>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

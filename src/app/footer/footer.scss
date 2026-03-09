@@ -1,3 +1,48 @@
+/* --- SPONSOR BALK STYLING --- */
+.sponsors-balk {
+  background-color: white; /* Een witte achtergrond laat logo's het beste uitkomen */
+  color: var(--eagle-blue);
+  text-align: center;
+  padding: 2rem;
+  margin-bottom: 3rem; /* Ruimte tussen de sponsors en de rest van de footer */
+  border-bottom: 5px solid var(--eagle-red); /* Een rode scheidingslijn */
+
+  h4 {
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+}
+
+.sponsor-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap; /* Zorgt dat ze netjes onder elkaar vallen op mobiele telefoons */
+}
+
+.sponsor-tag {
+  background-color: var(--bg-light);
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: var(--text-dark);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-5px); /* Zweeft een beetje omhoog */
+    color: var(--eagle-red);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* --- EINDE SPONSOR BALK --- */
+
 .site-footer {
   background-color: var(--eagle-blue);
   color: var(--text-light);

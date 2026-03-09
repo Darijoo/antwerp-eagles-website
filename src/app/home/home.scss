@@ -51,3 +51,89 @@
     transform: scale(1.05); /* Maakt de knop 5% groter */
   }
 }
+/* --- NIEUWS SECTIE --- */
+.nieuws-sectie {
+  padding: 4rem 2rem;
+  background-color: var(--bg-light);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sectie-titel {
+  text-align: center;
+  color: var(--eagle-blue);
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  text-transform: uppercase;
+}
+
+/* We maken weer een mooi grid voor de nieuwskaartjes */
+.nieuws-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.nieuws-kaart {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.nieuws-datum {
+  background-color: var(--eagle-red);
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nieuws-inhoud {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Zorgt dat de knop altijd mooi onderaan staat */
+
+  h3 {
+    color: var(--eagle-blue);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  p {
+    color: var(--text-dark);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+}
+
+.lees-meer {
+  color: var(--eagle-red);
+  text-decoration: none;
+  font-weight: bold;
+  align-self: flex-start; /* Zet de link netjes links uitgelijnd */
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--eagle-blue);
+  }
+}
