@@ -14,7 +14,7 @@
           <div class="nieuws-inhoud">
             <h3>{{ bericht.titel }}</h3>
             <p>{{ bericht.samenvatting }}</p>
-            <a href="#" class="lees-meer">Lees verder &rarr;</a>
+            <a [routerLink]="['/nieuws', bericht.id]" class="lees-meer">Lees verder &rarr;</a>
           </div>
         </article>
       }

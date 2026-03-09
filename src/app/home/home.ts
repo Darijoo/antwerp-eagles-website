@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 // 1. De blauwdruk voor een nieuwsbericht
 interface NieuwsBericht {
@@ -10,7 +11,7 @@ interface NieuwsBericht {
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
