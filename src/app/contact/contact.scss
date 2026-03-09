@@ -1,0 +1,105 @@
+.contact-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+h2 {
+  text-align: center;
+  color: var(--eagle-blue);
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  text-transform: uppercase;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 3rem;
+}
+
+.contact-info,
+.contact-form {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid var(--eagle-blue);
+}
+
+h3 {
+  color: var(--eagle-blue);
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.contact-info p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.contact-info a {
+  color: var(--eagle-red);
+  text-decoration: none;
+  font-weight: bold;
+  overflow-wrap: break-word;
+  word-break: break-all;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.map-container {
+  margin-top: 2rem;
+  border: 2px solid #eee;
+  border-radius: 8px;
+}
+
+/* Styling voor het formulier */
+.form-group {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--text-dark);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit; /* Neemt het club-lettertype over */
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+
+    /* Als je op een veld klikt, krijgt het een rode rand */
+    &:focus {
+      outline: none;
+      border-color: var(--eagle-red);
+      box-shadow: 0 0 5px rgba(153, 25, 25, 0.2);
+    }
+  }
+}
+
+.submit-knop {
+  background-color: var(--eagle-red);
+  color: var(--text-light);
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #7a1414;
+  }
+}
