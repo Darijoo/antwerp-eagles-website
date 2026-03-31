@@ -1,11 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { TeamService, Team } from '../diensten/team'; // Onze nieuwe postbode
 
 @Component({
   selector: 'app-teams',
   standalone: true,
+  imports: [RouterLink],
   templateUrl: './teams.html',
   styleUrl: './teams.scss',
 })
-export class Teams {
-  // Voorlopig geen ingewikkelde data nodig!
+export class Teams implements OnInit {
+  private teamService = inject(TeamService);
+  private cdr = inject(ChangeDetectorRef);
+
+  // We maken een lijst (array) aan om alle teams in op te slaan
+  alleTeams: Team[] = [];
+
+  ngOnInit() {
+    this.teamService.haalAlleTeamsOp().subscribe({
+      next: (data) => {
+        this.alleTeams = data; // Hier komen alle teams binnen
+        this.cdr.detectChanges();
+      },
+      error: (fout) => {
+        console.error('Kon de teams niet laden:', fout);
+      },
+    });
+  }
 }

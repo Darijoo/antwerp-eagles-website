@@ -84,3 +84,7 @@ h2 {
   border-top: 5px solid var(--eagle-red);
   background-color: #fff9f9; /* Heel licht rood achtergrondje */
 }
+
+.behoud-enters {
+  white-space: pre-line; /* Dit vertelt de browser: respecteer de Enters uit de database! */
+}

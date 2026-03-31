@@ -1,0 +1,83 @@
+<div class="beheer-sectie">
+  <div class="actie-balk">
+    <h2>Nieuwsberichten</h2>
+    <button class="btn-toevoegen" (click)="toggleFormulier()">
+      {{ toonFormulier ? 'Annuleren' : '+ Nieuw Bericht' }}
+    </button>
+  </div>
+
+  @if (toonFormulier) {
+    <div class="formulier-container">
+      <h3>{{ bewerkId !== null ? 'Bericht bewerken' : 'Nieuw bericht toevoegen' }}</h3>
+      <form (ngSubmit)="opslaan()">
+        <div class="form-groep">
+          <label for="titel">Titel</label>
+          <input type="text" id="titel" name="titel" [(ngModel)]="nieuwBericht.titel" required />
+        </div>
+        <div class="form-groep">
+          <label for="datum">Datum</label>
+          <input type="date" id="datum" name="datum" [(ngModel)]="nieuwBericht.datum" required />
+        </div>
+        <div class="form-groep">
+          <label for="samenvatting">Samenvatting</label>
+          <textarea
+            id="samenvatting"
+            name="samenvatting"
+            [(ngModel)]="nieuwBericht.samenvatting"
+            rows="2"
+            required
+          ></textarea>
+        </div>
+        <div class="form-groep">
+          <label for="volledigeText">Volledige tekst</label>
+          <textarea
+            id="volledigeText"
+            name="volledigeText"
+            [(ngModel)]="nieuwBericht.volledigeText"
+            rows="5"
+            required
+          ></textarea>
+        </div>
+        <div class="form-groep">
+          <label for="afbeeldingUrl">Afbeelding (optioneel)</label>
+          <input
+            type="file"
+            id="afbeeldingUrl"
+            name="afbeeldingUrl"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+          />
+        </div>
+        <button type="submit" class="btn-opslaan">Opslaan</button>
+      </form>
+    </div>
+  } @else {
+    <table class="beheer-tabel">
+      <thead>
+        <tr>
+          <th>Titel</th>
+          <th>Datum</th>
+          <th>Acties</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (bericht of nieuwsberichten$ | async; track bericht.id) {
+          <tr>
+            <td>{{ bericht.titel }}</td>
+            <td>{{ bericht.datum }}</td>
+            <td class="tabel-acties">
+              <button class="btn-bewerken" (click)="bewerkBericht(bericht)">Bewerken</button>
+              <button class="btn-verwijderen" (click)="verwijderBericht(bericht.id)">
+                Verwijderen
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="3">Geen nieuwsberichten gevonden.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

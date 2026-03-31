@@ -1,0 +1,68 @@
+<div class="beheer-sectie">
+  <div class="actie-balk">
+    <h2>Sponsors</h2>
+    <button class="btn-toevoegen" (click)="toggleFormulier()">
+      {{ toonFormulier ? 'Annuleren' : '+ Nieuwe Sponsor' }}
+    </button>
+  </div>
+
+  @if (toonFormulier) {
+    <div class="formulier-container">
+      <h3>{{ bewerkId !== null ? 'Sponsor bewerken' : 'Nieuwe sponsor toevoegen' }}</h3>
+      <form (ngSubmit)="opslaan()">
+        <div class="form-groep">
+          <label for="naam">Naam</label>
+          <input type="text" id="naam" name="naam" [(ngModel)]="nieuweSponsor.naam" required />
+        </div>
+        <div class="form-groep">
+          <label for="websiteUrl">Website URL (optioneel)</label>
+          <input
+            type="text"
+            id="websiteUrl"
+            name="websiteUrl"
+            [(ngModel)]="nieuweSponsor.websiteUrl"
+          />
+        </div>
+        <div class="form-groep">
+          <label for="afbeeldingUrl">Logo (optioneel)</label>
+          <input
+            type="file"
+            id="afbeeldingUrl"
+            name="afbeeldingUrl"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+          />
+        </div>
+        <button type="submit" class="btn-opslaan">Opslaan</button>
+      </form>
+    </div>
+  } @else {
+    <table class="beheer-tabel">
+      <thead>
+        <tr>
+          <th>Naam</th>
+          <th>Website</th>
+          <th>Acties</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (sponsor of sponsors$ | async; track sponsor.id) {
+          <tr>
+            <td>{{ sponsor.naam }}</td>
+            <td>{{ sponsor.websiteUrl }}</td>
+            <td class="tabel-acties">
+              <button class="btn-bewerken" (click)="bewerkSponsor(sponsor)">Bewerken</button>
+              <button class="btn-verwijderen" (click)="verwijderSponsor(sponsor.id)">
+                Verwijderen
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="3">Geen sponsors gevonden.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

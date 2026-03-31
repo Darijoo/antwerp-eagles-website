@@ -95,6 +95,25 @@
   }
 }
 
+.nieuws-kaart {
+  /* Zorgt ervoor dat de foto netjes binnen de (eventueel) ronde hoekjes van je kaartje blijft */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.kaart-afbeelding {
+  width: 100%;
+  height: 200px; /* Een mooie, vaste hoogte voor alle thumbnails */
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Snijdt de foto perfect bij als een uitsnede, zonder hem plat te drukken! */
+    display: block;
+  }
+}
+
 .nieuws-datum {
   background-color: var(--eagle-red);
   color: white;

@@ -1,0 +1,113 @@
+.beheer-sectie {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.actie-balk {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.actie-balk h2 {
+  margin: 0;
+}
+
+.btn-toevoegen {
+  background-color: #152269; /* De blauwe clubkleur */
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.beheer-tabel {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.beheer-tabel th,
+.beheer-tabel td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.tabel-acties button {
+  padding: 0.4rem 0.8rem;
+  margin-right: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-bewerken {
+  background-color: #f39c12;
+  color: white;
+}
+.btn-verwijderen {
+  background-color: #d32f2f;
+  color: white;
+}
+.tabel-acties button:hover {
+  opacity: 0.9;
+}
+
+/* --- Formulier Styling --- */
+.formulier-container {
+  background-color: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #eee;
+}
+
+.formulier-container h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.form-groep {
+  margin-bottom: 1rem;
+}
+
+.form-groep label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-groep input,
+.form-groep textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.btn-opslaan {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.btn-opslaan:hover {
+  background-color: #2ecc71;
+}

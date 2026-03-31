@@ -10,7 +10,13 @@
     <div class="nieuws-grid">
       @for (bericht of laatsteNieuws; track bericht.id) {
         <article class="nieuws-kaart">
-          <div class="nieuws-datum">{{ bericht.datum }}</div>
+          @if (bericht.afbeeldingUrl) {
+            <div class="kaart-afbeelding">
+              <img [src]="bericht.afbeeldingUrl" [alt]="bericht.titel" />
+            </div>
+          }
+
+          <div class="nieuws-datum">{{ bericht.datum | date: 'dd-MM-yyyy' }}</div>
           <div class="nieuws-inhoud">
             <h3>{{ bericht.titel }}</h3>
             <p>{{ bericht.samenvatting }}</p>

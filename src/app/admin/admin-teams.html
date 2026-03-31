@@ -1,0 +1,77 @@
+<div class="beheer-sectie">
+  <div class="actie-balk">
+    <h2>Teams</h2>
+    <button class="btn-toevoegen" (click)="toggleFormulier()">
+      {{ toonFormulier ? 'Annuleren' : '+ Nieuw Team' }}
+    </button>
+  </div>
+
+  @if (toonFormulier) {
+    <div class="formulier-container">
+      <h3>{{ bewerkId !== null ? 'Team bewerken' : 'Nieuw team toevoegen' }}</h3>
+      <form (ngSubmit)="opslaan()">
+        <div class="form-groep">
+          <label for="naam">Naam (bijv. Heren 1)</label>
+          <input type="text" id="naam" name="naam" [(ngModel)]="nieuwTeam.naam" required />
+        </div>
+        <div class="form-groep">
+          <label for="categorie">Categorie (Senioren, Jeugd, etc.)</label>
+          <input
+            type="text"
+            id="categorie"
+            name="categorie"
+            [(ngModel)]="nieuwTeam.categorie"
+            required
+          />
+        </div>
+        <div class="form-groep">
+          <label for="omschrijving">Omschrijving</label>
+          <textarea
+            id="omschrijving"
+            name="omschrijving"
+            [(ngModel)]="nieuwTeam.omschrijving"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+        <div class="form-groep">
+          <label for="afbeeldingUrl">Teamfoto (optioneel)</label>
+          <input
+            type="file"
+            id="afbeeldingUrl"
+            name="afbeeldingUrl"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+          />
+        </div>
+        <button type="submit" class="btn-opslaan">Opslaan</button>
+      </form>
+    </div>
+  } @else {
+    <table class="beheer-tabel">
+      <thead>
+        <tr>
+          <th>Naam</th>
+          <th>Categorie</th>
+          <th>Acties</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (team of teams$ | async; track team.id) {
+          <tr>
+            <td>{{ team.naam }}</td>
+            <td>{{ team.categorie }}</td>
+            <td class="tabel-acties">
+              <button class="btn-bewerken" (click)="bewerkTeam(team)">Bewerken</button>
+              <button class="btn-verwijderen" (click)="verwijderTeam(team.id)">Verwijderen</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="3">Geen teams gevonden.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

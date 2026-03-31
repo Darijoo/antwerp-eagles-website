@@ -3,17 +3,22 @@
 
   @if (actueelBericht) {
     <article class="volledig-artikel">
-      <div class="datum-badge">{{ actueelBericht.datum }}</div>
+      <div class="datum-badge">{{ actueelBericht.datum | date: 'dd-MM-yyyy' }}</div>
       <h2>{{ actueelBericht.titel }}</h2>
 
+      @if (actueelBericht.afbeeldingUrl) {
+        <div class="artikel-afbeelding-container">
+          <img
+            [src]="actueelBericht.afbeeldingUrl"
+            [alt]="actueelBericht.titel"
+            class="hoofdfoto"
+          />
+        </div>
+      }
+
       <div class="artikel-tekst">
-        <p>{{ actueelBericht.volledigeTekst }}</p>
+        <p>{{ actueelBericht.volledigeText }}</p>
       </div>
     </article>
-  } @else {
-    <div class="foutmelding">
-      <h2>Oeps!</h2>
-      <p>Dit nieuwsbericht bestaat helaas niet (meer).</p>
-    </div>
-  }
+  } @else {}
 </div>

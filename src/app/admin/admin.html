@@ -1,0 +1,25 @@
+<div class="admin-dashboard">
+  <aside class="admin-sidebar">
+    <h3>Beheer</h3>
+    <nav>
+      <ul>
+        <li><a routerLink="/admin/nieuws" routerLinkActive="active">Nieuwsberichten</a></li>
+        <li><a routerLink="/admin/teams" routerLinkActive="active">Teams</a></li>
+        <li><a routerLink="/admin/sponsors" routerLinkActive="active">Sponsors</a></li>
+        <li><a href="#">Wedstrijden</a></li>
+      </ul>
+    </nav>
+    <button class="logout-button" (click)="logout()">Uitloggen</button>
+  </aside>
+
+  <main class="admin-content">
+    <header class="admin-header">
+      <h1>Welkom, Beheerder!</h1>
+      <p>Selecteer een optie in het menu om de website te beheren.</p>
+    </header>
+
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

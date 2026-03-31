@@ -57,3 +57,16 @@
     color: var(--eagle-red);
   }
 }
+.artikel-afbeelding-container {
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  overflow: hidden; /* Zorgt voor ronde hoekjes bij de foto */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hoofdfoto {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover; /* Snijdt de foto mooi bij zonder hem uit te rekken */
+  display: block;
+}
