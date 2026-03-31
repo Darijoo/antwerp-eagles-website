@@ -1,8 +1,18 @@
-import { Injectable, signal } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  collectionData,
+  doc,
+  docData,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+} from '@angular/fire/firestore';
+import { Observable, from } from 'rxjs';
 
 export interface Sponsor {
-  id: number;
+  id: string; // Firebase IDs zijn unieke tekstreeksen
   naam: string;
   websiteUrl?: string;
   afbeeldingUrl?: string;
@@ -12,40 +22,29 @@ export interface Sponsor {
   providedIn: 'root',
 })
 export class SponsorService {
-  // Hardcoded lijst met sponsors
-  private sponsors = signal<Sponsor[]>([
-    { id: 1, naam: 'The Cage', websiteUrl: 'https://thecage.be', afbeeldingUrl: '' },
-    { id: 2, naam: 'Dog Partner', websiteUrl: 'https://dogpartner.be', afbeeldingUrl: '' },
-    { id: 3, naam: 'RSM Belgium', websiteUrl: 'https://www.rsmbelgium.be', afbeeldingUrl: '' },
-  ]);
+  private firestore = inject(Firestore);
+  private sponsorsCollection = collection(this.firestore, 'sponsors');
 
   haalAlleSponsorsOp(): Observable<Sponsor[]> {
-    return of(this.sponsors());
+    return collectionData(this.sponsorsCollection, { idField: 'id' }) as Observable<Sponsor[]>;
   }
 
-  haalSponsorOp(id: number): Observable<Sponsor> {
-    const sponsor = this.sponsors().find((s) => s.id === id);
-    if (sponsor) {
-      return of(sponsor);
-    }
-    return throwError(() => new Error(`Sponsor met id ${id} niet gevonden`));
+  haalSponsorOp(id: string): Observable<Sponsor> {
+    const sponsorDoc = doc(this.firestore, `sponsors/${id}`);
+    return docData(sponsorDoc, { idField: 'id' }) as Observable<Sponsor>;
   }
 
-  voegSponsorToe(nieuweSponsor: Omit<Sponsor, 'id'>): Observable<Sponsor> {
-    const id = Math.max(0, ...this.sponsors().map((s) => s.id)) + 1;
-    const sponsorMetId: Sponsor = { ...nieuweSponsor, id };
-    this.sponsors.update((sponsors) => [...sponsors, sponsorMetId]);
-    return of(sponsorMetId);
+  voegSponsorToe(nieuweSponsor: Omit<Sponsor, 'id'>): Observable<any> {
+    return from(addDoc(this.sponsorsCollection, nieuweSponsor));
   }
 
-  updateSponsor(id: number, gewijzigdSponsor: Omit<Sponsor, 'id'>): Observable<Sponsor> {
-    const compleetSponsor: Sponsor = { ...gewijzigdSponsor, id };
-    this.sponsors.update((sponsors) => sponsors.map((s) => (s.id === id ? compleetSponsor : s)));
-    return of(compleetSponsor);
+  updateSponsor(id: string, gewijzigdSponsor: Omit<Sponsor, 'id'>): Observable<void> {
+    const sponsorDoc = doc(this.firestore, `sponsors/${id}`);
+    return from(updateDoc(sponsorDoc, gewijzigdSponsor as any));
   }
 
-  verwijderSponsor(id: number): Observable<{}> {
-    this.sponsors.update((sponsors) => sponsors.filter((s) => s.id !== id));
-    return of({});
+  verwijderSponsor(id: string): Observable<void> {
+    const sponsorDoc = doc(this.firestore, `sponsors/${id}`);
+    return from(deleteDoc(sponsorDoc));
   }
 }

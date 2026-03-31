@@ -19,7 +19,7 @@ export class AdminNieuws implements OnInit {
 
   // Status van het formulier
   toonFormulier = false;
-  bewerkId: number | null = null;
+  bewerkId: string | null = null;
   nieuwBericht: Omit<NieuwsBericht, 'id'> = {
     titel: '',
     datum: new Date().toISOString().split('T')[0], // Standaard vandaag
@@ -29,14 +29,17 @@ export class AdminNieuws implements OnInit {
   };
 
   ngOnInit() {
-    // Haal de nieuwsberichten op uit de centrale service.
+    this.laadNieuws();
+  }
+
+  laadNieuws() {
     this.nieuwsberichten$ = this.nieuwsService.haalLaatsteNieuwsOp();
   }
 
-  verwijderBericht(id: number) {
+  verwijderBericht(id: string) {
     if (confirm('Weet je zeker dat je dit bericht wilt verwijderen?')) {
       this.nieuwsService.verwijderNieuwsBericht(id).subscribe(() => {
-        // De lijst wordt automatisch bijgewerkt dankzij de signal in de service.
+        this.laadNieuws(); // Tabel verversen vanaf de backend
       });
     }
   }
@@ -75,10 +78,12 @@ export class AdminNieuws implements OnInit {
     if (this.bewerkId !== null) {
       this.nieuwsService.updateNieuwsBericht(this.bewerkId, this.nieuwBericht).subscribe(() => {
         this.toggleFormulier(); // Sluit formulier en maak het leeg na succes
+        this.laadNieuws();
       });
     } else {
       this.nieuwsService.voegNieuwsBerichtToe(this.nieuwBericht).subscribe(() => {
         this.toggleFormulier(); // Sluit formulier en maak het leeg na succes
+        this.laadNieuws();
       });
     }
   }

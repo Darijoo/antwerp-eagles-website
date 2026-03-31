@@ -18,7 +18,7 @@ export class AdminSponsors implements OnInit {
 
   // Status van het formulier
   toonFormulier = false;
-  bewerkId: number | null = null;
+  bewerkId: string | null = null;
   nieuweSponsor: Omit<Sponsor, 'id'> = {
     naam: '',
     websiteUrl: '',
@@ -29,7 +29,7 @@ export class AdminSponsors implements OnInit {
     this.sponsors$ = this.sponsorService.haalAlleSponsorsOp();
   }
 
-  verwijderSponsor(id: number) {
+  verwijderSponsor(id: string) {
     if (confirm('Weet je zeker dat je deze sponsor wilt verwijderen?')) {
       this.sponsorService.verwijderSponsor(id).subscribe();
     }

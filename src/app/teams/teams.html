@@ -1,39 +1,26 @@
-<div class="teams-overzicht-container">
-  <h1>Onze Teams</h1>
-  <p>Ontdek de verschillende teams van de Antwerp Eagles.</p>
+<div class="teams-container">
+  <h2 class="sectie-titel">Onze Teams</h2>
 
-  <div class="teams-lijst">
+  <div class="teams-grid">
     @for (team of alleTeams; track team.id) {
-      <div class="team-detail-container card-spacing">
-        <h2>{{ team.naam }}</h2>
-
-        <div class="team-photo">
-          @if (team.teamfoto) {
-            <img [src]="'http://127.0.0.1:1337' + team.teamfoto.url" [alt]="team.naam" />
-          }
-        </div>
-
-        <div class="info-grid">
-          <div class="info-card">
-            <h3>📞 Contact</h3>
-            <ul>
-              <li><strong>Coach:</strong> {{ team.coach1_naam || 'Nog niet bekend' }}</li>
-              <li><strong>E-mail:</strong> {{ team.email }}</li>
-            </ul>
-            <a [routerLink]="['/teams', team.documentId]" class="btn-detail"
-              >Bekijk volledige info &rarr;</a
-            >
+      <article class="team-kaart">
+        @if (team.afbeeldingUrl) {
+          <div class="kaart-afbeelding">
+            <img [src]="team.afbeeldingUrl" [alt]="team.naam" />
           </div>
+        }
 
-          <div class="info-card">
-            <h3>⚾ Trainingen</h3>
-            <p><strong>Indoor:</strong> {{ team.indoor_trainingen }}</p>
-            <p><strong>Veld:</strong> {{ team.veld_trainingen }}</p>
-          </div>
+        <div class="team-inhoud">
+          <h3>{{ team.naam }}</h3>
+          <p class="team-categorie"><strong>Categorie:</strong> {{ team.categorie }}</p>
+          <p class="team-omschrijving">{{ team.omschrijving }}</p>
+
+          <!-- Let op: we gebruiken nu team.id in plaats van team.documentId -->
+          <a [routerLink]="['/teams', team.id]" class="btn-detail">Bekijk Team &rarr;</a>
         </div>
-      </div>
+      </article>
     } @empty {
-      <p>Er zijn momenteel geen teams om weer te geven. Voeg er eentje toe in Strapi!</p>
+      <p>Geen teams gevonden. Voeg er een toe via het beheerpaneel!</p>
     }
   </div>
 </div>

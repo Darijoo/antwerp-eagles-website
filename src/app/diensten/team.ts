@@ -1,9 +1,19 @@
-import { Injectable, signal } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  collectionData,
+  doc,
+  docData,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+} from '@angular/fire/firestore';
+import { Observable, from } from 'rxjs';
 
 // Simpele interface voor een team, zonder Strapi-specifieke velden.
 export interface Team {
-  id: number;
+  id: string; // Firebase IDs zijn unieke tekstreeksen (strings)
   naam: string;
   categorie: string;
   omschrijving: string;
@@ -14,62 +24,29 @@ export interface Team {
   providedIn: 'root',
 })
 export class TeamService {
-  // Hardcoded lijst als vervanging voor de Strapi backend
-  private teams = signal<Team[]>([
-    {
-      id: 1,
-      naam: 'Heren 1',
-      categorie: 'Senioren',
-      omschrijving:
-        'Ons eerste herenteam speelt in de hoogste klasse van de competitie en staat bekend om hun sterke verdediging.',
-      afbeeldingUrl: 'https://images.unsplash.com/photo-1508344928928-7105b67de451?q=80&w=2000',
-    },
-    {
-      id: 2,
-      naam: 'Dames 1',
-      categorie: 'Senioren',
-      omschrijving:
-        'Het damesteam is de absolute trots van onze club, met meerdere kampioenschappen op hun naam.',
-      afbeeldingUrl: 'https://images.unsplash.com/photo-1543351611-58f69d7c1781?q=80&w=2000',
-    },
-    {
-      id: 3,
-      naam: 'U15',
-      categorie: 'Jeugd',
-      omschrijving:
-        'Onze talentvolle jeugd onder de 15 jaar. Plezier en ontwikkeling staan hier voorop!',
-      afbeeldingUrl: 'https://images.unsplash.com/photo-1629114631087-85354b35a10a?q=80&w=2000',
-    },
-  ]);
+  private firestore = inject(Firestore);
+  private teamsCollection = collection(this.firestore, 'teams');
 
   haalAlleTeamsOp(): Observable<Team[]> {
-    return of(this.teams());
+    return collectionData(this.teamsCollection, { idField: 'id' }) as Observable<Team[]>;
   }
 
-  haalTeamOp(id: number): Observable<Team> {
-    const team = this.teams().find((t) => t.id === id);
-    if (team) {
-      return of(team);
-    }
-    return throwError(() => new Error(`Team met id ${id} niet gevonden`));
+  haalTeamOp(id: string): Observable<Team> {
+    const teamDoc = doc(this.firestore, `teams/${id}`);
+    return docData(teamDoc, { idField: 'id' }) as Observable<Team>;
   }
 
-  voegTeamToe(nieuwTeam: Omit<Team, 'id'>): Observable<Team> {
-    // Zoek het hoogste ID en tel er 1 bij op
-    const id = Math.max(0, ...this.teams().map((t) => t.id)) + 1;
-    const teamMetId: Team = { ...nieuwTeam, id };
-    this.teams.update((teams) => [...teams, teamMetId]);
-    return of(teamMetId);
+  voegTeamToe(nieuwTeam: Omit<Team, 'id'>): Observable<any> {
+    return from(addDoc(this.teamsCollection, nieuwTeam));
   }
 
-  updateTeam(id: number, gewijzigdTeam: Omit<Team, 'id'>): Observable<Team> {
-    const compleetTeam: Team = { ...gewijzigdTeam, id };
-    this.teams.update((teams) => teams.map((t) => (t.id === id ? compleetTeam : t)));
-    return of(compleetTeam);
+  updateTeam(id: string, gewijzigdTeam: Omit<Team, 'id'>): Observable<void> {
+    const teamDoc = doc(this.firestore, `teams/${id}`);
+    return from(updateDoc(teamDoc, gewijzigdTeam as any));
   }
 
-  verwijderTeam(id: number): Observable<{}> {
-    this.teams.update((teams) => teams.filter((t) => t.id !== id));
-    return of({});
+  verwijderTeam(id: string): Observable<void> {
+    const teamDoc = doc(this.firestore, `teams/${id}`);
+    return from(deleteDoc(teamDoc));
   }
 }

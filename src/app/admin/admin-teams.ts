@@ -18,7 +18,7 @@ export class AdminTeams implements OnInit {
 
   // Status van het formulier
   toonFormulier = false;
-  bewerkId: number | null = null;
+  bewerkId: string | null = null;
   nieuwTeam: Omit<Team, 'id'> = {
     naam: '',
     categorie: '',
@@ -30,7 +30,7 @@ export class AdminTeams implements OnInit {
     this.teams$ = this.teamService.haalAlleTeamsOp();
   }
 
-  verwijderTeam(id: number) {
+  verwijderTeam(id: string) {
     if (confirm('Weet je zeker dat je dit team wilt verwijderen?')) {
       this.teamService.verwijderTeam(id).subscribe();
     }

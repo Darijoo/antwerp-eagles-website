@@ -22,8 +22,8 @@ export class TeamDetail implements OnInit {
     const teamIdFromUrl = this.route.snapshot.paramMap.get('id');
 
     if (teamIdFromUrl) {
-      // 2. Vraag het op bij Strapi
-      this.teamService.haalTeamOp(+teamIdFromUrl).subscribe({
+      // 2. Vraag het op bij de TeamService
+      this.teamService.haalTeamOp(teamIdFromUrl).subscribe({
         next: (data) => {
           this.team = data; // Stop de data in de variabele voor de HTML
           this.cdr.detectChanges(); // Teken het scherm!

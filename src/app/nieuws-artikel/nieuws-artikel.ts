@@ -21,10 +21,10 @@ export class NieuwsArtikel implements OnInit {
     // 1. Haal het ID uit de adresbalk.
     const idFromUrl = this.route.snapshot.paramMap.get('id');
 
-    // Zorg dat we écht een ID hebben en converteer het naar een getal.
+    // Zorg dat we écht een ID hebben.
     if (idFromUrl) {
       // 2. Vraag dit specifieke bericht op bij de NieuwsService.
-      this.nieuwsService.haalNieuwsBerichtOp(+idFromUrl).subscribe({
+      this.nieuwsService.haalNieuwsBerichtOp(idFromUrl).subscribe({
         next: (data) => {
           this.actueelBericht = data;
           this.cdr.detectChanges(); // Dwing Angular om direct te updaten!
