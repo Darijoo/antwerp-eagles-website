@@ -1,69 +1,42 @@
-.admin-dashboard {
+.admin-container {
   display: flex;
-  min-height: calc(100vh - 120px); /* Pas aan op basis van je header/footer hoogte */
-  background-color: #f4f6f9;
+  height: 100vh;
 }
 
-.admin-sidebar {
-  width: 240px;
-  background-color: #2c3e50; /* Donkerblauw */
-  color: #ecf0f1;
-  padding: 1.5rem;
+.admin-nav {
+  width: 220px;
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
 }
 
-.admin-sidebar h3 {
+.admin-nav h3 {
   margin-top: 0;
-  border-bottom: 1px solid #34495e;
-  padding-bottom: 1rem;
-  font-size: 1.2rem;
 }
 
-.admin-sidebar nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0;
-}
-
-.admin-sidebar nav li a {
+.admin-nav a {
   display: block;
-  padding: 0.8rem 1rem;
-  margin: 0.2rem 0;
-  color: #ecf0f1;
+  padding: 12px 15px;
+  margin-bottom: 8px;
   text-decoration: none;
+  color: white;
   border-radius: 4px;
   transition: background-color 0.2s;
 }
 
-.admin-sidebar nav li a:hover,
-.admin-sidebar nav li a.active {
+.admin-nav a:hover,
+.admin-nav a.active {
   background-color: #34495e;
 }
 
 .logout-button {
-  margin-top: auto; /* Duwt de knop naar onder */
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #d32f2f; /* Eagles Rood */
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.logout-button:hover {
-  background-color: #b71c1c;
+  margin-top: auto;
 }
 
 .admin-content {
   flex-grow: 1;
-  padding: 2rem;
-}
-
-.admin-header h1 {
-  margin: 0 0 0.5rem 0;
+  padding: 20px;
+  overflow-y: auto;
 }

@@ -1,9 +1,13 @@
-import { ApplicationConfig } from '@angular/core';
+import 'zone.js'; // <-- Essentieel: zorgt dat Zone.js als allereerste wordt ingeladen
+
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { routes } from './app.routes';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getStorage, provideStorage } from '@angular/fire/storage';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAKa91f2DbvWU5RCjUgUh6t1wF290bumu8',
@@ -16,9 +20,12 @@ const firebaseConfig = {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }), // <-- Moderne optimalisatie voor Zone.js
     provideRouter(routes),
     provideHttpClient(withFetch()),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideFirestore(() => getFirestore()),
+    provideAuth(() => getAuth()),
+    provideStorage(() => getStorage()),
   ],
 };

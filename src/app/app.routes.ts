@@ -4,7 +4,7 @@ import { Teams } from './teams/teams';
 import { Contact } from './contact/contact';
 import { NieuwsArtikel } from './nieuws-artikel/nieuws-artikel'; // <-- 1. Importeer
 import { Admin } from './admin/admin';
-import { authGuard } from './auth.guard';
+import { authGuard } from './diensten/auth.guard';
 import { Login } from './login';
 import { AdminNieuws } from './admin/admin-nieuws';
 import { AdminTeams } from './admin/admin-teams';

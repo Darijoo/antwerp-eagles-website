@@ -40,6 +40,19 @@
         </div>
         <div class="form-groep">
           <label for="afbeeldingUrl">Afbeelding (optioneel)</label>
+          @if (nieuwBericht.afbeeldingUrl) {
+            <div class="afbeelding-preview" style="margin-bottom: 10px">
+              <img
+                [src]="nieuwBericht.afbeeldingUrl"
+                alt="Preview"
+                style="
+                  max-height: 150px;
+                  border-radius: 4px;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                "
+              />
+            </div>
+          }
           <input
             type="file"
             id="afbeeldingUrl"
@@ -48,7 +61,9 @@
             accept="image/*"
           />
         </div>
-        <button type="submit" class="btn-opslaan">Opslaan</button>
+        <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
+          {{ isAanHetOpslaan ? 'Opslaan & Uploaden...' : 'Opslaan' }}
+        </button>
       </form>
     </div>
   } @else {

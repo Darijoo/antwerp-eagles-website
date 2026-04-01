@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from './auth.service';
+import { AuthService } from './diensten/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';
   styleUrls: ['./login.css'],
 })
 export class Login {
-  username = '';
+  email = '';
   password = '';
   errorMessage = '';
 
@@ -19,12 +19,15 @@ export class Login {
   router = inject(Router);
 
   onSubmit() {
-    // Let op: Dit is een hardcoded check voor testdoeleinden!
-    if (this.username === 'admin' && this.password === 'eagles123') {
-      this.authService.login();
-      this.router.navigate(['/admin']); // Stuur door naar admin na succesvol inloggen
-    } else {
-      this.errorMessage = 'Ongeldige gebruikersnaam of wachtwoord.';
-    }
+    // Firebase Authentication verwacht een e-mailadres.
+    this.authService.login(this.email, this.password).subscribe({
+      next: () => {
+        this.router.navigate(['/admin']); // Stuur door naar admin na succesvol inloggen
+      },
+      error: (err) => {
+        console.error('Inlogfout:', err);
+        this.errorMessage = 'Inloggen mislukt. Controleer je e-mail en wachtwoord.';
+      },
+    });
   }
 }

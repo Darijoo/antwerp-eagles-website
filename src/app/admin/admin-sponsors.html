@@ -11,20 +11,34 @@
       <h3>{{ bewerkId !== null ? 'Sponsor bewerken' : 'Nieuwe sponsor toevoegen' }}</h3>
       <form (ngSubmit)="opslaan()">
         <div class="form-groep">
-          <label for="naam">Naam</label>
+          <label for="naam">Naam sponsor</label>
           <input type="text" id="naam" name="naam" [(ngModel)]="nieuweSponsor.naam" required />
         </div>
         <div class="form-groep">
           <label for="websiteUrl">Website URL (optioneel)</label>
           <input
-            type="text"
+            type="url"
             id="websiteUrl"
             name="websiteUrl"
+            placeholder="https://www.voorbeeld.be"
             [(ngModel)]="nieuweSponsor.websiteUrl"
           />
         </div>
         <div class="form-groep">
           <label for="afbeeldingUrl">Logo (optioneel)</label>
+          @if (nieuweSponsor.afbeeldingUrl) {
+            <div class="afbeelding-preview" style="margin-bottom: 10px">
+              <img
+                [src]="nieuweSponsor.afbeeldingUrl"
+                alt="Preview"
+                style="
+                  max-height: 150px;
+                  border-radius: 4px;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                "
+              />
+            </div>
+          }
           <input
             type="file"
             id="afbeeldingUrl"
@@ -33,7 +47,9 @@
             accept="image/*"
           />
         </div>
-        <button type="submit" class="btn-opslaan">Opslaan</button>
+        <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
+          {{ isAanHetOpslaan ? 'Opslaan & Uploaden...' : 'Opslaan' }}
+        </button>
       </form>
     </div>
   } @else {
@@ -49,7 +65,13 @@
         @for (sponsor of sponsors$ | async; track sponsor.id) {
           <tr>
             <td>{{ sponsor.naam }}</td>
-            <td>{{ sponsor.websiteUrl }}</td>
+            <td>
+              @if (sponsor.websiteUrl) {
+                <a [href]="sponsor.websiteUrl" target="_blank">{{ sponsor.websiteUrl }}</a>
+              } @else {
+                -
+              }
+            </td>
             <td class="tabel-acties">
               <button class="btn-bewerken" (click)="bewerkSponsor(sponsor)">Bewerken</button>
               <button class="btn-verwijderen" (click)="verwijderSponsor(sponsor.id)">
