@@ -1,16 +1,17 @@
 import { Component, inject } from '@angular/core';
-import { SponsorService, Sponsor } from '../diensten/sponsor';
-import { Observable } from 'rxjs';
+import { RouterLink } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
+import { Observable } from 'rxjs';
+import { Sponsor, SponsorService } from '../diensten/sponsor';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [AsyncPipe],
+  imports: [RouterLink, AsyncPipe],
   templateUrl: './footer.html',
-  styleUrl: './footer.scss',
+  styleUrls: ['./footer.css'],
 })
-export class Footer {
+export class FooterComponent {
   private sponsorService = inject(SponsorService);
   sponsors$: Observable<Sponsor[]> = this.sponsorService.haalAlleSponsorsOp();
 }

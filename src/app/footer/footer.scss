@@ -23,6 +23,20 @@
   flex-wrap: wrap; /* Zorgt dat ze netjes onder elkaar vallen op mobiele telefoons */
 }
 
+.sponsor-logo-img {
+  max-height: 80px;
+  width: auto;
+  filter: grayscale(100%); /* Een stijlvolle keuze: logos in zwart-wit */
+  opacity: 0.7;
+  transition: all 0.3s ease;
+
+  &:hover {
+    filter: grayscale(0%); /* Terug naar kleur bij hover */
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
 .sponsor-tag {
   background-color: var(--bg-light);
   padding: 1rem 2.5rem;

@@ -2,9 +2,15 @@
   <div class="sponsors-balk">
     <h4>Onze Partners & Sponsors</h4>
     <div class="sponsor-logos">
-      <span class="sponsor-tag">The Cage</span>
-      <span class="sponsor-tag">Dog Partner</span>
-      <span class="sponsor-tag">RSM Belgium</span>
+      @for (sponsor of sponsors$ | async; track sponsor.id) {
+        <a [href]="sponsor.websiteUrl" target="_blank" rel="noopener" class="sponsor-logo-link">
+          @if (sponsor.afbeeldingUrl) {
+            <img [src]="sponsor.afbeeldingUrl" [alt]="sponsor.naam" class="sponsor-logo-img" />
+          } @else {
+            <span class="sponsor-tag">{{ sponsor.naam }}</span>
+          }
+        </a>
+      }
     </div>
   </div>
 
