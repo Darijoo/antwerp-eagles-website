@@ -1,0 +1,144 @@
+.historie-sectie {
+  padding: 4rem 2rem;
+  background-color: var(--bg-light);
+  min-height: calc(100vh - 200px);
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.sectie-titel {
+  text-align: center;
+  color: var(--eagle-blue);
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.sectie-ondertitel {
+  text-align: center;
+  color: var(--text-dark);
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+  opacity: 0.8;
+}
+
+.historie-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  margin-bottom: 4rem;
+  background-color: white;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border-top: 5px solid var(--eagle-blue);
+}
+
+.tekst-blok {
+  h3 {
+    color: var(--eagle-red);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  p {
+    color: var(--text-dark);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+  }
+}
+
+.historie-foto-container {
+  background: var(--eagle-blue);
+  border-radius: 50%;
+  padding: 3rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1 / 1;
+  max-width: 350px;
+  margin: 0 auto;
+  transform: rotate(-2deg);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: rotate(0deg) scale(1.05);
+  }
+
+  .historie-foto {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3)); /* Geeft het logo diepte */
+  }
+}
+
+.call-to-action-balk {
+  text-align: center;
+  background-color: white;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border-bottom: 5px solid var(--eagle-red);
+
+  h3 {
+    color: var(--eagle-blue);
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.btn-actie {
+  display: inline-block;
+  background-color: var(--eagle-red);
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+
+  &:hover {
+    background-color: #7a1414;
+    transform: translateY(-2px);
+  }
+}
+
+/* --- MOBIELE OPTIMALISATIE --- */
+@media (max-width: 768px) {
+  .historie-sectie {
+    padding: 3rem 1rem;
+  }
+  .sectie-titel {
+    font-size: 2rem;
+  }
+  .historie-content {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+    gap: 2rem;
+  }
+  .historie-foto-container {
+    transform: none;
+    padding: 2rem;
+  }
+  .call-to-action-balk {
+    padding: 2rem 1rem;
+    h3 {
+      font-size: 1.5rem;
+    }
+  }
+}

@@ -10,9 +10,11 @@ import { AdminNieuws } from './admin/admin-nieuws';
 import { AdminTeams } from './admin/admin-teams';
 import { AdminSponsors } from './admin/admin-sponsors';
 import { TeamDetail } from './team-detail/team-detail';
+import { OverOns } from './over-ons/over-ons';
 
 export const routes: Routes = [
   { path: '', component: Home },
+  { path: 'over-ons', component: OverOns },
   { path: 'teams', component: Teams },
   { path: 'team/:id', component: TeamDetail }, // <-- Hier hoort de publieke detailpagina
   { path: 'contact', component: Contact },
