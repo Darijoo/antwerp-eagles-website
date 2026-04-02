@@ -11,6 +11,8 @@ import { AdminTeams } from './admin/admin-teams';
 import { AdminSponsors } from './admin/admin-sponsors';
 import { TeamDetail } from './team-detail/team-detail';
 import { OverOns } from './over-ons/over-ons';
+import { AdminKalender } from './admin/admin-kalender/admin-kalender';
+import { Kalender } from './kalender/kalender';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -18,6 +20,7 @@ export const routes: Routes = [
   { path: 'teams', component: Teams },
   { path: 'team/:id', component: TeamDetail }, // <-- Hier hoort de publieke detailpagina
   { path: 'contact', component: Contact },
+  { path: 'kalender', component: Kalender },
   { path: 'nieuws/:id', component: NieuwsArtikel }, // <-- 2. Voeg de dynamische route toe
   { path: 'login', component: Login },
   {
@@ -28,6 +31,7 @@ export const routes: Routes = [
       { path: 'nieuws', component: AdminNieuws }, // De nieuwe route voor nieuwsbeheer
       { path: 'teams', component: AdminTeams }, // De nieuwe route voor teambeheer
       { path: 'sponsors', component: AdminSponsors }, // De nieuwe route voor sponsorbeheer
+      { path: 'kalender', component: AdminKalender },
     ],
   },
 ];

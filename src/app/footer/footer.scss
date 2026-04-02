@@ -120,6 +120,48 @@
   opacity: 0.7;
 }
 
+.gemaakt-door {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* --- BACK TO TOP KNOP --- */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: var(--eagle-red);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.zichtbaar {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  &:hover {
+    background-color: #7a1414;
+    transform: scale(1.1);
+  }
+}
+
 /* --- MOBIELE OPTIMALISATIE --- */
 @media (max-width: 768px) {
   .sponsors-balk {
@@ -143,5 +185,10 @@
 
   .social-links {
     justify-content: center; /* Zorgt dat de links ook gecentreerd staan */
+  }
+
+  .back-to-top {
+    bottom: 20px;
+    right: 20px;
   }
 }

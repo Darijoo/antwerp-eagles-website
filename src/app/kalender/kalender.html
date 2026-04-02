@@ -1,0 +1,106 @@
+<div class="kalender-sectie">
+  <div class="container">
+    <h2 class="sectie-titel">Wedstrijdkalender</h2>
+    <p class="sectie-ondertitel">Bekijk het aankomende programma en de uitslagen van onze teams.</p>
+
+    <div class="kalender-navigatie">
+      <button (click)="vorigeMaand()" class="btn-nav">&larr; Vorige Maand</button>
+      <h3 class="maand-titel">{{ maandNaam }} {{ jaar }}</h3>
+      <button (click)="volgendeMaand()" class="btn-nav">Volgende Maand &rarr;</button>
+    </div>
+
+    <!-- RASTER WEERGAVE VOOR DESKTOP -->
+    <div class="kalender-raster desktop-only">
+      <div class="weekdagen">
+        <div>Ma</div>
+        <div>Di</div>
+        <div>Wo</div>
+        <div>Do</div>
+        <div>Vr</div>
+        <div>Za</div>
+        <div>Zo</div>
+      </div>
+      <div class="dagen-grid">
+        @for (dag of kalenderDagen; track dag.datum.toISOString()) {
+          <div
+            class="dag-vak"
+            [class.andere-maand]="!dag.isHuidigeMaand"
+            [class.vandaag]="isVandaag(dag.datum)"
+          >
+            <span class="dag-nummer">{{ dag.datum | date: 'd' }}</span>
+
+            <div class="dag-events">
+              @for (event of dag.events; track event.id) {
+                <div
+                  class="event-blokje"
+                  [class.is-evenement]="event.type === 'evenement'"
+                  [class.gespeeld]="isGespeeld(event.datum)"
+                >
+                  <span class="tijd">{{ event.tijd }}</span>
+                  @if (event.type === 'evenement') {
+                    <span class="titel">{{ event.titel }}</span>
+                  } @else {
+                    <span class="titel"
+                      >{{ event.team ? event.team + ': ' : '' }}{{ event.thuisploeg }} vs
+                      {{ event.uitploeg }}</span
+                    >
+                    @if (event.uitslag) {
+                      <span class="uitslag">({{ event.uitslag }})</span>
+                    }
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- LIJST WEERGAVE VOOR MOBIEL (Vergelijkbaar met de oude view) -->
+    <div class="wedstrijden-lijst mobiel-only">
+      @for (wedstrijd of maandEvents; track wedstrijd.id) {
+        <!-- Voeg de klasse toe als de wedstrijd al is gespeeld -->
+        <div
+          class="wedstrijd-kaart"
+          [class.gespeeld]="isGespeeld(wedstrijd.datum)"
+          [class.is-evenement]="wedstrijd.type === 'evenement'"
+        >
+          <div class="wedstrijd-datum">
+            <div class="dag">{{ wedstrijd.datum.toDate() | date: 'd' }}</div>
+            <div class="maand">{{ wedstrijd.datum.toDate() | date: 'MMM' }}</div>
+          </div>
+          <div class="wedstrijd-info">
+            @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
+              @if (wedstrijd.team) {
+                <div class="team-naam">{{ wedstrijd.team }}</div>
+              }
+              <div class="teams">
+                <span class="thuis">{{ wedstrijd.thuisploeg }}</span>
+                <span class="vs">vs</span>
+                <span class="uit">{{ wedstrijd.uitploeg }}</span>
+              </div>
+              <div class="locatie-tijd">
+                <span>{{ wedstrijd.locatie }}</span>
+                <span>{{ wedstrijd.tijd }}</span>
+              </div>
+            } @else {
+              <div class="evenement-titel">{{ wedstrijd.titel }}</div>
+              <div class="locatie-tijd">
+                <span>{{ wedstrijd.locatie }}</span>
+                <span>{{ wedstrijd.tijd }}</span>
+              </div>
+              @if (wedstrijd.omschrijving) {
+                <p class="evenement-omschrijving">{{ wedstrijd.omschrijving }}</p>
+              }
+            }
+          </div>
+          @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
+            <div class="wedstrijd-uitslag">{{ wedstrijd.uitslag || '-' }}</div>
+          }
+        </div>
+      } @empty {
+        <p class="lege-status">Er staan geen activiteiten gepland voor deze maand.</p>
+      }
+    </div>
+  </div>
+</div>

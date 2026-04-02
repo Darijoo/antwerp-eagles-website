@@ -1,0 +1,114 @@
+<div class="admin-sectie">
+  <h2>Kalender Beheren</h2>
+  <p>Voeg hier nieuwe wedstrijden toe of beheer bestaande wedstrijden.</p>
+
+  <div class="admin-grid">
+    <!-- Formulier voor nieuwe wedstrijd -->
+    <div class="admin-kaart">
+      <h3>{{ bewerkId ? 'Wedstrijd Bewerken' : 'Nieuwe Wedstrijd Toevoegen' }}</h3>
+      <form [formGroup]="wedstrijdForm" (ngSubmit)="onSubmit()">
+        <div class="form-group type-switch">
+          <label> <input type="radio" formControlName="type" value="wedstrijd" /> Wedstrijd </label>
+          <label>
+            <input type="radio" formControlName="type" value="evenement" /> Evenement / Activiteit
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="datum">Datum</label>
+          <input type="date" id="datum" formControlName="datum" />
+        </div>
+        <div class="form-group">
+          <label for="tijd">Tijd</label>
+          <input type="time" id="tijd" formControlName="tijd" />
+        </div>
+
+        @if (wedstrijdForm.get('type')?.value === 'wedstrijd') {
+          <div class="form-group">
+            <label for="team">Welk Team speelt er?</label>
+            <input
+              type="text"
+              id="team"
+              formControlName="team"
+              placeholder="Bv. Heren 1, Jeugd U15"
+            />
+          </div>
+          <div class="form-group">
+            <label for="thuisploeg">Thuisploeg</label>
+            <input type="text" id="thuisploeg" formControlName="thuisploeg" />
+          </div>
+          <div class="form-group">
+            <label for="uitploeg">Uitploeg</label>
+            <input type="text" id="uitploeg" formControlName="uitploeg" />
+          </div>
+          <div class="form-group">
+            <label for="uitslag">Uitslag (optioneel)</label>
+            <input type="text" id="uitslag" formControlName="uitslag" placeholder="bv. 10 - 5" />
+          </div>
+        } @else {
+          <div class="form-group">
+            <label for="titel">Titel Evenement</label>
+            <input
+              type="text"
+              id="titel"
+              formControlName="titel"
+              placeholder="Bv. Clubfeest, Mosselfestijn"
+            />
+          </div>
+          <div class="form-group">
+            <label for="omschrijving">Omschrijving (optioneel)</label>
+            <textarea
+              id="omschrijving"
+              formControlName="omschrijving"
+              rows="3"
+              placeholder="Wat is er te doen?"
+            ></textarea>
+          </div>
+        }
+
+        <div class="form-group">
+          <label for="locatie">Locatie</label>
+          <input type="text" id="locatie" formControlName="locatie" />
+        </div>
+        <div class="form-acties">
+          <button type="submit" class="btn-actie">
+            {{ bewerkId ? 'Wijzigingen Opslaan' : 'Wedstrijd Toevoegen' }}
+          </button>
+          @if (bewerkId) {
+            <button type="button" class="btn-annuleren" (click)="annuleerBewerken()">
+              Annuleren
+            </button>
+          }
+        </div>
+      </form>
+    </div>
+
+    <!-- Lijst van bestaande wedstrijden -->
+    <div class="admin-kaart lijst-kaart">
+      <h3>Bestaande Agenda Items</h3>
+      <div class="item-lijst">
+        @for (wedstrijd of wedstrijden$ | async; track wedstrijd.id) {
+          <div class="item" [class.gespeeld]="isGespeeld(wedstrijd.datum)">
+            <div class="item-info">
+              <strong>{{ wedstrijd.datum.toDate() | date: 'dd-MM-yyyy' }}</strong> -
+              @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
+                <span class="badge">Wedstrijd</span> {{ wedstrijd.thuisploeg }} vs
+                {{ wedstrijd.uitploeg }}
+              } @else {
+                <span class="badge evenement">Evenement</span> {{ wedstrijd.titel }}
+              }
+            </div>
+            <div class="item-acties">
+              <button (click)="bewerkWedstrijd(wedstrijd)" class="btn-bewerken">Bewerken</button>
+              <button (click)="verwijderWedstrijd(wedstrijd.id!)" class="btn-verwijder">
+                Verwijder
+              </button>
+            </div>
+          </div>
+        } @empty {
+          <p>Nog geen wedstrijden toegevoegd.</p>
+        }
+      </div>
+    </div>
+  </div>
+</div>

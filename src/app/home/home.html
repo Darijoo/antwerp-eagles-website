@@ -3,6 +3,43 @@
   <p>Welkom op de officiële website van de Antwerp Eagles.</p>
   <a routerLink="/contact" class="cta-knop">Word Lid</a>
 </div>
+
+<section class="aankomend-sectie">
+  <div class="container">
+    <h2 class="sectie-titel">Binnenkort bij de Eagles</h2>
+
+    <div class="aankomend-grid">
+      @for (item of aankomendeActiviteiten$ | async; track item.id) {
+        <div class="aankomend-kaart" [class.is-evenement]="item.type === 'evenement'">
+          <div class="datum-blok">
+            <span class="dag">{{ item.datum.toDate() | date: 'd' }}</span>
+            <span class="maand">{{ item.datum.toDate() | date: 'MMM' }}</span>
+          </div>
+          <div class="info-blok">
+            @if (!item.type || item.type === 'wedstrijd') {
+              <span class="badge">Wedstrijd</span>
+              <h4>{{ item.thuisploeg }} vs {{ item.uitploeg }}</h4>
+              <p>{{ item.tijd }} | {{ item.locatie }}</p>
+            } @else {
+              <span class="badge evenement">Evenement</span>
+              <h4>{{ item.titel }}</h4>
+              <p>{{ item.tijd }} | {{ item.locatie }}</p>
+            }
+          </div>
+        </div>
+      } @empty {
+        <p class="lege-status" style="grid-column: 1 / -1">
+          Er staan momenteel geen activiteiten op de planning.
+        </p>
+      }
+    </div>
+
+    <div class="actie-link">
+      <a routerLink="/kalender">Bekijk volledige kalender &rarr;</a>
+    </div>
+  </div>
+</section>
+
 <section class="nieuws-sectie">
   <div class="container">
     <h2 class="sectie-titel">Laatste Nieuws</h2>

@@ -27,6 +27,7 @@
       <div class="social-links" style="flex-direction: column; gap: 0.5rem">
         <a routerLink="/over-ons">Over Ons / Historie</a>
         <a routerLink="/teams">Onze Teams</a>
+        <a routerLink="/kalender">Kalender & Uitslagen</a>
         <a routerLink="/contact">Contact</a>
       </div>
     </div>
@@ -39,7 +40,9 @@
     <div class="footer-sectie">
       <h4>Volg Ons</h4>
       <div class="social-links">
-        <a href="#">Facebook</a>
+        <a href="https://www.facebook.com/AntwerpEagles" target="_blank" rel="noopener noreferrer"
+          >Facebook</a
+        >
         <a href="https://www.instagram.com/antwerpeagles/" target="_blank" rel="noopener noreferrer"
           >Instagram</a
         >
@@ -49,5 +52,16 @@
 
   <div class="footer-bottom">
     <p>&copy; 2026 Antwerp Eagles. Alle rechten voorbehouden.</p>
+    <p class="gemaakt-door">Website ontworpen & gebouwd door <strong>Dario Gilles</strong></p>
   </div>
+
+  <!-- Back to top knop -->
+  <button
+    class="back-to-top"
+    [class.zichtbaar]="toonKnoppie"
+    (click)="naarBoven()"
+    aria-label="Terug naar boven"
+  >
+    &uarr;
+  </button>
 </footer>
