@@ -1,21 +1,37 @@
-.contact-container {
-  max-width: 1200px;
-  margin: 0 auto;
+.contact-sectie {
   padding: 4rem 2rem;
+  background-color: var(--bg-light);
+  min-height: calc(100vh - 200px);
 }
 
-h2 {
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.sectie-titel {
   text-align: center;
   color: var(--eagle-blue);
   font-size: 2.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 0.5rem;
   text-transform: uppercase;
+}
+
+.sectie-ondertitel {
+  text-align: center;
+  color: var(--text-dark);
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+  opacity: 0.8;
 }
 
 .contact-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 3rem;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(280px, 1fr)
+  ); /* Zorgt dat de kaartjes passen op smalle telefoons */
+  gap: 2.5rem;
 }
 
 .contact-info,
@@ -101,5 +117,21 @@ h3 {
 
   &:hover {
     background-color: #7a1414;
+  }
+}
+
+/* --- MOBIELE OPTIMALISATIE --- */
+@media (max-width: 768px) {
+  .contact-sectie {
+    padding: 3rem 1rem; /* Minder lege ruimte op smalle schermen */
+  }
+
+  .sectie-titel {
+    font-size: 2rem;
+  }
+
+  .contact-info,
+  .contact-form {
+    padding: 1.5rem; /* Kaartjes iets compacter op mobiel */
   }
 }
