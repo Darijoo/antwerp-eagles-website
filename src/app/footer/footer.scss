@@ -74,6 +74,12 @@
   gap: 2rem;
 }
 
+.footer-logo {
+  max-width: 120px; /* Zorgt ervoor dat het logo niet te reusachtig wordt */
+  height: auto;
+  margin-bottom: 1rem;
+}
+
 .footer-sectie h4 {
   color: var(--text-light);
   margin-bottom: 1rem;
@@ -112,4 +118,30 @@
   background-color: rgba(0, 0, 0, 0.2); /* Een iets donkerdere balk helemaal onderaan */
   font-size: 0.9rem;
   opacity: 0.7;
+}
+
+/* --- MOBIELE OPTIMALISATIE --- */
+@media (max-width: 768px) {
+  .sponsors-balk {
+    padding: 1.5rem 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .sponsor-logos {
+    gap: 1.5rem;
+  }
+
+  .site-footer {
+    margin-top: 2rem;
+    padding-top: 2rem;
+  }
+
+  .footer-content {
+    padding: 0 1rem 1.5rem 1rem;
+    text-align: center; /* Tekst netjes in het midden op telefoons */
+  }
+
+  .social-links {
+    justify-content: center; /* Zorgt dat de links ook gecentreerd staan */
+  }
 }

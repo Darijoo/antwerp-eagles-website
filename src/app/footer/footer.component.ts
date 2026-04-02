@@ -9,7 +9,7 @@ import { Sponsor, SponsorService } from '../diensten/sponsor';
   standalone: true,
   imports: [AsyncPipe],
   templateUrl: './footer.html',
-  styleUrls: ['./footer.css'],
+  styleUrl: './footer.scss',
 })
 export class FooterComponent {
   private sponsorService = inject(SponsorService);
