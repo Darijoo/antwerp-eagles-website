@@ -1,1 +1,44 @@
+@if (team) {
+  <div class="team-detail-sectie">
+    <div class="container">
+      <a routerLink="/teams" class="terug-knop">&larr; Terug naar overzicht</a>
+
+      <article class="team-detail-kaart">
+        @if (team.afbeeldingUrl) {
+          <div class="team-hero">
+            <img [src]="team.afbeeldingUrl" [alt]="team.naam" />
+          </div>
+        }
+
+        <div class="team-inhoud">
+          <div class="team-header">
+            <h2>{{ team.naam }}</h2>
+            <span class="team-badge">{{ team.categorie }}</span>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-card">
+              <h3>Over dit team</h3>
+              <p class="behoud-enters">{{ team.omschrijving }}</p>
+            </div>
+
+            <div class="info-card highlight-card">
+              <h3>Meedoen?</h3>
+              <p>
+                Lijkt het je leuk om bij {{ team.naam }} te komen spelen? Neem dan snel contact met
+                ons op voor meer informatie over trainingstijden en het lidmaatschap!
+              </p>
+              <a routerLink="/contact" class="btn-actie">Neem Contact Op</a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+} @else {
+  <div class="laden-sectie">
+    <div class="spinner">⚾</div>
+    <p>Team gegevens laden...</p>
+  </div>
+}
 <p>team-detail works!</p>

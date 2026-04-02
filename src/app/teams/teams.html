@@ -1,26 +1,41 @@
-<div class="teams-container">
-  <h2 class="sectie-titel">Onze Teams</h2>
+<div class="teams-sectie">
+  <div class="container">
+    <h2 class="sectie-titel">Onze Teams</h2>
+    <p class="sectie-ondertitel">
+      Ontdek de verschillende teams van Antwerp Eagles, van de jeugd tot de senioren.
+    </p>
 
-  <div class="teams-grid">
-    @for (team of alleTeams; track team.id) {
-      <article class="team-kaart">
-        @if (team.afbeeldingUrl) {
-          <div class="kaart-afbeelding">
-            <img [src]="team.afbeeldingUrl" [alt]="team.naam" />
+    <div class="teams-grid">
+      @for (team of alleTeams; track team.id) {
+        <article class="team-kaart">
+          <div class="kaart-afbeelding-container">
+            @if (team.afbeeldingUrl) {
+              <img [src]="team.afbeeldingUrl" [alt]="team.naam" class="team-foto" />
+            } @else {
+              <div class="placeholder-foto">
+                <span class="placeholder-icoon">⚾</span>
+              </div>
+            }
           </div>
-        }
 
-        <div class="team-inhoud">
-          <h3>{{ team.naam }}</h3>
-          <p class="team-categorie"><strong>Categorie:</strong> {{ team.categorie }}</p>
-          <p class="team-omschrijving">{{ team.omschrijving }}</p>
+          <div class="team-inhoud">
+            <div class="team-header">
+              <h3>{{ team.naam }}</h3>
+              <span class="team-badge">{{ team.categorie }}</span>
+            </div>
+            <p class="team-omschrijving">{{ team.omschrijving }}</p>
 
-          <!-- Let op: we gebruiken nu team.id in plaats van team.documentId -->
-          <a [routerLink]="['/teams', team.id]" class="btn-detail">Bekijk Team &rarr;</a>
+            <div class="team-footer">
+              <!-- Let op: we gebruiken nu team.id in plaats van team.documentId -->
+              <a [routerLink]="['/team', team.id]" class="btn-detail">Ontdek Team &rarr;</a>
+            </div>
+          </div>
+        </article>
+      } @empty {
+        <div class="lege-status">
+          <p>⚾ Geen teams gevonden. Voeg er een toe via het beheerpaneel!</p>
         </div>
-      </article>
-    } @empty {
-      <p>Geen teams gevonden. Voeg er een toe via het beheerpaneel!</p>
-    }
+      }
+    </div>
   </div>
 </div>

@@ -1,9 +1,19 @@
 <nav class="navbar">
-  <div class="logo">⚾ Antwerp Eagles</div>
+  <a routerLink="/" class="logo">
+    <img src="/logo.png" alt="Antwerp Eagles Logo" class="logo-img" />
+    Antwerp Eagles
+  </a>
 
-  <ul class="nav-links">
-    <li><a routerLink="/">Homeplate</a></li>
-    <li><a routerLink="/teams">Teams</a></li>
-    <li><a routerLink="/contact">Contact</a></li>
+  <!-- De hamburger knop voor mobiel -->
+  <button class="hamburger" (click)="toggleMenu()" [class.actief]="menuOpen">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <ul class="nav-links" [class.actief]="menuOpen">
+    <li><a routerLink="/" (click)="sluitMenu()">Homeplate</a></li>
+    <li><a routerLink="/teams" (click)="sluitMenu()">Teams</a></li>
+    <li><a routerLink="/contact" (click)="sluitMenu()">Contact</a></li>
   </ul>
 </nav>

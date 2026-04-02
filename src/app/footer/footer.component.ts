@@ -7,7 +7,7 @@ import { Sponsor, SponsorService } from '../diensten/sponsor';
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [RouterLink, AsyncPipe],
+  imports: [AsyncPipe],
   templateUrl: './footer.html',
   styleUrls: ['./footer.css'],
 })

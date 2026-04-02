@@ -1,0 +1,180 @@
+.team-detail-sectie {
+  padding: 4rem 2rem;
+  background-color: var(--bg-light);
+  min-height: calc(100vh - 200px);
+}
+
+.container {
+  max-width: 1000px; /* Iets smaller voor een betere leesbaarheid van de tekst */
+  margin: 0 auto;
+}
+
+.terug-knop {
+  display: inline-block;
+  color: var(--eagle-blue);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--eagle-red);
+  }
+}
+
+.team-detail-kaart {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.team-hero {
+  width: 100%;
+  height: 400px;
+  background-color: #eee;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.team-inhoud {
+  padding: 3rem;
+}
+
+.team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 2rem;
+
+  h2 {
+    color: var(--eagle-blue);
+    font-size: 2.8rem;
+    margin: 0;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+}
+
+.team-badge {
+  background-color: var(--eagle-red);
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+}
+
+.info-card {
+  h3 {
+    color: var(--eagle-blue);
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  p {
+    color: var(--text-dark);
+    line-height: 1.8;
+    font-size: 1.05rem;
+    margin: 0;
+  }
+}
+
+.highlight-card {
+  background-color: #fff9f9;
+  padding: 2rem;
+  border-radius: 8px;
+  border-left: 5px solid var(--eagle-red);
+
+  h3 {
+    color: var(--eagle-red);
+  }
+}
+
+.behoud-enters {
+  white-space: pre-line;
+}
+
+.btn-actie {
+  display: inline-block;
+  margin-top: 1.5rem;
+  background-color: var(--eagle-red);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+
+  &:hover {
+    background-color: #7a1414;
+    transform: translateY(-2px);
+  }
+}
+
+/* Styling voor het laadscherm (indien de data even op zich laat wachten) */
+.laden-sectie {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8rem 2rem;
+  min-height: 50vh;
+
+  .spinner {
+    font-size: 4rem;
+    animation: spin 2s linear infinite;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: var(--eagle-blue);
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsief maken voor mobiel */
+@media (max-width: 768px) {
+  .team-hero {
+    height: 250px;
+  }
+
+  .team-inhoud {
+    padding: 2rem 1.5rem;
+  }
+
+  .team-header h2 {
+    font-size: 2rem;
+  }
+}

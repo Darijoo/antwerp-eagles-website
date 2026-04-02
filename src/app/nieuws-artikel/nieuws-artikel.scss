@@ -1,14 +1,20 @@
-.artikel-container {
-  max-width: 800px; /* Artikelen lezen fijner als ze niet te breed zijn */
-  margin: 0 auto;
+.nieuws-detail-sectie {
   padding: 4rem 2rem;
+  background-color: var(--bg-light);
+  min-height: calc(100vh - 200px);
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .terug-knop {
   display: inline-block;
   color: var(--eagle-blue);
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 1.1rem;
   margin-bottom: 2rem;
   transition: color 0.3s ease;
 
@@ -17,56 +23,114 @@
   }
 }
 
-.volledig-artikel {
+.nieuws-detail-kaart {
   background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.nieuws-hero {
+  width: 100%;
+  height: 400px;
+  background-color: #eee;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+}
+
+.nieuws-inhoud {
   padding: 3rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  border-top: 5px solid var(--eagle-blue);
+}
+
+.nieuws-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 2rem;
 
   h2 {
     color: var(--eagle-blue);
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
+    font-size: 2.8rem;
+    margin: 0;
     line-height: 1.2;
   }
 }
 
 .datum-badge {
-  display: inline-block;
   background-color: var(--eagle-red);
   color: white;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  margin-bottom: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
-.artikel-tekst p {
+.artikel-tekst {
+  color: var(--text-dark);
   line-height: 1.8;
   font-size: 1.1rem;
-  color: var(--text-dark);
+
+  /* Zorgt ervoor dat alle tekst mooi leesbaar in het midden staat en niet uitrekt op brede schermen */
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.foutmelding {
-  text-align: center;
-  padding: 4rem;
+.behoud-enters {
+  white-space: pre-line;
+}
 
-  h2 {
-    color: var(--eagle-red);
+/* Styling voor het laadscherm */
+.laden-sectie {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8rem 2rem;
+  min-height: 50vh;
+
+  .spinner {
+    font-size: 4rem;
+    animation: spin 2s linear infinite;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: var(--eagle-blue);
+    font-size: 1.2rem;
+    font-weight: bold;
   }
 }
-.artikel-afbeelding-container {
-  margin-bottom: 2rem;
-  border-radius: 8px;
-  overflow: hidden; /* Zorgt voor ronde hoekjes bij de foto */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.hoofdfoto {
-  width: 100%;
-  max-height: 400px;
-  object-fit: cover; /* Snijdt de foto mooi bij zonder hem uit te rekken */
-  display: block;
+/* Responsief maken voor mobiel */
+@media (max-width: 768px) {
+  .nieuws-hero {
+    height: 250px;
+  }
+
+  .nieuws-inhoud {
+    padding: 2rem 1.5rem;
+  }
+
+  .nieuws-header h2 {
+    font-size: 2rem;
+  }
 }

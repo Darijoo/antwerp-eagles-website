@@ -5,7 +5,7 @@ import { TeamService, Team } from '../diensten/team'; // Haal de nieuwe postbode
 @Component({
   selector: 'app-team-detail', // Dit kan bij jou anders heten
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './team-detail.html', // Jouw HTML bestand met de info-cards
   styleUrl: './team-detail.scss', // Jouw CSS bestand
 })

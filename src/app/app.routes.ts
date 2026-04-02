@@ -9,10 +9,12 @@ import { Login } from './login';
 import { AdminNieuws } from './admin/admin-nieuws';
 import { AdminTeams } from './admin/admin-teams';
 import { AdminSponsors } from './admin/admin-sponsors';
+import { TeamDetail } from './team-detail/team-detail';
 
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'teams', component: Teams },
+  { path: 'team/:id', component: TeamDetail }, // <-- Hier hoort de publieke detailpagina
   { path: 'contact', component: Contact },
   { path: 'nieuws/:id', component: NieuwsArtikel }, // <-- 2. Voeg de dynamische route toe
   { path: 'login', component: Login },

@@ -8,4 +8,14 @@ import { RouterLink } from '@angular/router'; // <-- 1. Importeer RouterLink
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
-export class Navbar {}
+export class Navbar {
+  menuOpen = false;
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  sluitMenu() {
+    this.menuOpen = false;
+  }
+}

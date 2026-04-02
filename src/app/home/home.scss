@@ -1,13 +1,19 @@
 .hero-sectie {
   /* Een donkerblauwe transparante laag (gradient) over de foto, zodat de witte tekst altijd goed leesbaar blijft */
   background-image:
-    linear-gradient(rgba(21, 34, 105, 0.8), rgba(21, 34, 105, 0.8)),
-    url('https://images.unsplash.com/photo-1508344928928-7105b67de451?q=80&w=2000&auto=format&fit=crop');
+    linear-gradient(
+      to bottom,
+      rgba(21, 34, 105, 0.9),
+      rgba(21, 34, 105, 0.6) 50%,
+      rgba(21, 34, 105, 0.9)
+    ),
+    url('../../assets/bb_field.jpg');
   background-size: cover;
   background-position: center;
+  background-attachment: fixed; /* Zorgt voor een subtiel parallax effect */
 
-  /* We maken deze sectie lekker hoog */
-  height: 500px;
+  /* We maken deze sectie lekker hoog, afhankelijk van de schermhoogte */
+  min-height: 70vh;
 
   /* Flexbox om alles perfect in het midden te zetten */
   display: flex;
@@ -17,19 +23,43 @@
   text-align: center;
   color: var(--text-light);
   padding: 2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Voor nog betere leesbaarheid */
 }
 
 .hero-sectie h2 {
-  font-size: 4rem;
+  font-size: clamp(2.5rem, 5vw, 4.5rem); /* Responsieve tekstgrootte */
   font-weight: 900;
   text-transform: uppercase;
   margin-bottom: 1rem;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  animation: slideDown 0.8s ease-out forwards;
 }
 
 .hero-sectie p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  margin-bottom: 2.5rem;
+  max-width: 600px; /* Voorkomt te brede, moeilijk leesbare zinnen op grote schermen */
+  animation: fadeIn 1.2s ease-in forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* De Word Lid knop in de rode clubkleur */
@@ -73,7 +103,7 @@
 /* We maken weer een mooi grid voor de nieuwskaartjes */
 .nieuws-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Past beter op smalle telefoons */
   gap: 2rem;
 }
 
@@ -154,5 +184,17 @@
 
   &:hover {
     color: var(--eagle-blue);
+  }
+}
+
+/* --- MOBIELE OPTIMALISATIE --- */
+@media (max-width: 768px) {
+  .nieuws-sectie {
+    padding: 3rem 1rem; /* Minder lege ruimte aan de zijkanten op mobiel */
+  }
+
+  .sectie-titel {
+    font-size: 2rem; /* Iets kleinere titel op mobiel */
+    margin-bottom: 2rem;
   }
 }

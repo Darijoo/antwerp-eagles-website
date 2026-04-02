@@ -1,90 +1,179 @@
-.team-detail-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 3rem 2rem;
+/* --- NIEUWE TEAMS OVERZICHT PAGINA STYLING --- */
+.teams-sectie {
+  padding: 4rem 2rem;
+  background-color: var(--bg-light);
+  min-height: calc(100vh - 200px);
 }
 
-h2 {
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sectie-titel {
   text-align: center;
   color: var(--eagle-blue);
   font-size: 2.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   text-transform: uppercase;
 }
 
-.team-photo {
-  width: 100%;
-  border-radius: 8px;
-  overflow: hidden;
+.sectie-ondertitel {
+  text-align: center;
+  color: var(--text-dark);
+  font-size: 1.1rem;
   margin-bottom: 3rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Mooie schaduw achter de foto */
-  border: 5px solid var(--eagle-blue); /* Blauwe rand om de foto */
+  opacity: 0.8;
+}
 
-  img {
-    width: 100%;
-    height: auto;
-    display: block;
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(280px, 1fr)
+  ); /* Voorkomt dat kaartjes uitsteken op mobiel */
+  gap: 2.5rem;
+}
+
+.team-kaart {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 5px solid var(--eagle-blue);
+
+  &:hover {
+    transform: translateY(-8px); /* Laat de kaart iets omhoog komen */
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    border-bottom-color: var(--eagle-red); /* Een mooi detail voor clubkleuren */
   }
 }
 
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
+.kaart-afbeelding-container {
+  height: 220px;
+  width: 100%;
+  background-color: #eee;
+  position: relative;
+  overflow: hidden;
 }
 
-.info-card {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-top: 5px solid var(--eagle-blue);
+.team-foto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+
+  /* Zoomt de foto soepel in als je over de kaart hovert */
+  .team-kaart:hover & {
+    transform: scale(1.05);
+  }
+}
+
+/* Voor als er nog geen foto is geüpload */
+.placeholder-foto {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--eagle-blue), #2c3e50);
+
+  .placeholder-icoon {
+    font-size: 4rem;
+    opacity: 0.5;
+  }
+}
+
+.team-inhoud {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
 
   h3 {
     color: var(--eagle-blue);
-    margin-bottom: 1.5rem;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
+    margin: 0;
+    line-height: 1.2;
   }
+}
 
-  ul,
-  ol {
-    padding-left: 1.2rem;
-    margin-bottom: 1rem;
-    line-height: 1.6;
+.team-badge {
+  background-color: var(--eagle-red);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin-left: 1rem;
+}
+
+.team-omschrijving {
+  color: var(--text-dark);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.team-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.btn-detail {
+  display: inline-block;
+  color: var(--eagle-blue);
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--eagle-red);
   }
+}
+
+.lege-status {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 
   p {
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-
-  hr {
-    border: 0;
-    border-top: 1px solid #eee;
-    margin: 1rem 0;
-  }
-
-  a {
-    color: var(--eagle-red);
-    text-decoration: none;
-    font-weight: bold;
-
-    /* VOEG DEZE TWEE REGELS TOE: */
-    overflow-wrap: break-word;
-    word-break: break-all;
-
-    &:hover {
-      text-decoration: underline;
-    }
+    font-size: 1.2rem;
+    color: var(--text-dark);
   }
 }
 
-/* We geven de kaart over het lidgeld een rode rand zodat het extra opvalt */
-.highlight-card {
-  border-top: 5px solid var(--eagle-red);
-  background-color: #fff9f9; /* Heel licht rood achtergrondje */
-}
+/* --- MOBIELE OPTIMALISATIE --- */
+@media (max-width: 768px) {
+  .teams-sectie {
+    padding: 2rem 1rem; /* Meer ruimte voor de kaartjes zelf op smalle schermen */
+  }
 
-.behoud-enters {
-  white-space: pre-line; /* Dit vertelt de browser: respecteer de Enters uit de database! */
+  .sectie-titel {
+    font-size: 2rem;
+  }
 }

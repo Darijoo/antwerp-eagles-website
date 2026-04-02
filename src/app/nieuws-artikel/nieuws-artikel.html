@@ -1,24 +1,31 @@
-<div class="artikel-container">
-  <a routerLink="/" class="terug-knop">&larr; Terug naar overzicht</a>
+@if (actueelBericht) {
+  <div class="nieuws-detail-sectie">
+    <div class="container">
+      <a routerLink="/" class="terug-knop">&larr; Terug naar overzicht</a>
 
-  @if (actueelBericht) {
-    <article class="volledig-artikel">
-      <div class="datum-badge">{{ actueelBericht.datum | date: 'dd-MM-yyyy' }}</div>
-      <h2>{{ actueelBericht.titel }}</h2>
+      <article class="nieuws-detail-kaart">
+        @if (actueelBericht.afbeeldingUrl) {
+          <div class="nieuws-hero">
+            <img [src]="actueelBericht.afbeeldingUrl" [alt]="actueelBericht.titel" />
+          </div>
+        }
 
-      @if (actueelBericht.afbeeldingUrl) {
-        <div class="artikel-afbeelding-container">
-          <img
-            [src]="actueelBericht.afbeeldingUrl"
-            [alt]="actueelBericht.titel"
-            class="hoofdfoto"
-          />
+        <div class="nieuws-inhoud">
+          <div class="nieuws-header">
+            <h2>{{ actueelBericht.titel }}</h2>
+            <span class="datum-badge">{{ actueelBericht.datum | date: 'dd-MM-yyyy' }}</span>
+          </div>
+
+          <div class="artikel-tekst">
+            <p class="behoud-enters">{{ actueelBericht.volledigeText }}</p>
+          </div>
         </div>
-      }
-
-      <div class="artikel-tekst">
-        <p>{{ actueelBericht.volledigeText }}</p>
-      </div>
-    </article>
-  } @else {}
-</div>
+      </article>
+    </div>
+  </div>
+} @else {
+  <div class="laden-sectie">
+    <div class="spinner">⚾</div>
+    <p>Nieuwsbericht laden...</p>
+  </div>
+}
