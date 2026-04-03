@@ -28,6 +28,92 @@
           ></textarea>
         </div>
         <div class="form-groep">
+          <label for="coach">Naam Coach</label>
+          <input
+            type="text"
+            id="coach"
+            name="coach"
+            [(ngModel)]="nieuwTeam.coach"
+            placeholder="Bv. John Doe"
+          />
+        </div>
+        <div class="form-groep">
+          <label for="trainingsdagen">Trainingsdagen & Uren</label>
+          <div class="trainingen-lijst">
+            @for (training of trainingen; track $index) {
+              <div
+                class="training-rij"
+                style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center"
+              >
+                <select
+                  [(ngModel)]="training.dag"
+                  name="dag_{{ $index }}"
+                  style="
+                    flex: 2;
+                    margin-bottom: 0;
+                    padding: 0.75rem;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 1rem;
+                    background-color: white;
+                    cursor: pointer;
+                  "
+                >
+                  @for (dag of beschikbareDagen; track dag) {
+                    <option [value]="dag">{{ dag }}</option>
+                  }
+                </select>
+                <input
+                  type="time"
+                  [(ngModel)]="training.start"
+                  name="start_{{ $index }}"
+                  style="
+                    flex: 1;
+                    margin-bottom: 0;
+                    padding: 0.75rem;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 1rem;
+                    background-color: white;
+                  "
+                />
+                <span style="font-weight: bold; color: #555">tot</span>
+                <input
+                  type="time"
+                  [(ngModel)]="training.eind"
+                  name="eind_{{ $index }}"
+                  style="
+                    flex: 1;
+                    margin-bottom: 0;
+                    padding: 0.75rem;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 1rem;
+                    background-color: white;
+                  "
+                />
+                <button
+                  type="button"
+                  class="btn-verwijderen"
+                  (click)="verwijderTraining($index)"
+                  style="padding: 0.75rem; min-width: 40px; margin-bottom: 0"
+                  aria-label="Verwijder"
+                >
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            }
+          </div>
+          <button
+            type="button"
+            class="btn-toevoegen"
+            (click)="voegTrainingToe()"
+            style="margin-top: 0.5rem; font-size: 0.9rem; padding: 0.5rem 1rem"
+          >
+            + Trainingsmoment toevoegen
+          </button>
+        </div>
+        <div class="form-groep">
           <label for="afbeeldingUrl">Teamfoto (optioneel)</label>
           @if (nieuwTeam.afbeeldingUrl) {
             <div class="afbeelding-preview" style="margin-bottom: 10px">

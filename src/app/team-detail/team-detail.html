@@ -16,6 +16,27 @@
             <span class="team-badge">{{ team.categorie }}</span>
           </div>
 
+          <div
+            class="team-extra-info"
+            style="margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-dark)"
+          >
+            @if (team.coach) {
+              <p style="margin-bottom: 0.5rem">
+                <i class="fa-solid fa-user-tie" style="color: var(--eagle-blue); width: 25px"></i>
+                <strong>Coach:</strong> {{ team.coach }}
+              </p>
+            }
+            @if (team.trainingsdagen) {
+              <p style="margin-bottom: 0">
+                <i
+                  class="fa-regular fa-calendar-check"
+                  style="color: var(--eagle-blue); width: 25px"
+                ></i>
+                <strong>Trainingen:</strong> {{ team.trainingsdagen }}
+              </p>
+            }
+          </div>
+
           <div class="info-grid">
             <div class="info-card">
               <h3>Over dit team</h3>

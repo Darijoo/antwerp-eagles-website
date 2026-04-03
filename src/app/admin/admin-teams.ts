@@ -25,11 +25,25 @@ export class AdminTeams {
   toonFormulier = false;
   bewerkId: string | null = null;
 
+  // Voor het dynamisch kiezen van trainingsmomenten
+  trainingen: { dag: string; start: string; eind: string }[] = [];
+  beschikbareDagen = [
+    'Maandag',
+    'Dinsdag',
+    'Woensdag',
+    'Donderdag',
+    'Vrijdag',
+    'Zaterdag',
+    'Zondag',
+  ];
+
   nieuwTeam: Omit<Team, 'id'> = {
     naam: '',
     categorie: '',
     omschrijving: '',
     afbeeldingUrl: '',
+    coach: '',
+    trainingsdagen: '',
   };
 
   verwijderTeam(id: string) {
@@ -52,7 +66,22 @@ export class AdminTeams {
       categorie: team.categorie || '',
       omschrijving: team.omschrijving || '',
       afbeeldingUrl: team.afbeeldingUrl || '',
+      coach: team.coach || '',
+      trainingsdagen: team.trainingsdagen || '',
     };
+
+    // Probeer bestaande tekst (bv "Maandag 19:30 - 21:00") netjes in te laden in de keuzelijstjes
+    this.trainingen = [];
+    if (team.trainingsdagen) {
+      const momenten = team.trainingsdagen.split(' & ');
+      for (const m of momenten) {
+        const match = m.match(/^([A-Za-z]+)\s+(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})$/);
+        if (match) {
+          this.trainingen.push({ dag: match[1], start: match[2], eind: match[3] });
+        }
+      }
+    }
+
     this.toonFormulier = true;
   }
 
@@ -69,6 +98,16 @@ export class AdminTeams {
   }
 
   async opslaan() {
+    // Zet de gekozen lijst met trainingen om naar 1 overzichtelijke tekst voor in de database
+    if (this.trainingen.length > 0) {
+      this.nieuwTeam.trainingsdagen = this.trainingen
+        .filter((t) => t.dag && t.start && t.eind)
+        .map((t) => `${t.dag} ${t.start} - ${t.eind}`)
+        .join(' & ');
+    } else {
+      this.nieuwTeam.trainingsdagen = '';
+    }
+
     this.isAanHetOpslaan = true;
     try {
       // Upload de afbeelding naar de /teams map in Firebase Storage
@@ -113,6 +152,22 @@ export class AdminTeams {
   private resetFormulier() {
     this.bewerkId = null;
     this.geselecteerdBestand = null;
-    this.nieuwTeam = { naam: '', categorie: '', omschrijving: '', afbeeldingUrl: '' };
+    this.nieuwTeam = {
+      naam: '',
+      categorie: '',
+      omschrijving: '',
+      afbeeldingUrl: '',
+      coach: '',
+      trainingsdagen: '',
+    };
+    this.trainingen = [];
+  }
+
+  voegTrainingToe() {
+    this.trainingen.push({ dag: 'Maandag', start: '19:30', eind: '21:00' });
+  }
+
+  verwijderTraining(index: number) {
+    this.trainingen.splice(index, 1);
   }
 }

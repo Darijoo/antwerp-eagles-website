@@ -18,6 +18,8 @@ export interface Team {
   categorie: string;
   omschrijving: string;
   afbeeldingUrl?: string;
+  coach?: string;
+  trainingsdagen?: string;
 }
 
 @Injectable({
