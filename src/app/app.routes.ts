@@ -13,9 +13,15 @@ import { TeamDetail } from './team-detail/team-detail';
 import { OverOns } from './over-ons/over-ons';
 import { AdminKalender } from './admin/admin-kalender/admin-kalender';
 import { Kalender } from './kalender/kalender';
+import { Aansluiten } from './aansluiten/aansluiten';
+import { HuishoudelijkReglement } from './huishoudelijk-reglement';
+import { Sportreglement } from './sportreglement';
 
 export const routes: Routes = [
   { path: '', component: Home },
+  { path: 'aansluiten', component: Aansluiten },
+  { path: 'huishoudelijk-reglement', component: HuishoudelijkReglement },
+  { path: 'sportreglement', component: Sportreglement },
   { path: 'over-ons', component: OverOns },
   { path: 'teams', component: Teams },
   { path: 'team/:id', component: TeamDetail }, // <-- Hier hoort de publieke detailpagina

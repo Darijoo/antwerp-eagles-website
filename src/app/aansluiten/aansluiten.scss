@@ -1,0 +1,185 @@
+.aansluiten-sectie {
+  padding: 4rem 2rem;
+  background-color: var(--bg-light);
+  min-height: calc(100vh - 200px);
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.sectie-titel {
+  text-align: center;
+  color: var(--eagle-blue);
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.sectie-ondertitel {
+  text-align: center;
+  color: var(--text-dark);
+  font-size: 1.2rem;
+  margin-bottom: 3rem;
+  opacity: 0.8;
+  font-weight: bold;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.info-kaart {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+  h3 {
+    color: var(--eagle-blue);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #eee;
+  }
+  
+  h3:first-of-type {
+    margin-top: 0;
+  }
+}
+
+.intro-tekst {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: var(--text-dark);
+}
+
+.tarieven-lijst {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 1.1rem;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.steunend {
+      margin-top: 1rem;
+      background-color: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+  }
+}
+
+.korting-alert {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border-left: 5px solid #ffeeba;
+
+  i {
+    font-size: 1.5rem;
+  }
+}
+
+.betaling-box {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+
+  p { margin: 0 0 0.5rem 0; }
+
+  .rekeningnummer {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--eagle-red);
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+  }
+
+  .mededeling {
+    font-size: 0.95rem;
+    color: #6c757d;
+  }
+}
+
+.zij-kolom {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.documenten-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-doc {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background-color: var(--eagle-blue);
+  color: white;
+  text-decoration: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--eagle-red);
+    transform: translateY(-2px);
+  }
+}
+
+.btn-contact {
+  display: inline-block;
+  background-color: var(--eagle-red);
+  color: white;
+  text-decoration: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #b71c1c;
+  }
+}
+
+/* Mobiele weergave */
+@media (max-width: 900px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .aansluiten-sectie {
+    padding: 2rem 1rem;
+  }
+  
+  .info-kaart {
+    padding: 1.5rem;
+  }
+}
