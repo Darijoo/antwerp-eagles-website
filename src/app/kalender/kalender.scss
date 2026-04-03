@@ -70,7 +70,8 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Zorgt voor soepel scrollen op iOS */
   border: 1px solid #eee;
 }
 
@@ -82,11 +83,13 @@
   text-align: center;
   font-weight: bold;
   padding: 1rem 0;
+  min-width: 700px; /* Voorkomt dat dagen onleesbaar worden geplet op mobiel */
 }
 
 .dagen-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  min-width: 700px; /* Voorkomt dat dagen onleesbaar worden geplet op mobiel */
 }
 
 .dag-vak {
@@ -332,5 +335,37 @@
     padding: 0.5rem 1rem;
     font-size: 1.2rem;
     justify-self: start;
+  }
+
+  /* Zorg dat het kalenderraster netjes meeschaalt op mobiel */
+  .weekdagen, .dagen-grid {
+    min-width: 100%;
+  }
+  .weekdagen {
+    padding: 0.5rem 0;
+    font-size: 0.75rem;
+  }
+  .dag-vak {
+    min-height: 70px;
+    padding: 0.15rem;
+    overflow: hidden;
+  }
+  .dag-nummer {
+    font-size: 0.75rem;
+    margin-bottom: 0.15rem;
+  }
+  .event-blokje {
+    font-size: 0.55rem;
+    padding: 0.2rem;
+  }
+  .event-blokje .titel {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .event-blokje .tijd, .event-blokje .uitslag {
+    display: block;
+    margin: 0;
   }
 }

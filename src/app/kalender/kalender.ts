@@ -98,4 +98,46 @@ export class Kalender implements OnInit {
       datum.getFullYear() === vandaag.getFullYear()
     );
   }
+
+  // Variabelen om de veeg-coördinaten op te slaan
+  private touchStartX = 0;
+  private touchEndX = 0;
+
+  // Wordt afgevuurd zodra de vinger het scherm raakt
+  onTouchStart(event: TouchEvent) {
+    this.touchStartX = event.changedTouches[0].screenX;
+  }
+
+  // Wordt afgevuurd zodra de vinger het scherm loslaat
+  onTouchEnd(event: TouchEvent) {
+    this.touchEndX = event.changedTouches[0].screenX;
+    this.verwerkSwipe();
+  }
+
+  // Berekent of het een swipe was en in welke richting
+  private verwerkSwipe() {
+    const swipeDrempel = 50; // De minimum afstand in pixels om als 'swipe' te tellen
+    
+    // Veeg van rechts naar links (<--)
+    if (this.touchEndX < this.touchStartX - swipeDrempel) {
+      this.volgendeMaand();
+    }
+    
+    // Veeg van links naar rechts (-->)
+    if (this.touchEndX > this.touchStartX + swipeDrempel) {
+      this.vorigeMaand();
+    }
+  }
+
+  // Genereer een vaste kleur op basis van de letters uit de teamnaam
+  getTeamKleur(teamNaam: string): string {
+    if (!teamNaam) return 'var(--eagle-blue)'; // Standaard clubkleur
+    
+    let hash = 0;
+    for (let i = 0; i < teamNaam.length; i++) {
+      hash = teamNaam.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = Math.abs(hash) % 360;
+    return `hsl(${h}, 70%, 40%)`; // Donkere, verzadigde kleur voor witte tekst
+  }
 }

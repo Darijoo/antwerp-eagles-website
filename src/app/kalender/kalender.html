@@ -1,16 +1,20 @@
-<div class="kalender-sectie">
+<div class="kalender-sectie" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
   <div class="container">
     <h2 class="sectie-titel">Wedstrijdkalender</h2>
     <p class="sectie-ondertitel">Bekijk het aankomende programma en de uitslagen van onze teams.</p>
 
     <div class="kalender-navigatie">
-      <button (click)="vorigeMaand()" class="btn-nav">&larr; Vorige Maand</button>
+      <button (click)="vorigeMaand()" class="btn-nav">
+        <span aria-hidden="true">&larr;</span><span class="nav-tekst"> Vorige</span>
+      </button>
       <h3 class="maand-titel">{{ maandNaam }} {{ jaar }}</h3>
-      <button (click)="volgendeMaand()" class="btn-nav">Volgende Maand &rarr;</button>
+      <button (click)="volgendeMaand()" class="btn-nav">
+        <span class="nav-tekst">Volgende </span><span aria-hidden="true">&rarr;</span>
+      </button>
     </div>
 
-    <!-- RASTER WEERGAVE VOOR DESKTOP -->
-    <div class="kalender-raster desktop-only">
+    <!-- RASTER WEERGAVE (Nu overal zichtbaar) -->
+    <div class="kalender-raster">
       <div class="weekdagen">
         <div>Ma</div>
         <div>Di</div>
@@ -35,6 +39,7 @@
                   class="event-blokje"
                   [class.is-evenement]="event.type === 'evenement'"
                   [class.gespeeld]="isGespeeld(event.datum)"
+                  [style.background-color]="event.type !== 'evenement' && event.team && !isGespeeld(event.datum) ? getTeamKleur(event.team) : null"
                 >
                   <span class="tijd">{{ event.tijd }}</span>
                   @if (event.type === 'evenement') {
@@ -64,6 +69,7 @@
           class="wedstrijd-kaart"
           [class.gespeeld]="isGespeeld(wedstrijd.datum)"
           [class.is-evenement]="wedstrijd.type === 'evenement'"
+          [style.border-left-color]="wedstrijd.type !== 'evenement' && wedstrijd.team && !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null"
         >
           <div class="wedstrijd-datum">
             <div class="dag">{{ wedstrijd.datum.toDate() | date: 'd' }}</div>

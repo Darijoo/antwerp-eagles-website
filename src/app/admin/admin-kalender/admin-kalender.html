@@ -26,12 +26,12 @@
         @if (wedstrijdForm.get('type')?.value === 'wedstrijd') {
           <div class="form-group">
             <label for="team">Welk Team speelt er?</label>
-            <input
-              type="text"
-              id="team"
-              formControlName="team"
-              placeholder="Bv. Heren 1, Jeugd U15"
-            />
+            <select id="team" formControlName="team">
+              <option value="">-- Geen specifiek team --</option>
+              @for (team of teams$ | async; track team.id) {
+                <option [value]="team.naam">{{ team.naam }}</option>
+              }
+            </select>
           </div>
           <div class="form-group">
             <label for="thuisploeg">Thuisploeg</label>

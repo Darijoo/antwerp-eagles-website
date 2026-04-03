@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { KalenderService, Match } from '../../diensten/kalender.service';
 
 @Component({
@@ -14,9 +15,12 @@ import { KalenderService, Match } from '../../diensten/kalender.service';
 })
 export class AdminKalender {
   private kalenderService = inject(KalenderService);
+  private firestore = inject(Firestore);
   private fb = inject(FormBuilder);
 
   bewerkId: string | null = null;
+  teams$: Observable<any[]>;
+  
   wedstrijden$: Observable<Match[]>;
   wedstrijdForm = this.fb.group({
     type: ['wedstrijd', Validators.required],
@@ -35,6 +39,8 @@ export class AdminKalender {
     this.wedstrijden$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
       map((wedstrijden) => wedstrijden.slice().reverse()), // Draait de lijst om (nieuwste bovenaan)
     );
+    const teamsRef = collection(this.firestore, 'teams');
+    this.teams$ = collectionData(teamsRef, { idField: 'id' });
   }
 
   async onSubmit() {
