@@ -121,6 +121,21 @@
       opacity: 1;
       color: var(--eagle-red);
     }
+
+      /* Specifieke hover-effecten voor de sociale media iconen */
+      .fa-facebook, .fa-instagram {
+        transition: all 0.3s ease;
+      }
+
+      &:hover .fa-facebook {
+        color: #1877f2; /* Officiële Facebook blauwe kleur */
+        transform: scale(1.15);
+      }
+
+      &:hover .fa-instagram {
+        color: #e1306c; /* Herkenbare Instagram roze/rode kleur */
+        transform: scale(1.15);
+      }
   }
 }
 
