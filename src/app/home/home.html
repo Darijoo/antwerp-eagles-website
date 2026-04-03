@@ -10,14 +10,30 @@
 
     <div class="aankomend-grid">
       @for (item of aankomendeActiviteiten$ | async; track item.id) {
-        <div class="aankomend-kaart" [class.is-evenement]="item.type === 'evenement'">
-          <div class="datum-blok">
+        <div
+          class="aankomend-kaart"
+          [class.is-evenement]="item.type === 'evenement'"
+          [style.border-left-color]="
+            item.type !== 'evenement' && item.team ? getTeamKleur(item.team) : null
+          "
+        >
+          <div
+            class="datum-blok"
+            [style.background-color]="
+              item.type !== 'evenement' && item.team ? getTeamKleur(item.team) : null
+            "
+          >
             <span class="dag">{{ item.datum.toDate() | date: 'd' }}</span>
             <span class="maand">{{ item.datum.toDate() | date: 'MMM' }}</span>
           </div>
           <div class="info-blok">
             @if (!item.type || item.type === 'wedstrijd') {
-              <span class="badge">Wedstrijd</span>
+              <span
+                class="badge"
+                [style.background-color]="item.team ? getTeamKleur(item.team) : null"
+              >
+                {{ item.team ? item.team : 'Wedstrijd' }}
+              </span>
               <h4>{{ item.thuisploeg }} vs {{ item.uitploeg }}</h4>
               <p>{{ item.tijd }} | {{ item.locatie }}</p>
             } @else {

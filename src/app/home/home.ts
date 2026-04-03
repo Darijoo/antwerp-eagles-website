@@ -46,4 +46,16 @@ export class Home implements OnInit {
       },
     });
   }
+
+  // Genereer een vaste kleur op basis van de letters uit de teamnaam
+  getTeamKleur(teamNaam: string): string {
+    if (!teamNaam) return 'var(--eagle-blue)'; // Standaard clubkleur
+
+    let hash = 0;
+    for (let i = 0; i < teamNaam.length; i++) {
+      hash = teamNaam.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = Math.abs(hash) % 360;
+    return `hsl(${h}, 70%, 40%)`; // Donkere, verzadigde kleur voor witte tekst
+  }
 }

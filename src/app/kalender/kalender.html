@@ -3,6 +3,32 @@
     <h2 class="sectie-titel">Wedstrijdkalender</h2>
     <p class="sectie-ondertitel">Bekijk het aankomende programma en de uitslagen van onze teams.</p>
 
+    <!-- FILTERS -->
+    <div class="kalender-filters">
+      <div class="filter-groep">
+        <label for="filterType">Type Activiteit</label>
+        <select id="filterType" [(ngModel)]="geselecteerdType" (change)="onFilterWijziging()">
+          <option value="">Alles tonen</option>
+          <option value="wedstrijd">Alleen Wedstrijden</option>
+          <option value="evenement">Alleen Evenementen</option>
+        </select>
+      </div>
+      <div class="filter-groep">
+        <label for="filterTeam">Specifiek Team</label>
+        <select
+          id="filterTeam"
+          [(ngModel)]="geselecteerdTeam"
+          (change)="onFilterWijziging()"
+          [disabled]="geselecteerdType === 'evenement'"
+        >
+          <option value="">Alle Teams</option>
+          @for (team of beschikbareTeams; track team) {
+            <option [value]="team">{{ team }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
     <div class="kalender-navigatie">
       <button (click)="vorigeMaand()" class="btn-nav">
         <span aria-hidden="true">&larr;</span><span class="nav-tekst"> Vorige</span>
@@ -39,7 +65,11 @@
                   class="event-blokje"
                   [class.is-evenement]="event.type === 'evenement'"
                   [class.gespeeld]="isGespeeld(event.datum)"
-                  [style.background-color]="event.type !== 'evenement' && event.team && !isGespeeld(event.datum) ? getTeamKleur(event.team) : null"
+                  [style.background-color]="
+                    event.type !== 'evenement' && event.team && !isGespeeld(event.datum)
+                      ? getTeamKleur(event.team)
+                      : null
+                  "
                 >
                   <span class="tijd">{{ event.tijd }}</span>
                   @if (event.type === 'evenement') {
@@ -69,16 +99,32 @@
           class="wedstrijd-kaart"
           [class.gespeeld]="isGespeeld(wedstrijd.datum)"
           [class.is-evenement]="wedstrijd.type === 'evenement'"
-          [style.border-left-color]="wedstrijd.type !== 'evenement' && wedstrijd.team && !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null"
+          [style.border-left-color]="
+            wedstrijd.type !== 'evenement' && wedstrijd.team && !isGespeeld(wedstrijd.datum)
+              ? getTeamKleur(wedstrijd.team)
+              : null
+          "
         >
-          <div class="wedstrijd-datum">
+          <div
+            class="wedstrijd-datum"
+            [style.background-color]="
+              wedstrijd.type !== 'evenement' && wedstrijd.team && !isGespeeld(wedstrijd.datum)
+                ? getTeamKleur(wedstrijd.team)
+                : null
+            "
+          >
             <div class="dag">{{ wedstrijd.datum.toDate() | date: 'd' }}</div>
             <div class="maand">{{ wedstrijd.datum.toDate() | date: 'MMM' }}</div>
           </div>
           <div class="wedstrijd-info">
             @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
               @if (wedstrijd.team) {
-                <div class="team-naam">{{ wedstrijd.team }}</div>
+                <div
+                  class="team-naam"
+                  [style.color]="!isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null"
+                >
+                  {{ wedstrijd.team }}
+                </div>
               }
               <div class="teams">
                 <span class="thuis">{{ wedstrijd.thuisploeg }}</span>
@@ -101,7 +147,14 @@
             }
           </div>
           @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
-            <div class="wedstrijd-uitslag">{{ wedstrijd.uitslag || '-' }}</div>
+            <div
+              class="wedstrijd-uitslag"
+              [style.color]="
+                wedstrijd.team && !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null
+              "
+            >
+              {{ wedstrijd.uitslag || '-' }}
+            </div>
           }
         </div>
       } @empty {

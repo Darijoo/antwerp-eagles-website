@@ -25,6 +25,43 @@
   opacity: 0.8;
 }
 
+/* --- KALENDER FILTERS --- */
+.kalender-filters {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.filter-groep {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  label {
+    font-weight: bold;
+    color: var(--eagle-blue);
+    margin-bottom: 0.5rem;
+  }
+
+  select {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: var(--bg-light);
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
 /* --- KALENDER NAVIGATIE --- */
 .kalender-navigatie {
   display: flex;
@@ -99,6 +136,7 @@
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
+  min-width: 0; /* Cruciaal: voorkomt dat de grid uittrekt door lange tekst! */
 
   &:nth-child(7n) {
     border-right: none;
@@ -143,6 +181,7 @@
   padding: 0.3rem 0.5rem;
   border-radius: 4px;
   line-height: 1.2;
+  overflow: hidden; /* Belangrijk voor het afkappen van lange namen */
 
   &.is-evenement {
     background-color: var(--eagle-red);
@@ -316,8 +355,18 @@
     flex-direction: column;
     gap: 1rem;
   }
+
+  .kalender-filters {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
   .kalender-sectie {
     padding: 2rem 1rem;
+  }
+  .wedstrijd-info {
+    min-width: 0;
+    word-wrap: break-word;
   }
   .sectie-titel {
     font-size: 2rem;
@@ -338,7 +387,8 @@
   }
 
   /* Zorg dat het kalenderraster netjes meeschaalt op mobiel */
-  .weekdagen, .dagen-grid {
+  .weekdagen,
+  .dagen-grid {
     min-width: 100%;
   }
   .weekdagen {
@@ -364,7 +414,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .event-blokje .tijd, .event-blokje .uitslag {
+  .event-blokje .tijd,
+  .event-blokje .uitslag {
     display: block;
     margin: 0;
   }

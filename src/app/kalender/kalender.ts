@@ -1,11 +1,12 @@
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { KalenderService, Match } from '../diensten/kalender.service';
 
 @Component({
   selector: 'app-kalender',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './kalender.html',
   styleUrl: './kalender.scss',
 })
@@ -18,6 +19,11 @@ export class Kalender implements OnInit {
   maandNaam = '';
   jaar = 0;
 
+  // Filters
+  geselecteerdType = '';
+  geselecteerdTeam = '';
+  beschikbareTeams: string[] = [];
+
   // Voor de desktop raster weergave
   kalenderDagen: { datum: Date; isHuidigeMaand: boolean; events: Match[] }[] = [];
   // Voor de mobiele lijst weergave
@@ -26,9 +32,23 @@ export class Kalender implements OnInit {
   ngOnInit() {
     this.kalenderService.haalAlleWedstrijdenOp().subscribe((data) => {
       this.alleWedstrijden = data;
+
+      // Haal automatisch alle unieke teamnamen uit de wedstrijden
+      this.beschikbareTeams = [
+        ...new Set(data.map((w) => w.team).filter((t): t is string => !!t)),
+      ].sort();
+
       this.genereerKalender();
       this.cdr.detectChanges(); // Vertel Angular dwingend om het scherm NU te updaten
     });
+  }
+
+  onFilterWijziging() {
+    // Als we "Evenementen" kiezen, heeft filteren op team geen zin
+    if (this.geselecteerdType === 'evenement') {
+      this.geselecteerdTeam = '';
+    }
+    this.genereerKalender();
   }
 
   genereerKalender() {
@@ -46,6 +66,14 @@ export class Kalender implements OnInit {
 
     const startDatum = new Date(this.jaar, maand, 1 - startDag);
 
+    // Pas de geselecteerde filters toe op de volledige lijst met activiteiten
+    const gefilterdeWedstrijden = this.alleWedstrijden.filter((w) => {
+      const matchType =
+        this.geselecteerdType === '' || (w.type || 'wedstrijd') === this.geselecteerdType;
+      const matchTeam = this.geselecteerdTeam === '' || w.team === this.geselecteerdTeam;
+      return matchType && matchTeam;
+    });
+
     this.kalenderDagen = [];
     for (let i = 0; i < 42; i++) {
       // 6 rijen van 7 dagen = 42 vakjes
@@ -53,7 +81,7 @@ export class Kalender implements OnInit {
       datum.setDate(startDatum.getDate() + i);
 
       const isHuidigeMaand = datum.getMonth() === maand;
-      const events = this.alleWedstrijden.filter((w) => {
+      const events = gefilterdeWedstrijden.filter((w) => {
         const wDatum = w.datum.toDate();
         return (
           wDatum.getDate() === datum.getDate() &&
@@ -66,7 +94,7 @@ export class Kalender implements OnInit {
     }
 
     // Vul de lijst voor de mobiele weergave (alleen de geselecteerde maand)
-    this.maandEvents = this.alleWedstrijden
+    this.maandEvents = gefilterdeWedstrijden
       .filter(
         (w) =>
           w.datum.toDate().getMonth() === maand && w.datum.toDate().getFullYear() === this.jaar,
@@ -119,12 +147,12 @@ export class Kalender implements OnInit {
   // Berekent of het een swipe was en in welke richting
   private verwerkSwipe() {
     const swipeDrempel = 50; // De minimum afstand in pixels om als 'swipe' te tellen
-    
+
     // Veeg van rechts naar links (<--)
     if (this.touchEndX < this.touchStartX - swipeDrempel) {
       this.volgendeMaand();
     }
-    
+
     // Veeg van links naar rechts (-->)
     if (this.touchEndX > this.touchStartX + swipeDrempel) {
       this.vorigeMaand();
@@ -134,7 +162,7 @@ export class Kalender implements OnInit {
   // Genereer een vaste kleur op basis van de letters uit de teamnaam
   getTeamKleur(teamNaam: string): string {
     if (!teamNaam) return 'var(--eagle-blue)'; // Standaard clubkleur
-    
+
     let hash = 0;
     for (let i = 0; i < teamNaam.length; i++) {
       hash = teamNaam.charCodeAt(i) + ((hash << 5) - hash);

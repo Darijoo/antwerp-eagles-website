@@ -90,7 +90,7 @@
 
 .aankomend-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
@@ -206,7 +206,7 @@
 /* We maken weer een mooi grid voor de nieuwskaartjes */
 .nieuws-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Past beter op smalle telefoons */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Past beter op smalle telefoons */
   gap: 2rem;
 }
 
