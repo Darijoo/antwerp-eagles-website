@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { KalenderService, Match } from '../diensten/kalender.service';
 
@@ -11,6 +11,7 @@ import { KalenderService, Match } from '../diensten/kalender.service';
 })
 export class Kalender implements OnInit {
   private kalenderService = inject(KalenderService);
+  private cdr = inject(ChangeDetectorRef);
   alleWedstrijden: Match[] = [];
 
   huidigeDatum = new Date();
@@ -26,6 +27,7 @@ export class Kalender implements OnInit {
     this.kalenderService.haalAlleWedstrijdenOp().subscribe((data) => {
       this.alleWedstrijden = data;
       this.genereerKalender();
+      this.cdr.detectChanges(); // Vertel Angular dwingend om het scherm NU te updaten
     });
   }
 
