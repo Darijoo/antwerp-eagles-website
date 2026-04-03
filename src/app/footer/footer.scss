@@ -73,11 +73,16 @@
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
 }
+/* Zorgt dat het logo en de tekst naast elkaar komen staan */
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* Ruimte tussen het logo en de tekst */
+}
 
 .footer-logo {
-  max-width: 120px; /* Zorgt ervoor dat het logo niet te reusachtig wordt */
+  max-width: 90px; /* Logo iets kleiner voor een compactere footer */
   height: auto;
-  margin-bottom: 1rem;
 }
 
 .footer-sectie h4 {
@@ -90,6 +95,13 @@
 .footer-sectie p {
   line-height: 1.6;
   opacity: 0.8; /* Maakt de tekst nét iets lichter dan de titel */
+}
+
+/* Strakkere uitlijning voor de tekst naast het logo op desktop */
+.brand-tekst {
+  text-align: left;
+  h4 { margin-bottom: 0.2rem; font-size: 1.4rem; }
+  p { margin-bottom: 0; }
 }
 
 .social-links {
@@ -181,6 +193,15 @@
   .footer-content {
     padding: 0 1rem 1.5rem 1rem;
     text-align: center; /* Tekst netjes in het midden op telefoons */
+  }
+
+  /* Op mobiel zetten we het logo weer netjes boven de tekst */
+  .footer-brand {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .brand-tekst {
+    text-align: center;
   }
 
   .social-links {
