@@ -136,6 +136,26 @@
             accept="image/*"
           />
         </div>
+        <div class="form-groep">
+          <label for="facebookUrl">Facebook Link (optioneel)</label>
+          <input
+            type="url"
+            id="facebookUrl"
+            name="facebookUrl"
+            [(ngModel)]="nieuwTeam.facebookUrl"
+            placeholder="https://facebook.com/..."
+          />
+        </div>
+        <div class="form-groep">
+          <label for="instagramUrl">Instagram Link (optioneel)</label>
+          <input
+            type="url"
+            id="instagramUrl"
+            name="instagramUrl"
+            [(ngModel)]="nieuwTeam.instagramUrl"
+            placeholder="https://instagram.com/..."
+          />
+        </div>
         <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
           {{ isAanHetOpslaan ? 'Opslaan & Uploaden...' : 'Opslaan' }}
         </button>

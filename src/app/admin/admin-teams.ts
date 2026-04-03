@@ -44,6 +44,8 @@ export class AdminTeams {
     afbeeldingUrl: '',
     coach: '',
     trainingsdagen: '',
+    facebookUrl: '',
+    instagramUrl: '',
   };
 
   verwijderTeam(id: string) {
@@ -68,6 +70,8 @@ export class AdminTeams {
       afbeeldingUrl: team.afbeeldingUrl || '',
       coach: team.coach || '',
       trainingsdagen: team.trainingsdagen || '',
+      facebookUrl: team.facebookUrl || '',
+      instagramUrl: team.instagramUrl || '',
     };
 
     // Probeer bestaande tekst (bv "Maandag 19:30 - 21:00") netjes in te laden in de keuzelijstjes
@@ -159,6 +163,8 @@ export class AdminTeams {
       afbeeldingUrl: '',
       coach: '',
       trainingsdagen: '',
+      facebookUrl: '',
+      instagramUrl: '',
     };
     this.trainingen = [];
   }

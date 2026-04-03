@@ -35,6 +35,21 @@
                 <strong>Trainingen:</strong> {{ team.trainingsdagen }}
               </p>
             }
+
+            @if (team.facebookUrl || team.instagramUrl) {
+              <div class="team-socials">
+                @if (team.facebookUrl) {
+                  <a [href]="team.facebookUrl" target="_blank" rel="noopener noreferrer"
+                    ><i class="fa-brands fa-facebook fa-2x" aria-label="Facebook"></i
+                  ></a>
+                }
+                @if (team.instagramUrl) {
+                  <a [href]="team.instagramUrl" target="_blank" rel="noopener noreferrer"
+                    ><i class="fa-brands fa-instagram fa-2x" aria-label="Instagram"></i
+                  ></a>
+                }
+              </div>
+            }
           </div>
 
           <div class="info-grid">

@@ -76,6 +76,28 @@
   text-transform: uppercase;
 }
 
+.team-socials {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+
+  a {
+    color: var(--eagle-blue);
+    transition: transform 0.3s ease;
+    display: inline-block;
+
+    &:hover {
+      transform: scale(1.15);
+    }
+    &:hover .fa-facebook {
+      color: #1877f2;
+    }
+    &:hover .fa-instagram {
+      color: #e1306c;
+    }
+  }
+}
+
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

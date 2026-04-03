@@ -20,6 +20,8 @@ export interface Team {
   afbeeldingUrl?: string;
   coach?: string;
   trainingsdagen?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
 }
 
 @Injectable({
