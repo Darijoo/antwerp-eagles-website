@@ -91,7 +91,33 @@
 
     <!-- Lijst van bestaande wedstrijden -->
     <div class="admin-kaart lijst-kaart">
-      <h3>Bestaande Agenda Items</h3>
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 1px solid #eee;
+          margin-bottom: 1.5rem;
+          padding-bottom: 1rem;
+        "
+      >
+        <h3 style="margin: 0; border-bottom: none; padding-bottom: 0">Bestaande Agenda Items</h3>
+        <button
+          style="
+            background-color: var(--eagle-red);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+          "
+          (click)="verwijderAlles()"
+        >
+          <i class="fa-solid fa-trash"></i> Alles Verwijderen
+        </button>
+      </div>
 
       <div class="admin-filters">
         <select (change)="onFilterTypeWijziging($event)" [value]="filterType$ | async">

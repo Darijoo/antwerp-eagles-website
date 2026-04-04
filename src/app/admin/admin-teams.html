@@ -7,9 +7,29 @@
 
   <div class="actie-balk">
     <h2>Teams</h2>
-    <button class="btn-toevoegen" (click)="toggleFormulier()">
-      {{ toonFormulier ? 'Annuleren' : '+ Nieuw Team' }}
-    </button>
+    <div style="display: flex; gap: 1rem">
+      <button
+        class="btn-opslaan"
+        style="background-color: #27ae60"
+        (click)="syncAlleKalenders()"
+        [disabled]="isSyncingAll"
+      >
+        <i class="fa-solid fa-rotate" [class.fa-spin]="isSyncingAll"></i>
+        {{ isSyncingAll ? 'Bezig met syncen...' : 'Alle Kalenders Syncen' }}
+      </button>
+      <button
+        class="btn-opslaan"
+        style="background-color: #27ae60"
+        (click)="syncAlleRosters()"
+        [disabled]="isSyncingAllRosters"
+      >
+        <i class="fa-solid fa-users" [class.fa-fade]="isSyncingAllRosters"></i>
+        {{ isSyncingAllRosters ? 'Bezig met syncen...' : 'Alle Rosters Syncen' }}
+      </button>
+      <button class="btn-toevoegen" (click)="toggleFormulier()">
+        {{ toonFormulier ? 'Annuleren' : '+ Nieuw Team' }}
+      </button>
+    </div>
   </div>
 
   @if (toonFormulier) {

@@ -1,7 +1,7 @@
 import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { KalenderService, Match } from '../../diensten/kalender.service';
@@ -157,6 +157,33 @@ export class AdminKalender {
   async verwijderWedstrijd(id: string) {
     await this.kalenderService.verwijderWedstrijd(id);
     this.toonNotificatie('Wedstrijd succesvol verwijderd!');
+  }
+
+  async verwijderAlles() {
+    if (
+      confirm(
+        '⚠️ WAARSCHUWING! Weet je zeker dat je ALLE wedstrijden en evenementen definitief wilt verwijderen? Dit kan niet ongedaan worden gemaakt!',
+      )
+    ) {
+      try {
+        const alleItems = await firstValueFrom(this.kalenderService.haalAlleWedstrijdenOp());
+        if (alleItems.length === 0) {
+          this.toonNotificatie('Er zijn geen items om te verwijderen.', 'fout');
+          return;
+        }
+
+        this.toonNotificatie('Bezig met verwijderen van alle items...', 'succes');
+        for (const item of alleItems) {
+          if (item.id) {
+            await this.kalenderService.verwijderWedstrijd(item.id);
+          }
+        }
+        this.toonNotificatie('Alle kalender items zijn succesvol verwijderd!');
+      } catch (error) {
+        console.error('Fout bij het verwijderen van alles:', error);
+        this.toonNotificatie('Er is een fout opgetreden bij het verwijderen.', 'fout');
+      }
+    }
   }
 
   onFilterTypeWijziging(event: Event) {

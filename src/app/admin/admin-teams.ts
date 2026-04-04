@@ -31,6 +31,8 @@ export class AdminTeams {
   geselecteerdBestand: File | null = null;
   toonFormulier = false;
   syncingTeamId: string | null = null;
+  isSyncingAll = false;
+  isSyncingAllRosters = false;
   syncingRosterTeamId: string | null = null;
   bewerkId: string | null = null;
   notificatie: { bericht: string; type: 'succes' | 'fout' } | null = null;
@@ -242,114 +244,228 @@ export class AdminTeams {
     this.trainingen.splice(index, 1);
   }
 
-  syncKalender(team: Team) {
+  async syncKalender(team: Team) {
     const teamUrl = team.wbscTeamUrl;
     if (!teamUrl) return;
     this.syncingTeamId = team.id;
 
-    // 1. Haal eerst eenmalig de huidige kalender op om dubbelingen te voorkomen
-    const sub = this.kalenderService.haalAlleWedstrijdenOp().subscribe({
-      next: (bestaandeMatchen) => {
-        sub.unsubscribe(); // Stop direct met luisteren naar kalender-updates
+    try {
+      const bestaandeMatchen = await firstValueFrom(this.kalenderService.haalAlleWedstrijdenOp());
+      const result = await firstValueFrom(this.wbscService.haalTeamMatchenOp(teamUrl));
 
-        // 2. Haal de nieuwe matchen van de bond op
-        this.wbscService.haalTeamMatchenOp(teamUrl).subscribe({
-          next: (result) => {
-            if (result.matchen && result.matchen.length > 0) {
-              let aantalVerwerkt = 0;
-              let aantalToegevoegd = 0;
-              let aantalGeupdate = 0;
+      if (result.matchen && result.matchen.length > 0) {
+        let aantalToegevoegd = 0;
+        let aantalGeupdate = 0;
 
-              result.matchen.forEach((match: any) => {
-                // Controleer of de wedstrijd al bestaat o.b.v. team, tegenstanders en exacte datum
-                const bestaandeMatch = bestaandeMatchen.find((m: any) => {
-                  if (m.type !== 'wedstrijd' || m.team !== team.naam) return false;
-                  const mDatum = m.datum.toDate();
-                  return (
-                    mDatum.getDate() === match.datum.getDate() &&
-                    mDatum.getMonth() === match.datum.getMonth() &&
-                    mDatum.getFullYear() === match.datum.getFullYear() &&
-                    m.thuisploeg === match.thuisploeg &&
-                    m.uitploeg === match.uitploeg
-                  );
+        for (const match of result.matchen) {
+          const bestaandeMatch = bestaandeMatchen.find((m: any) => {
+            if (m.type !== 'wedstrijd' || m.team !== team.naam) return false;
+            const mDatum = m.datum.toDate();
+            return (
+              mDatum.getDate() === match.datum.getDate() &&
+              mDatum.getMonth() === match.datum.getMonth() &&
+              mDatum.getFullYear() === match.datum.getFullYear() &&
+              m.thuisploeg === match.thuisploeg &&
+              m.uitploeg === match.uitploeg
+            );
+          });
+
+          if (bestaandeMatch) {
+            if (
+              bestaandeMatch.uitslag !== match.uitslag ||
+              bestaandeMatch.tijd !== match.tijd ||
+              bestaandeMatch.locatie !== match.locatie
+            ) {
+              await this.kalenderService.updateWedstrijd(bestaandeMatch.id!, {
+                uitslag: match.uitslag,
+                tijd: match.tijd,
+                locatie: match.locatie,
+              });
+              bestaandeMatch.uitslag = match.uitslag;
+              bestaandeMatch.tijd = match.tijd;
+              bestaandeMatch.locatie = match.locatie;
+              aantalGeupdate++;
+            }
+          } else {
+            await this.kalenderService.voegWedstrijdToe({
+              type: 'wedstrijd',
+              team: team.naam,
+              thuisploeg: match.thuisploeg,
+              uitploeg: match.uitploeg,
+              datum: match.datum,
+              tijd: match.tijd,
+              locatie: match.locatie,
+              uitslag: match.uitslag,
+            });
+
+            bestaandeMatchen.push({
+              type: 'wedstrijd',
+              team: team.naam,
+              thuisploeg: match.thuisploeg,
+              uitploeg: match.uitploeg,
+              datum: { toDate: () => match.datum },
+              tijd: match.tijd,
+              locatie: match.locatie,
+              uitslag: match.uitslag,
+            } as any);
+
+            aantalToegevoegd++;
+          }
+        }
+        this.toonNotificatie(
+          `Klaar! ${aantalToegevoegd} nieuw toegevoegd en ${aantalGeupdate} geüpdatet voor ${team.naam}.`,
+        );
+      } else {
+        this.toonNotificatie(`Geen wedstrijden gevonden voor ${team.naam}.`, 'fout');
+      }
+    } catch (err) {
+      console.error('Fout bij WBSC API of Kalender:', err);
+      this.toonNotificatie('Kon wedstrijden niet ophalen of opslaan.', 'fout');
+    }
+
+    this.syncingTeamId = null;
+    this.cdr.detectChanges();
+  }
+
+  async syncAlleKalenders() {
+    this.isSyncingAll = true;
+    this.cdr.detectChanges();
+
+    try {
+      const teams = await firstValueFrom(this.teamService.haalAlleTeamsOp());
+      const teamsMetUrl = teams.filter((t) => !!t.wbscTeamUrl);
+
+      if (teamsMetUrl.length === 0) {
+        this.toonNotificatie('Geen teams met een WBSC link gevonden om te syncen.', 'fout');
+        this.isSyncingAll = false;
+        this.cdr.detectChanges();
+        return;
+      }
+
+      // Haal alle bestaande wedstrijden 1x op om onnodige database oproepen te vermijden
+      const bestaandeMatchen = await firstValueFrom(this.kalenderService.haalAlleWedstrijdenOp());
+      let totaalToegevoegd = 0;
+      let totaalGeupdate = 0;
+
+      for (const team of teamsMetUrl) {
+        try {
+          const result = await firstValueFrom(
+            this.wbscService.haalTeamMatchenOp(team.wbscTeamUrl!),
+          );
+          if (result.matchen && result.matchen.length > 0) {
+            for (const match of result.matchen) {
+              const bestaandeMatch = bestaandeMatchen.find((m: any) => {
+                if (m.type !== 'wedstrijd' || m.team !== team.naam) return false;
+                const mDatum = m.datum.toDate();
+                return (
+                  mDatum.getDate() === match.datum.getDate() &&
+                  mDatum.getMonth() === match.datum.getMonth() &&
+                  mDatum.getFullYear() === match.datum.getFullYear() &&
+                  m.thuisploeg === match.thuisploeg &&
+                  m.uitploeg === match.uitploeg
+                );
+              });
+
+              if (bestaandeMatch) {
+                if (
+                  bestaandeMatch.uitslag !== match.uitslag ||
+                  bestaandeMatch.tijd !== match.tijd ||
+                  bestaandeMatch.locatie !== match.locatie
+                ) {
+                  await this.kalenderService.updateWedstrijd(bestaandeMatch.id!, {
+                    uitslag: match.uitslag,
+                    tijd: match.tijd,
+                    locatie: match.locatie,
+                  });
+                  bestaandeMatch.uitslag = match.uitslag;
+                  bestaandeMatch.tijd = match.tijd;
+                  bestaandeMatch.locatie = match.locatie;
+                  totaalGeupdate++;
+                }
+              } else {
+                await this.kalenderService.voegWedstrijdToe({
+                  type: 'wedstrijd',
+                  team: team.naam,
+                  thuisploeg: match.thuisploeg,
+                  uitploeg: match.uitploeg,
+                  datum: match.datum,
+                  tijd: match.tijd,
+                  locatie: match.locatie,
+                  uitslag: match.uitslag,
                 });
 
-                const controleerKlaar = () => {
-                  aantalVerwerkt++;
-                  if (aantalVerwerkt === result.matchen.length) {
-                    this.toonNotificatie(
-                      `Klaar! ${aantalToegevoegd} nieuw toegevoegd en ${aantalGeupdate} geüpdatet voor ${team.naam}.`,
-                    );
-                    this.syncingTeamId = null;
-                    this.cdr.detectChanges();
-                  }
-                };
+                bestaandeMatchen.push({
+                  type: 'wedstrijd',
+                  team: team.naam,
+                  thuisploeg: match.thuisploeg,
+                  uitploeg: match.uitploeg,
+                  datum: { toDate: () => match.datum },
+                  tijd: match.tijd,
+                  locatie: match.locatie,
+                  uitslag: match.uitslag,
+                } as any);
 
-                if (bestaandeMatch) {
-                  // Bestaat al! Update alleen als er iets is veranderd (zoals de uitslag van 0-0 naar een echte eindstand)
-                  if (
-                    bestaandeMatch.uitslag !== match.uitslag ||
-                    bestaandeMatch.tijd !== match.tijd ||
-                    bestaandeMatch.locatie !== match.locatie
-                  ) {
-                    this.kalenderService
-                      .updateWedstrijd(bestaandeMatch.id!, {
-                        uitslag: match.uitslag,
-                        tijd: match.tijd,
-                        locatie: match.locatie,
-                      })
-                      .then(() => {
-                        aantalGeupdate++;
-                        controleerKlaar();
-                      })
-                      .catch(() => controleerKlaar());
-                  } else {
-                    controleerKlaar(); // Niets veranderd
-                  }
-                } else {
-                  // Nieuwe wedstrijd!
-                  this.kalenderService
-                    .voegWedstrijdToe({
-                      type: 'wedstrijd',
-                      team: team.naam,
-                      thuisploeg: match.thuisploeg,
-                      uitploeg: match.uitploeg,
-                      datum: match.datum,
-                      tijd: match.tijd,
-                      locatie: match.locatie,
-                      uitslag: match.uitslag,
-                    })
-                    .then(() => {
-                      aantalToegevoegd++;
-                      controleerKlaar();
-                    })
-                    .catch(() => controleerKlaar());
-                }
-              });
-            } else {
-              this.toonNotificatie(`Geen wedstrijden gevonden voor ${team.naam}.`, 'fout');
-              this.syncingTeamId = null;
-              this.cdr.detectChanges();
+                totaalToegevoegd++;
+              }
             }
-          },
-          error: (err) => {
-            console.error('Fout bij WBSC API:', err);
-            this.toonNotificatie(
-              'Kon wedstrijden niet ophalen. Controleer of de URL klopt.',
-              'fout',
-            );
-            this.syncingTeamId = null;
-            this.cdr.detectChanges();
-          },
-        });
-      },
-      error: (err) => {
-        console.error('Fout bij ophalen bestaande kalender:', err);
-        this.toonNotificatie('Kon de huidige kalender niet ophalen om te synchroniseren.', 'fout');
-        this.syncingTeamId = null;
+          }
+        } catch (err) {
+          console.error(`Fout bij ophalen matchen voor ${team.naam}:`, err);
+        }
+      }
+      this.toonNotificatie(
+        `Klaar! ${totaalToegevoegd} nieuwe toegevoegd en ${totaalGeupdate} geüpdatet over alle teams.`,
+      );
+    } catch (err) {
+      console.error('Fout bij globale kalender sync:', err);
+      this.toonNotificatie('Er is een fout opgetreden bij het synchroniseren.', 'fout');
+    }
+
+    this.isSyncingAll = false;
+    this.cdr.detectChanges();
+  }
+
+  async syncAlleRosters() {
+    this.isSyncingAllRosters = true;
+    this.cdr.detectChanges();
+
+    try {
+      const teams = await firstValueFrom(this.teamService.haalAlleTeamsOp());
+      const teamsMetUrl = teams.filter((t) => !!t.wbscTeamUrl);
+
+      if (teamsMetUrl.length === 0) {
+        this.toonNotificatie('Geen teams met een WBSC link gevonden om te syncen.', 'fout');
+        this.isSyncingAllRosters = false;
         this.cdr.detectChanges();
-      },
-    });
+        return;
+      }
+
+      let totaalGeupdate = 0;
+
+      for (const team of teamsMetUrl) {
+        try {
+          const spelers = await firstValueFrom(
+            this.wbscService.haalTeamRosterOp(team.wbscTeamUrl!),
+          );
+          if (spelers && spelers.length > 0) {
+            await firstValueFrom(this.teamService.updateTeam(team.id, { roster: spelers }));
+            totaalGeupdate++;
+          }
+        } catch (err) {
+          console.error(`Fout bij ophalen roster voor ${team.naam}:`, err);
+        }
+      }
+      this.toonNotificatie(`Klaar! ${totaalGeupdate} team rosters succesvol geüpdatet.`);
+    } catch (err) {
+      console.error('Fout bij globale roster sync:', err);
+      this.toonNotificatie(
+        'Er is een fout opgetreden bij het synchroniseren van de rosters.',
+        'fout',
+      );
+    }
+
+    this.isSyncingAllRosters = false;
+    this.cdr.detectChanges();
   }
 
   syncRoster(team: Team) {
