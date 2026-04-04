@@ -13,15 +13,11 @@
         <div
           class="aankomend-kaart"
           [class.is-evenement]="item.type === 'evenement'"
-          [style.border-left-color]="
-            item.type !== 'evenement' && item.team ? getTeamKleur(item.team) : null
-          "
+          [style.border-left-color]="item.team ? getTeamKleur(item.team) : null"
         >
           <div
             class="datum-blok"
-            [style.background-color]="
-              item.type !== 'evenement' && item.team ? getTeamKleur(item.team) : null
-            "
+            [style.background-color]="item.team ? getTeamKleur(item.team) : null"
           >
             <span class="dag">{{ item.datum.toDate() | date: 'd' }}</span>
             <span class="maand">{{ item.datum.toDate() | date: 'MMM' }}</span>

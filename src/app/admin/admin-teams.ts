@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
+import { WbscService } from '../diensten/wbsc.service';
+import { KalenderService } from '../diensten/kalender.service';
 
 @Component({
   selector: 'app-admin-teams',
@@ -16,6 +18,8 @@ export class AdminTeams {
   private teamService = inject(TeamService);
   private storage = inject(Storage);
   private cdr = inject(ChangeDetectorRef);
+  private wbscService = inject(WbscService);
+  private kalenderService = inject(KalenderService);
 
   teams$: Observable<Team[]> = this.teamService.haalAlleTeamsOp();
 
@@ -23,7 +27,10 @@ export class AdminTeams {
   isAanHetOpslaan = false;
   geselecteerdBestand: File | null = null;
   toonFormulier = false;
+  syncingTeamId: string | null = null;
   bewerkId: string | null = null;
+  notificatie: { bericht: string; type: 'succes' | 'fout' } | null = null;
+  private notificatieTimer: any;
 
   // Voor het dynamisch kiezen van trainingsmomenten
   trainingen: { dag: string; start: string; eind: string }[] = [];
@@ -46,12 +53,24 @@ export class AdminTeams {
     trainingsdagen: '',
     facebookUrl: '',
     instagramUrl: '',
+    wbscTeamUrl: '',
+    kleur: '#152269',
   };
 
+  toonNotificatie(bericht: string, type: 'succes' | 'fout' = 'succes') {
+    if (this.notificatieTimer) clearTimeout(this.notificatieTimer);
+    this.notificatie = { bericht, type };
+    this.cdr.detectChanges();
+    this.notificatieTimer = setTimeout(() => {
+      this.notificatie = null;
+      this.cdr.detectChanges();
+    }, 4000);
+  }
+
   verwijderTeam(id: string) {
-    if (confirm('Weet je zeker dat je dit team wilt verwijderen?')) {
-      this.teamService.verwijderTeam(id).subscribe();
-    }
+    this.teamService.verwijderTeam(id).subscribe(() => {
+      this.toonNotificatie('Team succesvol verwijderd!');
+    });
   }
 
   toggleFormulier() {
@@ -72,6 +91,8 @@ export class AdminTeams {
       trainingsdagen: team.trainingsdagen || '',
       facebookUrl: team.facebookUrl || '',
       instagramUrl: team.instagramUrl || '',
+      wbscTeamUrl: team.wbscTeamUrl || '',
+      kleur: team.kleur || '#152269',
     };
 
     // Probeer bestaande tekst (bv "Maandag 19:30 - 21:00") netjes in te laden in de keuzelijstjes
@@ -126,6 +147,7 @@ export class AdminTeams {
         this.isAanHetOpslaan = false;
         this.toonFormulier = false;
         this.resetFormulier();
+        this.toonNotificatie('Team succesvol opgeslagen!', 'succes');
         this.cdr.detectChanges(); // Ververs het scherm
       };
 
@@ -136,7 +158,10 @@ export class AdminTeams {
           console.error('Fout bij opslaan in database:', err);
           this.isAanHetOpslaan = false;
           this.cdr.detectChanges();
-          alert('Opslaan mislukt! Kijk in de F12 Console voor meer details.');
+          this.toonNotificatie(
+            'Opslaan mislukt! Kijk in de F12 Console voor meer details.',
+            'fout',
+          );
         },
       };
 
@@ -147,7 +172,7 @@ export class AdminTeams {
       }
     } catch (error) {
       console.error('Fout bij het opslaan:', error);
-      alert('Er is een fout opgetreden bij het uploaden van de afbeelding.');
+      this.toonNotificatie('Er is een fout opgetreden bij het uploaden van de afbeelding.', 'fout');
       this.isAanHetOpslaan = false;
       this.cdr.detectChanges();
     }
@@ -165,6 +190,8 @@ export class AdminTeams {
       trainingsdagen: '',
       facebookUrl: '',
       instagramUrl: '',
+      wbscTeamUrl: '',
+      kleur: '#152269',
     };
     this.trainingen = [];
   }
@@ -175,5 +202,115 @@ export class AdminTeams {
 
   verwijderTraining(index: number) {
     this.trainingen.splice(index, 1);
+  }
+
+  syncKalender(team: Team) {
+    const teamUrl = team.wbscTeamUrl;
+    if (!teamUrl) return;
+    this.syncingTeamId = team.id;
+
+    // 1. Haal eerst eenmalig de huidige kalender op om dubbelingen te voorkomen
+    const sub = this.kalenderService.haalAlleWedstrijdenOp().subscribe({
+      next: (bestaandeMatchen) => {
+        sub.unsubscribe(); // Stop direct met luisteren naar kalender-updates
+
+        // 2. Haal de nieuwe matchen van de bond op
+        this.wbscService.haalTeamMatchenOp(teamUrl).subscribe({
+          next: (result) => {
+            if (result.matchen && result.matchen.length > 0) {
+              let aantalVerwerkt = 0;
+              let aantalToegevoegd = 0;
+              let aantalGeupdate = 0;
+
+              result.matchen.forEach((match: any) => {
+                // Controleer of de wedstrijd al bestaat o.b.v. team, tegenstanders en exacte datum
+                const bestaandeMatch = bestaandeMatchen.find((m: any) => {
+                  if (m.type !== 'wedstrijd' || m.team !== team.naam) return false;
+                  const mDatum = m.datum.toDate();
+                  return (
+                    mDatum.getDate() === match.datum.getDate() &&
+                    mDatum.getMonth() === match.datum.getMonth() &&
+                    mDatum.getFullYear() === match.datum.getFullYear() &&
+                    m.thuisploeg === match.thuisploeg &&
+                    m.uitploeg === match.uitploeg
+                  );
+                });
+
+                const controleerKlaar = () => {
+                  aantalVerwerkt++;
+                  if (aantalVerwerkt === result.matchen.length) {
+                    this.toonNotificatie(
+                      `Klaar! ${aantalToegevoegd} nieuw toegevoegd en ${aantalGeupdate} geüpdatet voor ${team.naam}.`,
+                    );
+                    this.syncingTeamId = null;
+                    this.cdr.detectChanges();
+                  }
+                };
+
+                if (bestaandeMatch) {
+                  // Bestaat al! Update alleen als er iets is veranderd (zoals de uitslag van 0-0 naar een echte eindstand)
+                  if (
+                    bestaandeMatch.uitslag !== match.uitslag ||
+                    bestaandeMatch.tijd !== match.tijd ||
+                    bestaandeMatch.locatie !== match.locatie
+                  ) {
+                    this.kalenderService
+                      .updateWedstrijd(bestaandeMatch.id!, {
+                        uitslag: match.uitslag,
+                        tijd: match.tijd,
+                        locatie: match.locatie,
+                      })
+                      .then(() => {
+                        aantalGeupdate++;
+                        controleerKlaar();
+                      })
+                      .catch(() => controleerKlaar());
+                  } else {
+                    controleerKlaar(); // Niets veranderd
+                  }
+                } else {
+                  // Nieuwe wedstrijd!
+                  this.kalenderService
+                    .voegWedstrijdToe({
+                      type: 'wedstrijd',
+                      team: team.naam,
+                      thuisploeg: match.thuisploeg,
+                      uitploeg: match.uitploeg,
+                      datum: match.datum,
+                      tijd: match.tijd,
+                      locatie: match.locatie,
+                      uitslag: match.uitslag,
+                    })
+                    .then(() => {
+                      aantalToegevoegd++;
+                      controleerKlaar();
+                    })
+                    .catch(() => controleerKlaar());
+                }
+              });
+            } else {
+              this.toonNotificatie(`Geen wedstrijden gevonden voor ${team.naam}.`, 'fout');
+              this.syncingTeamId = null;
+              this.cdr.detectChanges();
+            }
+          },
+          error: (err) => {
+            console.error('Fout bij WBSC API:', err);
+            this.toonNotificatie(
+              'Kon wedstrijden niet ophalen. Controleer of de URL klopt.',
+              'fout',
+            );
+            this.syncingTeamId = null;
+            this.cdr.detectChanges();
+          },
+        });
+      },
+      error: (err) => {
+        console.error('Fout bij ophalen bestaande kalender:', err);
+        this.toonNotificatie('Kon de huidige kalender niet ophalen om te synchroniseren.', 'fout');
+        this.syncingTeamId = null;
+        this.cdr.detectChanges();
+      },
+    });
   }
 }

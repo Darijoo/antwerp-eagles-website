@@ -67,6 +67,51 @@
               <a routerLink="/contact" class="btn-actie">Neem Contact Op</a>
             </div>
           </div>
+
+          <!-- WBSC SPELERSLIJST (ROSTER) -->
+          @if (team.wbscTeamUrl) {
+            <div class="roster-sectie">
+              <h3>Spelerslijst</h3>
+
+              @if (rosterLaden) {
+                <div class="laden-klein">
+                  <div class="spinner-klein">⚾</div>
+                  <p>Spelers inladen via de bond...</p>
+                </div>
+              } @else if (rosterFout) {
+                <p class="roster-fout">Kon de spelerslijst momenteel niet laden van de bond.</p>
+              } @else if (roster.length > 0) {
+                <div class="roster-tabel-container">
+                  <table class="roster-tabel">
+                    <thead>
+                      <tr>
+                        <th class="col-nr">#</th>
+                        <th class="col-naam">Naam</th>
+                        <th class="col-pos">Positie</th>
+                        <th class="col-slag">Slag/Worp</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (speler of roster; track speler.naam) {
+                        <tr>
+                          <td class="col-nr">
+                            {{ speler.rugnummer ? speler.rugnummer : '-' }}
+                          </td>
+                          <td class="col-naam">
+                            <strong>{{ speler.naam }}</strong>
+                          </td>
+                          <td class="col-pos">
+                            <span class="positie-badge">{{ speler.positie }}</span>
+                          </td>
+                          <td class="col-slag">{{ speler.slagWorp }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              }
+            </div>
+          }
         </div>
       </article>
     </div>

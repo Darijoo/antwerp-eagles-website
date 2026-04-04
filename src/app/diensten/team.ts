@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, Injector, runInInjectionContext } from '@angular/core';
 import {
   Firestore,
   collection,
@@ -22,6 +22,8 @@ export interface Team {
   trainingsdagen?: string;
   facebookUrl?: string;
   instagramUrl?: string;
+  wbscTeamUrl?: string;
+  kleur?: string;
 }
 
 @Injectable({
@@ -29,15 +31,20 @@ export interface Team {
 })
 export class TeamService {
   private firestore = inject(Firestore);
+  private injector = inject(Injector);
   private teamsCollection = collection(this.firestore, 'teams');
 
   haalAlleTeamsOp(): Observable<Team[]> {
-    return collectionData(this.teamsCollection, { idField: 'id' }) as Observable<Team[]>;
+    return runInInjectionContext(this.injector, () => {
+      return collectionData(this.teamsCollection, { idField: 'id' }) as Observable<Team[]>;
+    });
   }
 
   haalTeamOp(id: string): Observable<Team> {
-    const teamDoc = doc(this.firestore, `teams/${id}`);
-    return docData(teamDoc, { idField: 'id' }) as Observable<Team>;
+    return runInInjectionContext(this.injector, () => {
+      const teamDoc = doc(this.firestore, `teams/${id}`);
+      return docData(teamDoc, { idField: 'id' }) as Observable<Team>;
+    });
   }
 
   voegTeamToe(nieuwTeam: Omit<Team, 'id'>): Observable<any> {

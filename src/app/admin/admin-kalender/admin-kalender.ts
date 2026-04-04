@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { KalenderService, Match } from '../../diensten/kalender.service';
@@ -17,10 +17,17 @@ export class AdminKalender {
   private kalenderService = inject(KalenderService);
   private firestore = inject(Firestore);
   private fb = inject(FormBuilder);
+  private cdr = inject(ChangeDetectorRef);
+
+  notificatie: { bericht: string; type: 'succes' | 'fout' } | null = null;
+  private notificatieTimer: any;
 
   bewerkId: string | null = null;
   teams$: Observable<any[]>;
-  
+
+  filterType$ = new BehaviorSubject<string>('');
+  filterTeam$ = new BehaviorSubject<string>('');
+
   wedstrijden$: Observable<Match[]>;
   wedstrijdForm = this.fb.group({
     type: ['wedstrijd', Validators.required],
@@ -35,17 +42,41 @@ export class AdminKalender {
     uitslag: [''],
   });
 
+  toonNotificatie(bericht: string, type: 'succes' | 'fout' = 'succes') {
+    if (this.notificatieTimer) clearTimeout(this.notificatieTimer);
+    this.notificatie = { bericht, type };
+    this.cdr.detectChanges();
+    this.notificatieTimer = setTimeout(() => {
+      this.notificatie = null;
+      this.cdr.detectChanges();
+    }, 4000);
+  }
+
   constructor() {
-    this.wedstrijden$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
+    const alleWedstrijden$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
       map((wedstrijden) => wedstrijden.slice().reverse()), // Draait de lijst om (nieuwste bovenaan)
     );
+
+    this.wedstrijden$ = combineLatest([alleWedstrijden$, this.filterType$, this.filterTeam$]).pipe(
+      map(([wedstrijden, type, team]) => {
+        return wedstrijden.filter((w) => {
+          const matchType = type === '' || (w.type || 'wedstrijd') === type;
+          const matchTeam = team === '' || w.team === team;
+          return matchType && matchTeam;
+        });
+      }),
+    );
+
     const teamsRef = collection(this.firestore, 'teams');
     this.teams$ = collectionData(teamsRef, { idField: 'id' });
   }
 
   async onSubmit() {
     if (this.wedstrijdForm.invalid) {
-      alert('Let op: Vul alle verplichte velden in (Datum, Tijd en Locatie).');
+      this.toonNotificatie(
+        'Let op: Vul alle verplichte velden in (Datum, Tijd en Locatie).',
+        'fout',
+      );
       return;
     }
 
@@ -66,15 +97,15 @@ export class AdminKalender {
     try {
       if (this.bewerkId) {
         await this.kalenderService.updateWedstrijd(this.bewerkId, nieuweWedstrijd);
-        alert('Wedstrijd succesvol bijgewerkt!');
+        this.toonNotificatie('Wedstrijd succesvol bijgewerkt!');
       } else {
         await this.kalenderService.voegWedstrijdToe(nieuweWedstrijd);
-        alert('Wedstrijd succesvol toegevoegd!');
+        this.toonNotificatie('Wedstrijd succesvol toegevoegd!');
       }
       this.annuleerBewerken();
     } catch (error) {
       console.error('Fout bij opslaan:', error);
-      alert('Er ging iets mis bij het opslaan naar de database!');
+      this.toonNotificatie('Er ging iets mis bij het opslaan naar de database!', 'fout');
     }
   }
 
@@ -116,10 +147,21 @@ export class AdminKalender {
   }
 
   async verwijderWedstrijd(id: string) {
-    if (confirm('Weet je zeker dat je deze wedstrijd wilt verwijderen?')) {
-      await this.kalenderService.verwijderWedstrijd(id);
-      alert('Wedstrijd verwijderd!');
+    await this.kalenderService.verwijderWedstrijd(id);
+    this.toonNotificatie('Wedstrijd succesvol verwijderd!');
+  }
+
+  onFilterTypeWijziging(event: Event) {
+    const type = (event.target as HTMLSelectElement).value;
+    this.filterType$.next(type);
+    if (type === 'evenement') {
+      this.filterTeam$.next(''); // Reset teamfilter bij evenementen
     }
+  }
+
+  onFilterTeamWijziging(event: Event) {
+    const team = (event.target as HTMLSelectElement).value;
+    this.filterTeam$.next(team);
   }
 
   // Controleert of een wedstrijd in het verleden ligt

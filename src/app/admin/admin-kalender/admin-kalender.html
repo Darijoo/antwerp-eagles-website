@@ -1,4 +1,10 @@
 <div class="admin-sectie">
+  @if (notificatie) {
+    <div class="notificatie-banner" [class.is-fout]="notificatie.type === 'fout'">
+      {{ notificatie.bericht }}
+    </div>
+  }
+
   <h2>Kalender Beheren</h2>
   <p>Voeg hier nieuwe wedstrijden toe of beheer bestaande wedstrijden.</p>
 
@@ -86,13 +92,37 @@
     <!-- Lijst van bestaande wedstrijden -->
     <div class="admin-kaart lijst-kaart">
       <h3>Bestaande Agenda Items</h3>
+
+      <div class="admin-filters">
+        <select (change)="onFilterTypeWijziging($event)" [value]="filterType$ | async">
+          <option value="">Alle Types</option>
+          <option value="wedstrijd">Enkel Wedstrijden</option>
+          <option value="evenement">Enkel Evenementen</option>
+        </select>
+
+        <select
+          (change)="onFilterTeamWijziging($event)"
+          [disabled]="(filterType$ | async) === 'evenement'"
+          [value]="filterTeam$ | async"
+        >
+          <option value="">Alle Teams</option>
+          @for (team of teams$ | async; track team.id) {
+            <option [value]="team.naam">{{ team.naam }}</option>
+          }
+        </select>
+      </div>
+
       <div class="item-lijst">
         @for (wedstrijd of wedstrijden$ | async; track wedstrijd.id) {
           <div class="item" [class.gespeeld]="isGespeeld(wedstrijd.datum)">
             <div class="item-info">
               <strong>{{ wedstrijd.datum.toDate() | date: 'dd-MM-yyyy' }}</strong> -
               @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
-                <span class="badge">Wedstrijd</span> {{ wedstrijd.thuisploeg }} vs
+                <span class="badge">Wedstrijd</span>
+                @if (wedstrijd.team) {
+                  <span class="badge team-badge">{{ wedstrijd.team }}</span>
+                }
+                {{ wedstrijd.thuisploeg }} vs
                 {{ wedstrijd.uitploeg }}
               } @else {
                 <span class="badge evenement">Evenement</span> {{ wedstrijd.titel }}

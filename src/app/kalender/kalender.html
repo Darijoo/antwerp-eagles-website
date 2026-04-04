@@ -66,9 +66,7 @@
                   [class.is-evenement]="event.type === 'evenement'"
                   [class.gespeeld]="isGespeeld(event.datum)"
                   [style.background-color]="
-                    event.type !== 'evenement' && event.team && !isGespeeld(event.datum)
-                      ? getTeamKleur(event.team)
-                      : null
+                    event.team && !isGespeeld(event.datum) ? getTeamKleur(event.team) : null
                   "
                 >
                   <span class="tijd">{{ event.tijd }}</span>
@@ -100,17 +98,13 @@
           [class.gespeeld]="isGespeeld(wedstrijd.datum)"
           [class.is-evenement]="wedstrijd.type === 'evenement'"
           [style.border-left-color]="
-            wedstrijd.type !== 'evenement' && wedstrijd.team && !isGespeeld(wedstrijd.datum)
-              ? getTeamKleur(wedstrijd.team)
-              : null
+            wedstrijd.team && !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null
           "
         >
           <div
             class="wedstrijd-datum"
             [style.background-color]="
-              wedstrijd.type !== 'evenement' && wedstrijd.team && !isGespeeld(wedstrijd.datum)
-                ? getTeamKleur(wedstrijd.team)
-                : null
+              wedstrijd.team && !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null
             "
           >
             <div class="dag">{{ wedstrijd.datum.toDate() | date: 'd' }}</div>

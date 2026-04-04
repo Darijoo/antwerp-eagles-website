@@ -2,6 +2,7 @@ import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { KalenderService, Match } from '../diensten/kalender.service';
+import { TeamService } from '../diensten/team';
 
 @Component({
   selector: 'app-kalender',
@@ -13,6 +14,8 @@ import { KalenderService, Match } from '../diensten/kalender.service';
 export class Kalender implements OnInit {
   private kalenderService = inject(KalenderService);
   private cdr = inject(ChangeDetectorRef);
+  private teamService = inject(TeamService);
+  teamsKleurMap: Record<string, string> = {};
   alleWedstrijden: Match[] = [];
 
   huidigeDatum = new Date();
@@ -30,6 +33,16 @@ export class Kalender implements OnInit {
   maandEvents: Match[] = [];
 
   ngOnInit() {
+    // Haal de teams op om hun specifiek gekozen kalenderkleur te onthouden
+    this.teamService.haalAlleTeamsOp().subscribe((teams) => {
+      teams.forEach((t) => {
+        if (t.naam && t.kleur) {
+          this.teamsKleurMap[t.naam] = t.kleur;
+        }
+      });
+      this.cdr.detectChanges(); // <-- Ververs de kalender zodra de kleuren binnen zijn!
+    });
+
     this.kalenderService.haalAlleWedstrijdenOp().subscribe((data) => {
       this.alleWedstrijden = data;
 
@@ -161,6 +174,8 @@ export class Kalender implements OnInit {
 
   // Genereer een vaste kleur op basis van de letters uit de teamnaam
   getTeamKleur(teamNaam: string): string {
+    // Als de beheerder een kleur heeft ingesteld in het admin paneel, gebruik die!
+    if (this.teamsKleurMap[teamNaam]) return this.teamsKleurMap[teamNaam];
     if (!teamNaam) return 'var(--eagle-blue)'; // Standaard clubkleur
 
     let hash = 0;

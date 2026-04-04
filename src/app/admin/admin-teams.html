@@ -1,4 +1,10 @@
 <div class="beheer-sectie">
+  @if (notificatie) {
+    <div class="notificatie-banner" [class.is-fout]="notificatie.type === 'fout'">
+      {{ notificatie.bericht }}
+    </div>
+  }
+
   <div class="actie-balk">
     <h2>Teams</h2>
     <button class="btn-toevoegen" (click)="toggleFormulier()">
@@ -156,6 +162,26 @@
             placeholder="https://instagram.com/..."
           />
         </div>
+        <div class="form-groep">
+          <label for="kleur">Kleur in de kalender</label>
+          <input
+            type="color"
+            id="kleur"
+            name="kleur"
+            [(ngModel)]="nieuwTeam.kleur"
+            style="height: 40px; padding: 0.2rem; cursor: pointer; width: 100px"
+          />
+        </div>
+        <div class="form-groep">
+          <label for="wbscTeamUrl">WBSC Team URL (voor kalender sync)</label>
+          <input
+            type="url"
+            id="wbscTeamUrl"
+            name="wbscTeamUrl"
+            [(ngModel)]="nieuwTeam.wbscTeamUrl"
+            placeholder="Bijv. https://www.baseballsoftball.be/en/events/..."
+          />
+        </div>
         <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
           {{ isAanHetOpslaan ? 'Opslaan & Uploaden...' : 'Opslaan' }}
         </button>
@@ -180,6 +206,17 @@
             <td class="tabel-acties">
               <button class="btn-bewerken" (click)="bewerkTeam(team)">Bewerken</button>
               <button class="btn-verwijderen" (click)="verwijderTeam(team.id)">Verwijderen</button>
+              @if (team.wbscTeamUrl) {
+                <button
+                  class="btn-opslaan"
+                  style="margin-left: 0.5rem; padding: 0.5rem 1rem; font-size: 0.9rem"
+                  (click)="syncKalender(team)"
+                  [disabled]="syncingTeamId === team.id"
+                >
+                  <i class="fa-solid fa-rotate"></i>
+                  {{ syncingTeamId === team.id ? 'Bezig...' : 'Sync Kalender' }}
+                </button>
+              }
             </td>
           </tr>
         } @empty {
