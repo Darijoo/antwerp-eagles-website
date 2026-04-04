@@ -4,6 +4,7 @@ import { Observable, firstValueFrom } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
+import { map } from 'rxjs/operators';
 import { WbscService } from '../diensten/wbsc.service';
 import { KalenderService } from '../diensten/kalender.service';
 
@@ -21,7 +22,9 @@ export class AdminTeams {
   private wbscService = inject(WbscService);
   private kalenderService = inject(KalenderService);
 
-  teams$: Observable<Team[]> = this.teamService.haalAlleTeamsOp();
+  teams$: Observable<Team[]> = this.teamService
+    .haalAlleTeamsOp()
+    .pipe(map((teams) => teams.sort((a, b) => a.naam.localeCompare(b.naam))));
 
   // Status van het formulier
   isAanHetOpslaan = false;

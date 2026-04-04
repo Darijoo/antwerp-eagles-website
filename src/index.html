@@ -11,6 +11,24 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* Voorkomt dat elementen de pagina breder duwen dan het scherm */
+      html {
+        box-sizing: border-box;
+      }
+      *,
+      *:before,
+      *:after {
+        box-sizing: inherit;
+      }
+      html,
+      body {
+        max-width: 100vw;
+        overflow-x: hidden; /* Snijdt alles af wat buiten de breedte valt */
+        margin: 0;
+        padding: 0;
+      }
+    </style>
   </head>
   <body>
     <app-root></app-root>

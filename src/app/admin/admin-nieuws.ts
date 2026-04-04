@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-nieuws',
@@ -18,7 +19,13 @@ export class AdminNieuws {
   private cdr = inject(ChangeDetectorRef);
 
   // Data direct ophalen tijdens de initialisatie (dit valt wél binnen de Injection Context)
-  nieuwsberichten$: Observable<NieuwsBericht[]> = this.nieuwsService.haalLaatsteNieuwsOp();
+  nieuwsberichten$: Observable<NieuwsBericht[]> = this.nieuwsService
+    .haalLaatsteNieuwsOp()
+    .pipe(
+      map((nieuws) =>
+        nieuws.sort((a, b) => new Date(b.datum).getTime() - new Date(a.datum).getTime()),
+      ),
+    );
 
   // Status van het formulier
   isAanHetOpslaan = false;

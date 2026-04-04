@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-sponsors',
@@ -18,7 +19,9 @@ export class AdminSponsors {
   private cdr = inject(ChangeDetectorRef);
 
   // Pas de methodenaam aan indien nodig (bijv. haalAlleSponsorsOp)
-  sponsors$: Observable<Sponsor[]> = this.sponsorService.haalAlleSponsorsOp();
+  sponsors$: Observable<Sponsor[]> = this.sponsorService
+    .haalAlleSponsorsOp()
+    .pipe(map((sponsors) => sponsors.sort((a, b) => a.naam.localeCompare(b.naam))));
 
   // Status van het formulier
   isAanHetOpslaan = false;

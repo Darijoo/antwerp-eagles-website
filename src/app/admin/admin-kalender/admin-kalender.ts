@@ -53,9 +53,15 @@ export class AdminKalender {
   }
 
   constructor() {
-    const alleWedstrijden$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
-      map((wedstrijden) => wedstrijden.slice().reverse()), // Draait de lijst om (nieuwste bovenaan)
-    );
+    const alleWedstrijden$ = this.kalenderService
+      .haalAlleWedstrijdenOp()
+      .pipe(
+        map((wedstrijden) =>
+          wedstrijden
+            .slice()
+            .sort((a, b) => b.datum.toDate().getTime() - a.datum.toDate().getTime()),
+        ),
+      );
 
     this.wedstrijden$ = combineLatest([alleWedstrijden$, this.filterType$, this.filterTeam$]).pipe(
       map(([wedstrijden, type, team]) => {
@@ -68,7 +74,9 @@ export class AdminKalender {
     );
 
     const teamsRef = collection(this.firestore, 'teams');
-    this.teams$ = collectionData(teamsRef, { idField: 'id' });
+    this.teams$ = collectionData(teamsRef, { idField: 'id' }).pipe(
+      map((teams) => teams.sort((a: any, b: any) => a.naam.localeCompare(b.naam))),
+    );
   }
 
   async onSubmit() {

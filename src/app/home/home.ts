@@ -52,7 +52,10 @@ export class Home implements OnInit {
 
     this.nieuwsService.haalLaatsteNieuwsOp().subscribe({
       next: (data) => {
-        this.laatsteNieuws = data; // Stop de data erin
+        // Sorteer nieuws: nieuwste datum bovenaan
+        this.laatsteNieuws = data.sort(
+          (a, b) => new Date(b.datum).getTime() - new Date(a.datum).getTime(),
+        );
         this.cdr.detectChanges(); // <-- 3. DWING Angular om de HTML NU opnieuw te tekenen!
       },
       error: (fout) => {

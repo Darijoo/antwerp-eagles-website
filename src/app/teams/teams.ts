@@ -19,7 +19,8 @@ export class Teams implements OnInit {
   ngOnInit() {
     this.teamService.haalAlleTeamsOp().subscribe({
       next: (data) => {
-        this.alleTeams = data; // Hier komen alle teams binnen
+        // Sorteer alfabetisch op teamnaam (A-Z)
+        this.alleTeams = data.sort((a, b) => a.naam.localeCompare(b.naam));
         this.cdr.detectChanges();
       },
       error: (fout) => {
