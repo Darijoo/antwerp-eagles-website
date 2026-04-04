@@ -24,6 +24,7 @@ export interface Team {
   instagramUrl?: string;
   wbscTeamUrl?: string;
   kleur?: string;
+  roster?: any[];
 }
 
 @Injectable({
@@ -51,7 +52,7 @@ export class TeamService {
     return from(addDoc(this.teamsCollection, nieuwTeam));
   }
 
-  updateTeam(id: string, gewijzigdTeam: Omit<Team, 'id'>): Observable<void> {
+  updateTeam(id: string, gewijzigdTeam: Partial<Omit<Team, 'id'>>): Observable<void> {
     const teamDoc = doc(this.firestore, `teams/${id}`);
     return from(updateDoc(teamDoc, gewijzigdTeam as any));
   }

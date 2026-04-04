@@ -229,23 +229,6 @@
   }
 }
 
-.laden-klein {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  color: var(--eagle-blue);
-  font-weight: bold;
-
-  .spinner-klein {
-    animation: spin 2s linear infinite;
-  }
-}
-
-.roster-fout {
-  color: var(--eagle-red);
-  font-weight: bold;
-}
-
 /* Styling voor het laadscherm (indien de data even op zich laat wachten) */
 .laden-sectie {
   display: flex;

@@ -31,6 +31,7 @@ export class AdminTeams {
   geselecteerdBestand: File | null = null;
   toonFormulier = false;
   syncingTeamId: string | null = null;
+  syncingRosterTeamId: string | null = null;
   bewerkId: string | null = null;
   notificatie: { bericht: string; type: 'succes' | 'fout' } | null = null;
   private notificatieTimer: any;
@@ -346,6 +347,45 @@ export class AdminTeams {
         console.error('Fout bij ophalen bestaande kalender:', err);
         this.toonNotificatie('Kon de huidige kalender niet ophalen om te synchroniseren.', 'fout');
         this.syncingTeamId = null;
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  syncRoster(team: Team) {
+    const teamUrl = team.wbscTeamUrl;
+    if (!teamUrl) return;
+    this.syncingRosterTeamId = team.id;
+
+    this.wbscService.haalTeamRosterOp(teamUrl).subscribe({
+      next: (spelers) => {
+        if (spelers && spelers.length > 0) {
+          this.teamService.updateTeam(team.id, { roster: spelers }).subscribe({
+            next: () => {
+              this.toonNotificatie(`Spelerslijst gesynchroniseerd voor ${team.naam}!`);
+              this.syncingRosterTeamId = null;
+              this.cdr.detectChanges();
+            },
+            error: (err) => {
+              console.error('Fout bij opslaan roster in database:', err);
+              this.toonNotificatie('Kon de spelerslijst niet opslaan in de database.', 'fout');
+              this.syncingRosterTeamId = null;
+              this.cdr.detectChanges();
+            },
+          });
+        } else {
+          this.toonNotificatie(
+            `Geen spelers gevonden op de website van de bond voor ${team.naam}.`,
+            'fout',
+          );
+          this.syncingRosterTeamId = null;
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => {
+        console.error('Fout bij WBSC API (Roster):', err);
+        this.toonNotificatie('Kon de spelerslijst niet ophalen van de bond.', 'fout');
+        this.syncingRosterTeamId = null;
         this.cdr.detectChanges();
       },
     });

@@ -69,47 +69,37 @@
           </div>
 
           <!-- WBSC SPELERSLIJST (ROSTER) -->
-          @if (team.wbscTeamUrl) {
+          @if (team.roster && team.roster.length > 0) {
             <div class="roster-sectie">
               <h3>Spelerslijst</h3>
-
-              @if (rosterLaden) {
-                <div class="laden-klein">
-                  <div class="spinner-klein">⚾</div>
-                  <p>Spelers inladen via de bond...</p>
-                </div>
-              } @else if (rosterFout) {
-                <p class="roster-fout">Kon de spelerslijst momenteel niet laden van de bond.</p>
-              } @else if (roster.length > 0) {
-                <div class="roster-tabel-container">
-                  <table class="roster-tabel">
-                    <thead>
+              <div class="roster-tabel-container">
+                <table class="roster-tabel">
+                  <thead>
+                    <tr>
+                      <th class="col-nr">#</th>
+                      <th class="col-naam">Naam</th>
+                      <th class="col-pos">Positie</th>
+                      <th class="col-slag">Slag/Worp</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (speler of team.roster; track speler.naam) {
                       <tr>
-                        <th class="col-nr">#</th>
-                        <th class="col-naam">Naam</th>
-                        <th class="col-pos">Positie</th>
-                        <th class="col-slag">Slag/Worp</th>
+                        <td class="col-nr">
+                          {{ speler.rugnummer ? speler.rugnummer : '-' }}
+                        </td>
+                        <td class="col-naam">
+                          <strong>{{ speler.naam }}</strong>
+                        </td>
+                        <td class="col-pos">
+                          <span class="positie-badge">{{ speler.positie }}</span>
+                        </td>
+                        <td class="col-slag">{{ speler.slagWorp }}</td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      @for (speler of roster; track speler.naam) {
-                        <tr>
-                          <td class="col-nr">
-                            {{ speler.rugnummer ? speler.rugnummer : '-' }}
-                          </td>
-                          <td class="col-naam">
-                            <strong>{{ speler.naam }}</strong>
-                          </td>
-                          <td class="col-pos">
-                            <span class="positie-badge">{{ speler.positie }}</span>
-                          </td>
-                          <td class="col-slag">{{ speler.slagWorp }}</td>
-                        </tr>
-                      }
-                    </tbody>
-                  </table>
-                </div>
-              }
+                    }
+                  </tbody>
+                </table>
+              </div>
             </div>
           }
         </div>
