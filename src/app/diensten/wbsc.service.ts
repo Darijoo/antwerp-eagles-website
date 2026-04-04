@@ -46,13 +46,27 @@ const CLUB_MAPPING: Record<string, { naam: string; locatie: string }> = {
 export class WbscService {
   private http = inject(HttpClient);
 
+  // --- SLIMME PROXY KIEZER ---
+  // Omdat corsproxy.io perfect is lokaal, maar blokkeert op live servers,
+  // en allorigins soms hapert lokaal, laten we de code automatisch de beste kiezen!
+  private haalHtmlOp(doelUrl: string): Observable<string> {
+    const isLocalhost = window.location.hostname === 'localhost';
+
+    if (isLocalhost) {
+      // Lokaal testen we via corsproxy.io (geeft direct de pure HTML terug)
+      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(doelUrl)}`;
+      return this.http.get(proxyUrl, { responseType: 'text' });
+    } else {
+      // Live op de server gebruiken we allorigins (in JSON verpakt)
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(doelUrl)}`;
+      return this.http.get(proxyUrl).pipe(map((data: any) => data.contents));
+    }
+  }
+
   // --- 1. SPELERSLIJST (ROSTER) OPHALEN ---
   haalTeamRosterOp(teamUrl: string): Observable<WbscSpeler[]> {
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(teamUrl)}`;
-
-    return this.http.get(proxyUrl).pipe(
-      map((data: any) => {
-        const html = data.contents;
+    return this.haalHtmlOp(teamUrl).pipe(
+      map((html: string) => {
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const spelers: WbscSpeler[] = [];
         doc.querySelectorAll('table tbody tr').forEach((rij) => {
@@ -76,12 +90,9 @@ export class WbscService {
 
   // --- 2. WEDSTRIJDEN OPHALEN ---
   haalTeamMatchenOp(teamUrl: string): Observable<any> {
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(teamUrl)}`;
-
-    // Haal de HTML op als pure tekst en stuur het door naar onze "Scraper"
-    return this.http
-      .get(proxyUrl)
-      .pipe(map((data: any) => this.schraapWedstrijdenUitHtml(data.contents)));
+    return this.haalHtmlOp(teamUrl).pipe(
+      map((html: string) => this.schraapWedstrijdenUitHtml(html)),
+    );
   }
 
   private schraapWedstrijdenUitHtml(html: string): any {

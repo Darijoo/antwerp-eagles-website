@@ -1,6 +1,6 @@
 import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { TeamService, Team } from '../diensten/team';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
@@ -82,6 +82,7 @@ export class AdminTeams {
 
   bewerkTeam(team: Team) {
     this.bewerkId = team.id;
+    this.geselecteerdBestand = null; // Zorg dat een oude foto niet blijft hangen
     this.nieuwTeam = {
       naam: team.naam,
       categorie: team.categorie || '',
@@ -122,6 +123,47 @@ export class AdminTeams {
     }
   }
 
+  // Een slimme functie die grote (smartphone) foto's direct verkleint vóór het uploaden
+  private async comprimeerAfbeelding(file: File): Promise<Blob | File> {
+    // Als het bestand al kleiner is dan 1MB, hoeven we niets te doen
+    if (file.size < 1024 * 1024) return file;
+
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event: any) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1200;
+          const MAX_HEIGHT = 1200;
+          let width = img.width;
+          let height = img.height;
+
+          // Verhoudingen behouden bij het verkleinen
+          if (width > height && width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          } else if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          // Comprimeer naar JPEG met 80% kwaliteit (drastisch kleinere bestandsgrootte)
+          canvas.toBlob((blob) => resolve(blob || file), 'image/jpeg', 0.8);
+        };
+        img.onerror = () => resolve(file);
+      };
+      reader.onerror = () => resolve(file);
+    });
+  }
+
   async opslaan() {
     // Zet de gekozen lijst met trainingen om naar 1 overzichtelijke tekst voor in de database
     if (this.trainingen.length > 0) {
@@ -134,42 +176,32 @@ export class AdminTeams {
     }
 
     this.isAanHetOpslaan = true;
+    this.cdr.detectChanges(); // Zorg dat de knop direct toont dat we bezig zijn!
+
     try {
       // Upload de afbeelding naar de /teams map in Firebase Storage
       if (this.geselecteerdBestand) {
+        // Verklein de foto supersnel in de browser voordat we hem naar Firebase sturen
+        const gecomprimeerdBestand = await this.comprimeerAfbeelding(this.geselecteerdBestand);
+
         const bestandsNaam = `teams/${Date.now()}_${this.geselecteerdBestand.name}`;
         const opslagRef = ref(this.storage, bestandsNaam);
-        const uploadResultaat = await uploadBytes(opslagRef, this.geselecteerdBestand);
+        const uploadResultaat = await uploadBytes(opslagRef, gecomprimeerdBestand);
         this.nieuwTeam.afbeeldingUrl = await getDownloadURL(uploadResultaat.ref);
       }
 
-      const onSuccess = () => {
-        this.isAanHetOpslaan = false;
-        this.toonFormulier = false;
-        this.resetFormulier();
-        this.toonNotificatie('Team succesvol opgeslagen!', 'succes');
-        this.cdr.detectChanges(); // Ververs het scherm
-      };
-
-      const dbObserver = {
-        next: onSuccess,
-        complete: onSuccess,
-        error: (err: any) => {
-          console.error('Fout bij opslaan in database:', err);
-          this.isAanHetOpslaan = false;
-          this.cdr.detectChanges();
-          this.toonNotificatie(
-            'Opslaan mislukt! Kijk in de F12 Console voor meer details.',
-            'fout',
-          );
-        },
-      };
-
+      // Gebruik firstValueFrom om netjes te wachten tot de database klaar is
       if (this.bewerkId !== null) {
-        this.teamService.updateTeam(this.bewerkId, this.nieuwTeam).subscribe(dbObserver);
+        await firstValueFrom(this.teamService.updateTeam(this.bewerkId, this.nieuwTeam));
       } else {
-        this.teamService.voegTeamToe(this.nieuwTeam).subscribe(dbObserver);
+        await firstValueFrom(this.teamService.voegTeamToe(this.nieuwTeam));
       }
+
+      this.isAanHetOpslaan = false;
+      this.toonFormulier = false;
+      this.resetFormulier();
+      this.toonNotificatie('Team succesvol opgeslagen!', 'succes');
+      this.cdr.detectChanges(); // Ververs het scherm
     } catch (error) {
       console.error('Fout bij het opslaan:', error);
       this.toonNotificatie('Er is een fout opgetreden bij het uploaden van de afbeelding.', 'fout');
