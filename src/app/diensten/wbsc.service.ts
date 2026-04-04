@@ -48,10 +48,11 @@ export class WbscService {
 
   // --- 1. SPELERSLIJST (ROSTER) OPHALEN ---
   haalTeamRosterOp(teamUrl: string): Observable<WbscSpeler[]> {
-    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(teamUrl)}`;
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(teamUrl)}`;
 
-    return this.http.get(proxyUrl, { responseType: 'text' }).pipe(
-      map((html) => {
+    return this.http.get(proxyUrl).pipe(
+      map((data: any) => {
+        const html = data.contents;
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const spelers: WbscSpeler[] = [];
         doc.querySelectorAll('table tbody tr').forEach((rij) => {
@@ -75,12 +76,12 @@ export class WbscService {
 
   // --- 2. WEDSTRIJDEN OPHALEN ---
   haalTeamMatchenOp(teamUrl: string): Observable<any> {
-    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(teamUrl)}`;
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(teamUrl)}`;
 
     // Haal de HTML op als pure tekst en stuur het door naar onze "Scraper"
     return this.http
-      .get(proxyUrl, { responseType: 'text' })
-      .pipe(map((html) => this.schraapWedstrijdenUitHtml(html)));
+      .get(proxyUrl)
+      .pipe(map((data: any) => this.schraapWedstrijdenUitHtml(data.contents)));
   }
 
   private schraapWedstrijdenUitHtml(html: string): any {
