@@ -1,0 +1,180 @@
+<div class="beheer-sectie">
+  <div class="actie-balk">
+    <h2>Uniform Gids Beheren</h2>
+    <button class="btn-toevoegen" (click)="toggleFormulier()">
+      {{ toonFormulier ? 'Annuleren' : '+ Nieuw Item' }}
+    </button>
+  </div>
+
+  @if (toonFormulier) {
+    <div class="formulier-container">
+      <h3>{{ bewerkId !== null ? 'Item bewerken' : 'Nieuw item toevoegen' }}</h3>
+      <form (ngSubmit)="opslaan()">
+        <div class="form-groep">
+          <label for="naam">Naam onderdeel (bv. Grijze Honkbalbroek)</label>
+          <input type="text" id="naam" name="naam" [(ngModel)]="nieuwOnderdeel.naam" required />
+        </div>
+
+        <div class="form-groep">
+          <label for="beschrijving">Beschrijving</label>
+          <textarea
+            id="beschrijving"
+            name="beschrijving"
+            [(ngModel)]="nieuwOnderdeel.beschrijving"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+
+        <div
+          class="form-groep"
+          style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem"
+        >
+          <input
+            type="checkbox"
+            id="verplicht"
+            name="verplicht"
+            [(ngModel)]="nieuwOnderdeel.verplicht"
+            style="width: auto; transform: scale(1.5); cursor: pointer"
+          />
+          <label for="verplicht" style="margin: 0; cursor: pointer"
+            >Dit kledingstuk is verplicht tijdens wedstrijden</label
+          >
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem">
+          <div class="form-groep">
+            <label for="prijsIndicatie">Prijsindicatie</label>
+            <input
+              type="text"
+              id="prijsIndicatie"
+              name="prijsIndicatie"
+              [(ngModel)]="nieuwOnderdeel.prijsIndicatie"
+              placeholder="bv. € 35 - € 50"
+              required
+            />
+          </div>
+          <div class="form-groep">
+            <label for="winkelNaam">Verkrijgbaar bij (Winkelnaam)</label>
+            <input
+              type="text"
+              id="winkelNaam"
+              name="winkelNaam"
+              [(ngModel)]="nieuwOnderdeel.winkelNaam"
+              placeholder="bv. Forelle"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-groep">
+          <label for="winkelLink">Link naar de winkel of contactpagina</label>
+          <input
+            type="text"
+            id="winkelLink"
+            name="winkelLink"
+            [(ngModel)]="nieuwOnderdeel.winkelLink"
+            placeholder="https://www.forelle.com/..."
+            required
+          />
+        </div>
+
+        <div
+          class="form-groep"
+          style="
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+          "
+        >
+          <label style="color: var(--eagle-blue); font-size: 1.1rem; margin-bottom: 1rem"
+            ><i class="fa-solid fa-crosshairs"></i> Positie van de stip op de foto</label
+          >
+          <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: #555">
+            Schuif de balkjes om te bepalen waar de interactieve rode stip op de uniform-foto moet
+            komen te staan.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 1rem">
+            <div style="display: flex; align-items: center; gap: 1rem">
+              <span style="font-weight: bold; width: 120px">Links / Rechts:</span>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                [(ngModel)]="nieuwOnderdeel.left"
+                name="left"
+                style="flex: 1; cursor: pointer"
+              />
+              <span
+                style="font-weight: bold; color: var(--eagle-red); width: 40px; text-align: right"
+                >{{ nieuwOnderdeel.left }}%</span
+              >
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1rem">
+              <span style="font-weight: bold; width: 120px">Boven / Onder:</span>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                [(ngModel)]="nieuwOnderdeel.top"
+                name="top"
+                style="flex: 1; cursor: pointer"
+              />
+              <span
+                style="font-weight: bold; color: var(--eagle-red); width: 40px; text-align: right"
+                >{{ nieuwOnderdeel.top }}%</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
+          {{ isAanHetOpslaan ? 'Bezig met opslaan...' : 'Opslaan' }}
+        </button>
+      </form>
+    </div>
+  } @else {
+    <table class="beheer-tabel">
+      <thead>
+        <tr>
+          <th>Onderdeel</th>
+          <th>Verplicht</th>
+          <th>Winkel</th>
+          <th>Acties</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of onderdelen$ | async; track item.id) {
+          <tr>
+            <td>
+              <strong>{{ item.naam }}</strong>
+            </td>
+            <td>
+              <span
+                style="padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold"
+                [style.background-color]="item.verplicht ? '#ffebee' : '#e3f2fd'"
+                [style.color]="item.verplicht ? 'var(--eagle-red)' : 'var(--eagle-blue)'"
+              >
+                {{ item.verplicht ? 'JA' : 'NEE' }}
+              </span>
+            </td>
+            <td>{{ item.winkelNaam }}</td>
+            <td class="tabel-acties">
+              <button class="btn-bewerken" (click)="bewerkOnderdeel(item)">Bewerken</button>
+              <button class="btn-verwijderen" (click)="verwijderOnderdeel(item.id!)">
+                Verwijderen
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4">Je hebt nog geen uitrusting toegevoegd.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

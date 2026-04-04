@@ -1,0 +1,83 @@
+<div class="uniform-sectie">
+  <div class="container">
+    <div class="header-tekst">
+      <h2 class="sectie-titel">Uniform & Uitrusting</h2>
+      <p class="sectie-ondertitel">
+        Klik op de stippen op de speler om te zien wat je allemaal nodig hebt op het veld, of het
+        verplicht is en waar je het kan kopen!
+      </p>
+    </div>
+
+    <div class="gids-grid">
+      <!-- LINKER KANT: De Interactieve Afbeelding -->
+      <div class="visual-container">
+        <!-- Vervang deze src="..." later door je eigen Anime/3D render -->
+        <img
+          src="https://images.unsplash.com/photo-1508344928928-7165b67de128?auto=format&fit=crop&w=600&q=80"
+          alt="Baseball Uniform"
+          class="speler-afbeelding"
+        />
+
+        @for (onderdeel of onderdelen; track onderdeel.id) {
+          <button
+            class="hotspot"
+            [class.actief]="geselecteerdOnderdeel?.id === onderdeel.id"
+            [style.top.%]="onderdeel.top"
+            [style.left.%]="onderdeel.left"
+            (click)="selecteerOnderdeel(onderdeel)"
+            [attr.aria-label]="onderdeel.naam"
+          >
+            <span class="pulse"></span>
+            <span class="dot"></span>
+          </button>
+        }
+      </div>
+
+      <!-- RECHTER KANT: Het Informatie Paneel -->
+      <div class="info-paneel">
+        @if (geselecteerdOnderdeel) {
+          <div class="info-kaart">
+            <div class="kaart-header">
+              <h3>{{ geselecteerdOnderdeel.naam }}</h3>
+              <span
+                class="badge"
+                [class.verplicht]="geselecteerdOnderdeel.verplicht"
+                [class.optioneel]="!geselecteerdOnderdeel.verplicht"
+              >
+                {{ geselecteerdOnderdeel.verplicht ? 'Verplicht' : 'Optioneel' }}
+              </span>
+            </div>
+
+            <p class="beschrijving">{{ geselecteerdOnderdeel.beschrijving }}</p>
+
+            <div class="details-grid">
+              <div class="detail-item">
+                <i class="fa-solid fa-tag"></i>
+                <div>
+                  <span class="label">Prijsindicatie</span
+                  ><span class="waarde">{{ geselecteerdOnderdeel.prijsIndicatie }}</span>
+                </div>
+              </div>
+              <div class="detail-item">
+                <i class="fa-solid fa-shop"></i>
+                <div>
+                  <span class="label">Verkrijgbaar bij</span
+                  ><span class="waarde">{{ geselecteerdOnderdeel.winkelNaam }}</span>
+                </div>
+              </div>
+            </div>
+
+            <a
+              [href]="geselecteerdOnderdeel.winkelLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-kopen"
+            >
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Bekijk in de winkel / Info
+            </a>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
