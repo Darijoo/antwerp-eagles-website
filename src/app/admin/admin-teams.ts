@@ -68,9 +68,11 @@ export class AdminTeams {
   }
 
   verwijderTeam(id: string) {
-    this.teamService.verwijderTeam(id).subscribe(() => {
-      this.toonNotificatie('Team succesvol verwijderd!');
-    });
+    if (confirm('Weet je zeker dat je dit team definitief wilt verwijderen?')) {
+      this.teamService.verwijderTeam(id).subscribe(() => {
+        this.toonNotificatie('Team succesvol verwijderd!');
+      });
+    }
   }
 
   toggleFormulier() {
