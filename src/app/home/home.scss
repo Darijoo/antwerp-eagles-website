@@ -113,6 +113,18 @@
   }
 }
 
+.aankomend-kaart.geannuleerd {
+  opacity: 0.6;
+  border-left-color: #7f8c8d !important;
+  .datum-blok {
+    background-color: #7f8c8d !important;
+  }
+  h4,
+  p {
+    text-decoration: line-through;
+  }
+}
+
 .datum-blok {
   background-color: var(--eagle-blue);
   color: white;

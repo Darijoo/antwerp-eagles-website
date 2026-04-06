@@ -372,6 +372,11 @@
   .mobiel-only {
     display: flex;
   }
+  &.geannuleerd {
+    opacity: 0.8;
+    background-color: #7f8c8d !important;
+    text-decoration: line-through;
+  }
 
   .kalender-navigatie {
     flex-direction: column;
@@ -440,5 +445,21 @@
   .event-blokje .uitslag {
     display: block;
     margin: 0;
+  }
+}
+
+.wedstrijd-kaart.geannuleerd {
+  opacity: 0.6;
+  border-left-color: #7f8c8d !important;
+  background-color: #f9f9f9;
+
+  .wedstrijd-datum {
+    background-color: #7f8c8d !important;
+  }
+
+  .teams,
+  .evenement-titel,
+  .locatie-tijd {
+    text-decoration: line-through;
   }
 }

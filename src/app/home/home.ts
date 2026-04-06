@@ -50,7 +50,8 @@ export class Home implements OnInit {
               (!m.type || m.type === 'wedstrijd') &&
               m.datum.toDate() < vandaag &&
               m.uitslag &&
-              m.uitslag.trim() !== '',
+              m.uitslag.trim() !== '' &&
+              !(m as any).geannuleerd,
           )
           .sort((a, b) => b.datum.toDate().getTime() - a.datum.toDate().getTime()) // Sorteer op datum: nieuwste uitslag eerst
           .slice(0, 3); // Maximaal 3 uitslagen tonen

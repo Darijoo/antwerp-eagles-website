@@ -40,6 +40,7 @@ export class AdminKalender {
     omschrijving: [''],
     locatie: ['Eglantierlaan, Wilrijk', Validators.required],
     uitslag: [''],
+    geannuleerd: [false],
   });
 
   toonNotificatie(bericht: string, type: 'succes' | 'fout' = 'succes') {
@@ -100,6 +101,7 @@ export class AdminKalender {
       omschrijving: formValue.omschrijving || '',
       locatie: formValue.locatie || '',
       uitslag: formValue.uitslag || '',
+      geannuleerd: formValue.geannuleerd || false,
     };
 
     try {
@@ -135,6 +137,7 @@ export class AdminKalender {
       omschrijving: wedstrijd.omschrijving || '',
       locatie: wedstrijd.locatie,
       uitslag: wedstrijd.uitslag || '',
+      geannuleerd: (wedstrijd as any).geannuleerd || false,
     });
 
     // Scroll even soepel omhoog naar het formulier
@@ -151,6 +154,7 @@ export class AdminKalender {
       titel: '',
       omschrijving: '',
       locatie: 'Eglantierlaan, Wilrijk',
+      geannuleerd: false,
     });
   }
 

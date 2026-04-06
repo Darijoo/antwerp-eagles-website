@@ -13,6 +13,7 @@
         <div
           class="aankomend-kaart"
           [class.is-evenement]="item.type === 'evenement'"
+          [class.geannuleerd]="$any(item).geannuleerd"
           [style.border-left-color]="item.team ? getTeamKleur(item.team) : null"
         >
           <div
@@ -43,11 +44,25 @@
                   ></i>
                   {{ isThuisMatch(item) ? 'THUIS' : 'UIT' }}
                 </span>
+                @if ($any(item).geannuleerd) {
+                  <span class="badge" style="background-color: var(--eagle-red)">GEANNULEERD</span>
+                }
               </div>
               <h4>{{ item.thuisploeg }} vs {{ item.uitploeg }}</h4>
               <p>{{ item.tijd }} | {{ item.locatie }}</p>
             } @else {
               <span class="badge evenement">Evenement</span>
+              @if ($any(item).geannuleerd) {
+                <span
+                  class="badge"
+                  style="
+                    background-color: var(--eagle-red);
+                    margin-bottom: 0.5rem;
+                    margin-left: 0.5rem;
+                  "
+                  >GEANNULEERD</span
+                >
+              }
               <h4>{{ item.titel }}</h4>
               <p>{{ item.tijd }} | {{ item.locatie }}</p>
             }
