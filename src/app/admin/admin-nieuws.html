@@ -40,7 +40,7 @@
           ></textarea>
         </div>
         <div class="form-groep">
-          <label for="afbeeldingUrl">Afbeelding (optioneel)</label>
+          <label for="afbeeldingUrl">Hoofdfoto (optioneel)</label>
           @if (nieuwBericht.afbeeldingUrl) {
             <div class="afbeelding-preview" style="margin-bottom: 10px">
               <img
@@ -60,6 +60,45 @@
             name="afbeeldingUrl"
             (change)="onFileSelected($event)"
             accept="image/*"
+          />
+        </div>
+        <div class="form-groep">
+          <label for="extraAfbeeldingen">Extra foto's voor galerij (optioneel)</label>
+
+          <!-- Voorvertoning van reeds opgeslagen of nieuw geselecteerde extra foto's -->
+          @if (nieuwBericht.extraAfbeeldingen && nieuwBericht.extraAfbeeldingen.length > 0) {
+            <div class="galerij-preview">
+              @for (foto of nieuwBericht.extraAfbeeldingen; track $index) {
+                <div class="galerij-preview-item">
+                  <img [src]="foto" alt="Extra foto preview" />
+                  <button
+                    type="button"
+                    class="verwijder-foto-knop"
+                    (click)="verwijderExtraAfbeelding($index)"
+                    aria-label="Verwijder foto"
+                  >
+                    &times;
+                  </button>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Waarschuwing als er nieuwe lokale bestanden klaarstaan -->
+          @if (geselecteerdeExtraBestanden && geselecteerdeExtraBestanden.length > 0) {
+            <p class="upload-waarschuwing">
+              <i class="fa-solid fa-circle-info"></i> Je hebt
+              {{ geselecteerdeExtraBestanden.length }} nieuwe foto('s) klaargezet om te uploaden.
+              Druk op 'Opslaan' om dit te voltooien.
+            </p>
+          }
+
+          <input
+            type="file"
+            id="extraAfbeeldingen"
+            (change)="onExtraFilesSelected($event)"
+            accept="image/*"
+            multiple
           />
         </div>
         <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">

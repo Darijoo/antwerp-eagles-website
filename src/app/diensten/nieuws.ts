@@ -19,6 +19,7 @@ export interface NieuwsBericht {
   samenvatting: string;
   volledigeText: string;
   afbeeldingUrl?: string;
+  extraAfbeeldingen?: string[];
 }
 
 @Injectable({

@@ -11,28 +11,32 @@ import { DatePipe } from '@angular/common';
   styleUrl: './nieuws-artikel.scss',
 })
 export class NieuwsArtikel implements OnInit {
-  route = inject(ActivatedRoute);
+  private route = inject(ActivatedRoute);
   private nieuwsService = inject(NieuwsService);
-  private cdr = inject(ChangeDetectorRef); // De schilder weer naar binnen halen!
+  private cdr = inject(ChangeDetectorRef);
 
-  actueelBericht: NieuwsBericht | undefined;
+  artikel: NieuwsBericht | undefined;
+  geselecteerdeFoto: string | null = null;
 
   ngOnInit() {
-    // 1. Haal het ID uit de adresbalk.
-    const idFromUrl = this.route.snapshot.paramMap.get('id');
-
-    // Zorg dat we écht een ID hebben.
-    if (idFromUrl) {
-      // 2. Vraag dit specifieke bericht op bij de NieuwsService.
-      this.nieuwsService.haalNieuwsBerichtOp(idFromUrl).subscribe({
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.nieuwsService.haalNieuwsBerichtOp(id).subscribe({
         next: (data) => {
-          this.actueelBericht = data;
-          this.cdr.detectChanges(); // Dwing Angular om direct te updaten!
+          this.artikel = data;
+          this.cdr.detectChanges();
         },
-        error: (fout) => {
-          console.error('Oeps, kon het bericht niet vinden:', fout);
-        },
+        error: (err) => console.error('Fout bij laden artikel:', err),
       });
     }
+  }
+
+  openFoto(url: string, event?: Event) {
+    if (event) event.preventDefault();
+    this.geselecteerdeFoto = url;
+  }
+
+  sluitFoto() {
+    this.geselecteerdeFoto = null;
   }
 }

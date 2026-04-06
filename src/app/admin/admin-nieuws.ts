@@ -30,6 +30,7 @@ export class AdminNieuws {
   // Status van het formulier
   isAanHetOpslaan = false;
   geselecteerdBestand: File | null = null;
+  geselecteerdeExtraBestanden: File[] = [];
   toonFormulier = false;
   bewerkId: string | null = null;
   nieuwBericht: Omit<NieuwsBericht, 'id'> = {
@@ -38,6 +39,7 @@ export class AdminNieuws {
     samenvatting: '',
     volledigeText: '',
     afbeeldingUrl: '',
+    extraAfbeeldingen: [],
   };
 
   verwijderBericht(id: string) {
@@ -62,6 +64,7 @@ export class AdminNieuws {
       samenvatting: bericht.samenvatting,
       volledigeText: bericht.volledigeText,
       afbeeldingUrl: bericht.afbeeldingUrl || '',
+      extraAfbeeldingen: bericht.extraAfbeeldingen || [],
     };
     this.toonFormulier = true;
   }
@@ -79,6 +82,21 @@ export class AdminNieuws {
     }
   }
 
+  onExtraFilesSelected(event: any) {
+    if (event.target.files) {
+      this.geselecteerdeExtraBestanden = [
+        ...this.geselecteerdeExtraBestanden,
+        ...Array.from(event.target.files as File[]),
+      ];
+    }
+  }
+
+  verwijderExtraAfbeelding(index: number) {
+    if (this.nieuwBericht.extraAfbeeldingen) {
+      this.nieuwBericht.extraAfbeeldingen.splice(index, 1);
+    }
+  }
+
   async opslaan() {
     this.isAanHetOpslaan = true;
     try {
@@ -92,6 +110,22 @@ export class AdminNieuws {
 
         // Vervang de Base64 tekst met de échte URL van Firebase
         this.nieuwBericht.afbeeldingUrl = downloadUrl;
+      }
+
+      // 1b. Upload de EXTRA afbeeldingen
+      if (this.geselecteerdeExtraBestanden.length > 0) {
+        if (!this.nieuwBericht.extraAfbeeldingen) {
+          this.nieuwBericht.extraAfbeeldingen = [];
+        }
+
+        for (const file of this.geselecteerdeExtraBestanden) {
+          const bestandsNaam = `nieuws/galerij/${Date.now()}_${file.name}`;
+          const opslagRef = ref(this.storage, bestandsNaam);
+          const uploadResultaat = await uploadBytes(opslagRef, file);
+          const url = await getDownloadURL(uploadResultaat.ref);
+          this.nieuwBericht.extraAfbeeldingen.push(url);
+        }
+        this.geselecteerdeExtraBestanden = []; // Leeg de wachtrij
       }
 
       // Dit blok handelt de reactie van de database netjes af
@@ -134,12 +168,14 @@ export class AdminNieuws {
   private resetFormulier() {
     this.bewerkId = null;
     this.geselecteerdBestand = null;
+    this.geselecteerdeExtraBestanden = [];
     this.nieuwBericht = {
       titel: '',
       datum: new Date().toISOString().split('T')[0],
       samenvatting: '',
       volledigeText: '',
       afbeeldingUrl: '',
+      extraAfbeeldingen: [],
     };
   }
 }

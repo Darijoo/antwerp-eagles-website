@@ -1,28 +1,56 @@
-@if (actueelBericht) {
-  <div class="nieuws-detail-sectie">
+@if (artikel) {
+  <div class="artikel-sectie">
     <div class="container">
-      <a routerLink="/" class="terug-knop">&larr; Terug naar overzicht</a>
+      <a routerLink="/" class="terug-knop">&larr; Terug naar Home</a>
 
-      <article class="nieuws-detail-kaart">
-        @if (actueelBericht.afbeeldingUrl) {
-          <div class="nieuws-hero">
-            <img [src]="actueelBericht.afbeeldingUrl" [alt]="actueelBericht.titel" />
-          </div>
-        }
+      <article class="artikel-kaart">
+        <div class="artikel-inhoud">
+          <header class="artikel-header">
+            <h1>{{ artikel.titel }}</h1>
+            <div class="artikel-meta">
+              <span
+                ><i class="fa-regular fa-calendar"></i>
+                {{ artikel.datum | date: 'dd MMMM yyyy' }}</span
+              >
+            </div>
+          </header>
 
-        <div class="nieuws-inhoud">
-          <div class="nieuws-header">
-            <h2>{{ actueelBericht.titel }}</h2>
-            <span class="datum-badge">{{ actueelBericht.datum | date: 'dd-MM-yyyy' }}</span>
-          </div>
+          @if (artikel.afbeeldingUrl) {
+            <div class="artikel-hoofdfoto" (click)="openFoto(artikel.afbeeldingUrl)">
+              <img [src]="artikel.afbeeldingUrl" [alt]="artikel.titel" />
+              <div class="vergroot-icoon"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
+            </div>
+          }
 
           <div class="artikel-tekst">
-            <p class="behoud-enters">{{ actueelBericht.volledigeText }}</p>
+            <!-- white-space: pre-line behoudt alle line-breaks (enters) die je in de admin typt! -->
+            <p>{{ artikel.volledigeText }}</p>
           </div>
+
+          @if (artikel.extraAfbeeldingen && artikel.extraAfbeeldingen.length > 0) {
+            <div class="artikel-galerij">
+              <h3>Fotogalerij</h3>
+              <div class="galerij-grid">
+                @for (foto of artikel.extraAfbeeldingen; track foto) {
+                  <a [href]="foto" (click)="openFoto(foto, $event)">
+                    <img [src]="foto" alt="Extra nieuws foto" class="galerij-foto" />
+                  </a>
+                }
+              </div>
+            </div>
+          }
         </div>
       </article>
     </div>
   </div>
+
+  <!-- LIGHTBOX POP-UP -->
+  @if (geselecteerdeFoto) {
+    <div class="lightbox" (click)="sluitFoto()">
+      <button class="sluit-knop" (click)="sluitFoto()" aria-label="Sluiten">&times;</button>
+      <img [src]="geselecteerdeFoto" alt="Volledige weergave" (click)="$event.stopPropagation()" />
+    </div>
+  }
 } @else {
   <div class="laden-sectie">
     <div class="spinner">⚾</div>
