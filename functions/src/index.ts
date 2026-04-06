@@ -1,11 +1,11 @@
 import * as functions from "firebase-functions";
-import * as corsLib from "cors";
+import cors = require("cors");
 
-const cors = corsLib({ origin: true });
+const corsHandler = cors({ origin: true });
 
 // Dit is jouw eigen razendsnelle proxy-server in TypeScript!
 export const wbscProxy = functions.https.onRequest((req, res) => {
-  cors(req, res, async () => {
+  corsHandler(req, res, async () => {
     // In TypeScript moeten we expliciet aangeven dat de URL een string is
     const targetUrl = req.query.url as string;
 

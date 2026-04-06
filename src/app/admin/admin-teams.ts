@@ -63,11 +63,6 @@ export class AdminTeams {
     kleur: '#152269',
   };
 
-  // Helper functie om de proxy server even te laten rusten (CORS errors voorkomen)
-  private wachtEven(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   toonNotificatie(bericht: string, type: 'succes' | 'fout' = 'succes') {
     if (this.notificatieTimer) clearTimeout(this.notificatieTimer);
     this.notificatie = { bericht, type };
@@ -418,8 +413,6 @@ export class AdminTeams {
           console.error(`Fout bij ophalen matchen voor ${team.naam}:`, err);
         }
 
-        // Wacht 2 seconden om de proxy server niet te overbelasten
-        await this.wachtEven(2000);
       }
       this.toonNotificatie(
         `Klaar! ${totaalToegevoegd} nieuwe toegevoegd en ${totaalGeupdate} geüpdatet over alle teams.`,
@@ -463,8 +456,6 @@ export class AdminTeams {
           console.error(`Fout bij ophalen roster voor ${team.naam}:`, err);
         }
 
-        // Wacht 2 seconden om de proxy server niet te overbelasten
-        await this.wachtEven(2000);
       }
       this.toonNotificatie(`Klaar! ${totaalGeupdate} team rosters succesvol geüpdatet.`);
     } catch (err) {
