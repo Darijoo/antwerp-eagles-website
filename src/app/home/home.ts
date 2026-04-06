@@ -24,6 +24,7 @@ export class Home implements OnInit {
 
   laatsteNieuws: NieuwsBericht[] = [];
   aankomendeActiviteiten$: Observable<Match[]>;
+  laatsteUitslagen$: Observable<Match[]>;
 
   constructor() {
     this.aankomendeActiviteiten$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
@@ -35,6 +36,24 @@ export class Home implements OnInit {
           .filter((m) => m.datum.toDate() >= vandaag) // Bewaar alleen wedstrijden in de toekomst
           .sort((a, b) => a.datum.toDate().getTime() - b.datum.toDate().getTime()) // Sorteer op datum: dichtstbijzijnde eerst
           .slice(0, 3); // Laat maximaal 3 kaartjes tegelijk zien op de homepagina
+      }),
+    );
+
+    this.laatsteUitslagen$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
+      map((matches) => {
+        const vandaag = new Date();
+        vandaag.setHours(0, 0, 0, 0); // Negeer de tijd
+
+        return matches
+          .filter(
+            (m) =>
+              (!m.type || m.type === 'wedstrijd') &&
+              m.datum.toDate() < vandaag &&
+              m.uitslag &&
+              m.uitslag.trim() !== '',
+          )
+          .sort((a, b) => b.datum.toDate().getTime() - a.datum.toDate().getTime()) // Sorteer op datum: nieuwste uitslag eerst
+          .slice(0, 3); // Maximaal 3 uitslagen tonen
       }),
     );
   }
@@ -76,5 +95,10 @@ export class Home implements OnInit {
     }
     const h = Math.abs(hash) % 360;
     return `hsl(${h}, 70%, 40%)`; // Donkere, verzadigde kleur voor witte tekst
+  }
+
+  // Bepaalt of een wedstrijd een thuismatch is
+  isThuisMatch(match: Match): boolean {
+    return match.thuisploeg ? match.thuisploeg.toLowerCase().includes('eagle') : false;
   }
 }

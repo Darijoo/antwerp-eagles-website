@@ -24,12 +24,26 @@
           </div>
           <div class="info-blok">
             @if (!item.type || item.type === 'wedstrijd') {
-              <span
-                class="badge"
-                [style.background-color]="item.team ? getTeamKleur(item.team) : null"
-              >
-                {{ item.team ? item.team : 'Wedstrijd' }}
-              </span>
+              <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap">
+                <span
+                  class="badge"
+                  [style.background-color]="item.team ? getTeamKleur(item.team) : null"
+                >
+                  {{ item.team ? item.team : 'Wedstrijd' }}
+                </span>
+                <span
+                  class="badge locatie-badge"
+                  [class.is-thuis]="isThuisMatch(item)"
+                  [class.is-uit]="!isThuisMatch(item)"
+                >
+                  <i
+                    class="fa-solid"
+                    [class.fa-house]="isThuisMatch(item)"
+                    [class.fa-bus]="!isThuisMatch(item)"
+                  ></i>
+                  {{ isThuisMatch(item) ? 'THUIS' : 'UIT' }}
+                </span>
+              </div>
               <h4>{{ item.thuisploeg }} vs {{ item.uitploeg }}</h4>
               <p>{{ item.tijd }} | {{ item.locatie }}</p>
             } @else {
@@ -48,6 +62,60 @@
 
     <div class="actie-link">
       <a routerLink="/kalender">Bekijk volledige kalender &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<section class="uitslagen-sectie">
+  <div class="container">
+    <h2 class="sectie-titel">Laatste Uitslagen</h2>
+
+    <div class="aankomend-grid">
+      @for (match of laatsteUitslagen$ | async; track match.id) {
+        <div
+          class="aankomend-kaart gespeeld"
+          [style.border-left-color]="match.team ? getTeamKleur(match.team) : null"
+        >
+          <div class="datum-blok" style="background-color: #95a5a6">
+            <span class="dag">{{ match.datum.toDate() | date: 'd' }}</span>
+            <span class="maand">{{ match.datum.toDate() | date: 'MMM' }}</span>
+          </div>
+          <div class="info-blok">
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap">
+              <span
+                class="badge"
+                [style.background-color]="match.team ? getTeamKleur(match.team) : null"
+              >
+                {{ match.team ? match.team : 'Wedstrijd' }}
+              </span>
+              <span
+                class="badge locatie-badge"
+                [class.is-thuis]="isThuisMatch(match)"
+                [class.is-uit]="!isThuisMatch(match)"
+              >
+                <i
+                  class="fa-solid"
+                  [class.fa-house]="isThuisMatch(match)"
+                  [class.fa-bus]="!isThuisMatch(match)"
+                ></i>
+                {{ isThuisMatch(match) ? 'THUIS' : 'UIT' }}
+              </span>
+            </div>
+            <h4>{{ match.thuisploeg }} vs {{ match.uitploeg }}</h4>
+            <div class="uitslag-score" [style.color]="match.team ? getTeamKleur(match.team) : null">
+              {{ match.uitslag }}
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <p class="lege-status" style="grid-column: 1 / -1">
+          Er zijn recent geen uitslagen geregistreerd.
+        </p>
+      }
+    </div>
+
+    <div class="actie-link">
+      <a routerLink="/kalender">Bekijk alle uitslagen &rarr;</a>
     </div>
   </div>
 </section>

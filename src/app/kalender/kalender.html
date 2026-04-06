@@ -73,10 +73,17 @@
                   @if (event.type === 'evenement') {
                     <span class="titel">{{ event.titel }}</span>
                   } @else {
-                    <span class="titel"
-                      >{{ event.team ? event.team + ': ' : '' }}{{ event.thuisploeg }} vs
-                      {{ event.uitploeg }}</span
-                    >
+                    <span class="titel">
+                      <i
+                        class="fa-solid"
+                        [class.fa-house]="isThuisMatch(event)"
+                        [class.fa-bus]="!isThuisMatch(event)"
+                        [title]="isThuisMatch(event) ? 'Thuis' : 'Uit'"
+                        style="margin-right: 3px"
+                      ></i>
+                      {{ event.team ? event.team + ': ' : '' }}{{ event.thuisploeg }} vs
+                      {{ event.uitploeg }}
+                    </span>
                     @if (event.uitslag) {
                       <span class="uitslag">({{ event.uitslag }})</span>
                     }
@@ -112,14 +119,39 @@
           </div>
           <div class="wedstrijd-info">
             @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
-              @if (wedstrijd.team) {
-                <div
-                  class="team-naam"
-                  [style.color]="!isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null"
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 0.8rem;
+                  margin-bottom: 0.5rem;
+                  flex-wrap: wrap;
+                "
+              >
+                @if (wedstrijd.team) {
+                  <div
+                    class="team-naam"
+                    style="margin-bottom: 0"
+                    [style.color]="
+                      !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null
+                    "
+                  >
+                    {{ wedstrijd.team }}
+                  </div>
+                }
+                <span
+                  class="badge locatie-badge"
+                  [class.is-thuis]="isThuisMatch(wedstrijd)"
+                  [class.is-uit]="!isThuisMatch(wedstrijd)"
                 >
-                  {{ wedstrijd.team }}
-                </div>
-              }
+                  <i
+                    class="fa-solid"
+                    [class.fa-house]="isThuisMatch(wedstrijd)"
+                    [class.fa-bus]="!isThuisMatch(wedstrijd)"
+                  ></i>
+                  {{ isThuisMatch(wedstrijd) ? 'THUIS' : 'UIT' }}
+                </span>
+              </div>
               <div class="teams">
                 <span class="thuis">{{ wedstrijd.thuisploeg }}</span>
                 <span class="vs">vs</span>

@@ -185,4 +185,9 @@ export class Kalender implements OnInit {
     const h = Math.abs(hash) % 360;
     return `hsl(${h}, 70%, 40%)`; // Donkere, verzadigde kleur voor witte tekst
   }
+
+  // Bepaalt of een wedstrijd een thuismatch is
+  isThuisMatch(match: Match): boolean {
+    return match.thuisploeg ? match.thuisploeg.toLowerCase().includes('eagle') : false;
+  }
 }

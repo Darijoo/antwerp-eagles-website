@@ -144,17 +144,28 @@
   flex-grow: 1;
 
   .badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
     background-color: var(--eagle-blue);
     color: white;
     font-size: 0.7rem;
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
 
     &.evenement {
       background-color: var(--eagle-red);
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  .locatie-badge {
+    &.is-thuis {
+      background-color: #27ae60 !important; /* Groen voor thuis */
+    }
+    &.is-uit {
+      background-color: #f39c12 !important; /* Oranje voor uit */
     }
   }
 
@@ -182,6 +193,22 @@
       text-decoration: underline;
     }
   }
+}
+
+/* --- UITSLAGEN SECTIE --- */
+.uitslagen-sectie {
+  padding: 4rem 2rem 0 2rem;
+  background-color: white; /* Een witte achtergrond om te breken met de grijze secties erboven en eronder */
+}
+
+.uitslag-score {
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin-top: 0.8rem;
+  background-color: var(--bg-light);
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
 }
 
 /* --- NIEUWS SECTIE --- */
@@ -293,6 +320,10 @@
 /* --- MOBIELE OPTIMALISATIE --- */
 @media (max-width: 768px) {
   .aankomend-sectie {
+    padding: 3rem 1rem 0 1rem;
+  }
+
+  .uitslagen-sectie {
     padding: 3rem 1rem 0 1rem;
   }
 
