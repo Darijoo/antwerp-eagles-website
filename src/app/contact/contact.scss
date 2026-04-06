@@ -121,6 +121,27 @@ h3 {
   margin-top: 2rem;
   border: 2px solid #eee;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.route-knop {
+  display: block;
+  background-color: var(--bg-light);
+  color: var(--eagle-blue);
+  text-align: center;
+  padding: 0.8rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+
+  &:hover {
+    background-color: var(--eagle-blue);
+    color: white;
+  }
 }
 
 /* Styling voor het formulier */
@@ -150,6 +171,10 @@ h3 {
       border-color: var(--eagle-red);
       box-shadow: 0 0 5px rgba(153, 25, 25, 0.2);
     }
+  }
+
+  .map-container iframe {
+    pointer-events: none; /* Voorkomt dat je scherm 'vastloopt' als je over de kaart scrolt */
   }
 }
 
