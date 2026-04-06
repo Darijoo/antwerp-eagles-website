@@ -49,13 +49,12 @@ export class WbscService {
     const isLocalhost = window.location.hostname === 'localhost';
 
     if (isLocalhost) {
-      // Lokaal testen we via corsproxy.io
+      // Lokaal testen we via corsproxy.io (want lokaal werkt de rewrite URL niet zonder emulator)
       const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(doelUrl)}`;
       return this.http.get(proxyUrl, { responseType: 'text' });
     } else {
-      // Live op de server gebruiken we api.codetabs.com ipv allorigins
-      // Allorigins geeft vaak een onterechte CORS error als hun server even overbelast is.
-      const proxyUrl = `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(doelUrl)}`;
+      // Live op Firebase gebruiken we onze eigen supersnelle Cloud Function!
+      const proxyUrl = `/api/wbsc?url=${encodeURIComponent(doelUrl)}`;
       return this.http.get(proxyUrl, { responseType: 'text' });
     }
   }
