@@ -191,6 +191,12 @@
     background-color: #95a5a6;
   }
 
+  &.geannuleerd {
+    opacity: 0.8;
+    background-color: #7f8c8d !important;
+    text-decoration: line-through;
+  }
+
   .tijd {
     font-weight: bold;
     margin-right: 0.3rem;
@@ -371,11 +377,6 @@
   }
   .mobiel-only {
     display: flex;
-  }
-  &.geannuleerd {
-    opacity: 0.8;
-    background-color: #7f8c8d !important;
-    text-decoration: line-through;
   }
 
   .kalender-navigatie {

@@ -25,6 +25,7 @@ export class Kalender implements OnInit {
   // Filters
   geselecteerdType = '';
   geselecteerdTeam = '';
+  geselecteerdLocatie = '';
   beschikbareTeams: string[] = [];
 
   // Voor de desktop raster weergave
@@ -60,6 +61,7 @@ export class Kalender implements OnInit {
     // Als we "Evenementen" kiezen, heeft filteren op team geen zin
     if (this.geselecteerdType === 'evenement') {
       this.geselecteerdTeam = '';
+      this.geselecteerdLocatie = '';
     }
     this.genereerKalender();
   }
@@ -84,7 +86,10 @@ export class Kalender implements OnInit {
       const matchType =
         this.geselecteerdType === '' || (w.type || 'wedstrijd') === this.geselecteerdType;
       const matchTeam = this.geselecteerdTeam === '' || w.team === this.geselecteerdTeam;
-      return matchType && matchTeam;
+      const matchLocatie =
+        this.geselecteerdLocatie === '' ||
+        (this.geselecteerdLocatie === 'thuis' && this.isThuisMatch(w));
+      return matchType && matchTeam && matchLocatie;
     });
 
     this.kalenderDagen = [];

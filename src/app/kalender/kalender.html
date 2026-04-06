@@ -27,6 +27,18 @@
           }
         </select>
       </div>
+      <div class="filter-groep">
+        <label for="filterLocatie">Locatie</label>
+        <select
+          id="filterLocatie"
+          [(ngModel)]="geselecteerdLocatie"
+          (change)="onFilterWijziging()"
+          [disabled]="geselecteerdType === 'evenement'"
+        >
+          <option value="">Uit & Thuis</option>
+          <option value="thuis">Alleen Thuiswedstrijden</option>
+        </select>
+      </div>
     </div>
 
     <div class="kalender-navigatie">

@@ -1,39 +1,37 @@
 <div class="teams-sectie">
   <div class="container">
-    <h2 class="sectie-titel">Onze Teams</h2>
-    <p class="sectie-ondertitel">
-      Ontdek de verschillende teams van Antwerp Eagles, van de jeugd tot de senioren.
-    </p>
+    <div class="header-tekst">
+      <h2 class="sectie-titel">Onze Teams</h2>
+      <p class="sectie-ondertitel">
+        Ontdek alle ploegen van de Antwerp Eagles. Van de jongste jeugd tot de senioren!
+      </p>
+    </div>
 
     <div class="teams-grid">
       @for (team of alleTeams; track team.id) {
-        <article class="team-kaart">
-          <div class="kaart-afbeelding-container">
+        <div class="team-kaart">
+          <div class="team-foto">
             @if (team.afbeeldingUrl) {
-              <img [src]="team.afbeeldingUrl" [alt]="team.naam" class="team-foto" />
+              <img [src]="team.afbeeldingUrl" [alt]="team.naam" />
             } @else {
-              <div class="placeholder-foto">
-                <span class="placeholder-icoon">⚾</span>
+              <div class="foto-placeholder">
+                <i class="fa-solid fa-users fa-3x"></i>
               </div>
             }
+            <div class="team-categorie">{{ team.categorie }}</div>
           </div>
-
-          <div class="team-inhoud">
-            <div class="team-header">
-              <h3>{{ team.naam }}</h3>
-              <span class="team-badge">{{ team.categorie }}</span>
-            </div>
-            <p class="team-omschrijving">{{ team.omschrijving }}</p>
-
-            <div class="team-footer">
-              <!-- Let op: we gebruiken nu team.id in plaats van team.documentId -->
-              <a [routerLink]="['/team', team.id]" class="btn-detail">Ontdek Team &rarr;</a>
-            </div>
+          <div class="team-info">
+            <h3>{{ team.naam }}</h3>
+            @if (team.coach) {
+              <p class="coach"><i class="fa-solid fa-user-tie"></i> Coach: {{ team.coach }}</p>
+            }
+            <a [routerLink]="['/team', team.id]" class="btn-bekijk">Bekijk Team &rarr;</a>
           </div>
-        </article>
+        </div>
       } @empty {
         <div class="lege-status">
-          <p>⚾ Geen teams gevonden. Voeg er een toe via het beheerpaneel!</p>
+          <div class="spinner">⚾</div>
+          <p>Teams worden geladen...</p>
         </div>
       }
     </div>
