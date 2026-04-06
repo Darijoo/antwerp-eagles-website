@@ -12,8 +12,8 @@ export interface WbscSpeler {
 // Een 'woordenboek' om de afkortingen van de bond om te zetten naar echte namen en velden!
 const CLUB_MAPPING: Record<string, { naam: string; locatie: string }> = {
   ANT: { naam: 'Antwerp Eagles', locatie: 'Eagles Field (Wilrijk)' },
-  MSG: { naam: 'Mortsel Stars', locatie: 'Mortsel' },
-  BRI: { naam: 'Brasschaat Braves', locatie: 'Brasschaat' },
+  MSG: { naam: 'Mont-Saint-Guibert Phoenix', locatie: 'Mont-Saint-Guibert' },
+  BRI: { naam: 'Braine Black Rickers', locatie: 'Braine' },
   BRU: { naam: 'Brussels Kangaroos', locatie: 'Brussel' },
   MER: { naam: 'Merchtem Cats', locatie: 'Merchtem' },
   NAM: { naam: 'Namur Angels', locatie: 'Namen' },
@@ -26,18 +26,16 @@ const CLUB_MAPPING: Record<string, { naam: string; locatie: string }> = {
   LGE: { naam: 'Liège Red Roosters', locatie: 'Luik' },
   GNT: { naam: 'Gent Knights', locatie: 'Gent' },
   WIE: { naam: 'Wielsbeke Pitbulls', locatie: 'Wielsbeke' },
-  ZOT: { naam: 'Zottegem Frogs', locatie: 'Zottegem' },
+  ZOT: { naam: 'Zottegem Bebops', locatie: 'Zottegem' },
   ZON: { naam: 'Sunville Tigers', locatie: 'Zonhoven' },
-  OST: { naam: 'Ostend Raccoons', locatie: 'Oostende' },
-  POP: { naam: 'Poperinge Spartans', locatie: 'Poperinge' },
+  OST: { naam: 'Oostende Piranhas', locatie: 'Oostende' },
+  POP: { naam: 'Poperinge Frontliners', locatie: 'Poperinge' },
   BEV: { naam: 'Beveren Lions', locatie: 'Beveren' },
   HEI: { naam: 'Heist Afterburners', locatie: 'Heist-op-den-Berg' },
-  LLN: { naam: 'Louvain-la-Neuve Phoenix', locatie: 'Louvain-la-Neuve' },
-  BCC: { naam: 'Braine-le-Château', locatie: 'Braine-le-Château' },
-  HAS: { naam: 'Hasselt Pioneers', locatie: 'Hasselt' },
-  STV: { naam: 'St. Vith', locatie: 'St. Vith' },
-  FLA: { naam: 'Flemalle', locatie: 'Flémalle' },
-  BIN: { naam: 'Binche', locatie: 'Binche' },
+  WBA: { naam: 'WBA Foxes', locatie: 'Sint-Niklaas' },
+  BRA: { naam: 'Braschaat Braves', locatie: 'Brasschaat' },
+  CHI: { naam: 'Chicaboos', locatie: 'Stabroek' },
+  GRE: { naam: 'Royal Greys', locatie: 'Merksem' }
 };
 
 @Injectable({
