@@ -21,9 +21,11 @@
       *:after {
         box-sizing: inherit;
       }
-      html,
+      html {
+        overflow-x: hidden;
+      }
       body {
-        max-width: 100vw;
+        max-width: 100%;
         overflow-x: hidden; /* Snijdt alles af wat buiten de breedte valt */
         margin: 0;
         padding: 0;

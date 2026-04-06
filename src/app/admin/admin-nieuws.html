@@ -2,7 +2,8 @@
   <div class="actie-balk">
     <h2>Nieuwsberichten</h2>
     <button class="btn-toevoegen" (click)="toggleFormulier()">
-      {{ toonFormulier ? 'Annuleren' : '+ Nieuw Bericht' }}
+      <i class="fa-solid" [class.fa-xmark]="toonFormulier" [class.fa-plus]="!toonFormulier"></i>
+      {{ toonFormulier ? 'Annuleren' : 'Nieuw Bericht' }}
     </button>
   </div>
 
@@ -62,7 +63,8 @@
           />
         </div>
         <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
-          {{ isAanHetOpslaan ? 'Opslaan & Uploaden...' : 'Opslaan' }}
+          <i class="fa-solid fa-floppy-disk"></i>
+          {{ isAanHetOpslaan ? 'Opslaan...' : 'Opslaan' }}
         </button>
       </form>
     </div>
@@ -81,9 +83,11 @@
             <td>{{ bericht.titel }}</td>
             <td>{{ bericht.datum }}</td>
             <td class="tabel-acties">
-              <button class="btn-bewerken" (click)="bewerkBericht(bericht)">Bewerken</button>
+              <button class="btn-bewerken" (click)="bewerkBericht(bericht)">
+                <i class="fa-solid fa-pen-to-square"></i> Bewerken
+              </button>
               <button class="btn-verwijderen" (click)="verwijderBericht(bericht.id)">
-                Verwijderen
+                <i class="fa-solid fa-trash"></i> Verwijderen
               </button>
             </td>
           </tr>

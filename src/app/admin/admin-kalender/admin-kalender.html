@@ -77,12 +77,13 @@
           <input type="text" id="locatie" formControlName="locatie" />
         </div>
         <div class="form-acties">
-          <button type="submit" class="btn-actie">
-            {{ bewerkId ? 'Wijzigingen Opslaan' : 'Wedstrijd Toevoegen' }}
+          <button type="submit" class="btn-opslaan">
+            <i class="fa-solid fa-floppy-disk"></i>
+            {{ bewerkId ? 'Opslaan' : 'Toevoegen' }}
           </button>
           @if (bewerkId) {
             <button type="button" class="btn-annuleren" (click)="annuleerBewerken()">
-              Annuleren
+              <i class="fa-solid fa-xmark"></i> Annuleren
             </button>
           }
         </div>
@@ -99,22 +100,12 @@
           border-bottom: 1px solid #eee;
           margin-bottom: 1.5rem;
           padding-bottom: 1rem;
+          flex-wrap: wrap;
+          gap: 1rem;
         "
       >
         <h3 style="margin: 0; border-bottom: none; padding-bottom: 0">Bestaande Agenda Items</h3>
-        <button
-          style="
-            background-color: var(--eagle-red);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-          "
-          (click)="verwijderAlles()"
-        >
+        <button class="btn-verwijderen" (click)="verwijderAlles()">
           <i class="fa-solid fa-trash"></i> Alles Verwijderen
         </button>
       </div>
@@ -155,9 +146,11 @@
               }
             </div>
             <div class="item-acties">
-              <button (click)="bewerkWedstrijd(wedstrijd)" class="btn-bewerken">Bewerken</button>
-              <button (click)="verwijderWedstrijd(wedstrijd.id!)" class="btn-verwijder">
-                Verwijder
+              <button (click)="bewerkWedstrijd(wedstrijd)" class="btn-bewerken">
+                <i class="fa-solid fa-pen-to-square"></i> Bewerken
+              </button>
+              <button (click)="verwijderWedstrijd(wedstrijd.id!)" class="btn-verwijderen">
+                <i class="fa-solid fa-trash"></i> Verwijder
               </button>
             </div>
           </div>

@@ -2,7 +2,8 @@
   <div class="actie-balk">
     <h2>Uniform Gids Beheren</h2>
     <button class="btn-toevoegen" (click)="toggleFormulier()">
-      {{ toonFormulier ? 'Annuleren' : '+ Nieuw Item' }}
+      <i class="fa-solid" [class.fa-xmark]="toonFormulier" [class.fa-plus]="!toonFormulier"></i>
+      {{ toonFormulier ? 'Annuleren' : 'Nieuw Item' }}
     </button>
   </div>
 
@@ -42,7 +43,7 @@
           >
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem">
+        <div class="form-grid">
           <div class="form-groep">
             <label for="prijsIndicatie">Prijsindicatie</label>
             <input
@@ -132,7 +133,8 @@
         </div>
 
         <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
-          {{ isAanHetOpslaan ? 'Bezig met opslaan...' : 'Opslaan' }}
+          <i class="fa-solid fa-floppy-disk"></i>
+          {{ isAanHetOpslaan ? 'Opslaan...' : 'Opslaan' }}
         </button>
       </form>
     </div>
@@ -163,9 +165,11 @@
             </td>
             <td>{{ item.winkelNaam }}</td>
             <td class="tabel-acties">
-              <button class="btn-bewerken" (click)="bewerkOnderdeel(item)">Bewerken</button>
+              <button class="btn-bewerken" (click)="bewerkOnderdeel(item)">
+                <i class="fa-solid fa-pen-to-square"></i> Bewerken
+              </button>
               <button class="btn-verwijderen" (click)="verwijderOnderdeel(item.id!)">
-                Verwijderen
+                <i class="fa-solid fa-trash"></i> Verwijderen
               </button>
             </td>
           </tr>

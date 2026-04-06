@@ -7,27 +7,18 @@
 
   <div class="actie-balk">
     <h2>Teams</h2>
-    <div style="display: flex; gap: 1rem">
-      <button
-        class="btn-opslaan"
-        style="background-color: #27ae60"
-        (click)="syncAlleKalenders()"
-        [disabled]="isSyncingAll"
-      >
+    <div class="actie-knoppen">
+      <button class="btn-sync" (click)="syncAlleKalenders()" [disabled]="isSyncingAll">
         <i class="fa-solid fa-rotate" [class.fa-spin]="isSyncingAll"></i>
-        {{ isSyncingAll ? 'Bezig... (kan even duren)' : 'Alle Kalenders Syncen' }}
+        {{ isSyncingAll ? 'Bezig...' : 'Kalenders Syncen' }}
       </button>
-      <button
-        class="btn-opslaan"
-        style="background-color: #27ae60"
-        (click)="syncAlleRosters()"
-        [disabled]="isSyncingAllRosters"
-      >
+      <button class="btn-opslaan" (click)="syncAlleRosters()" [disabled]="isSyncingAllRosters">
         <i class="fa-solid fa-users" [class.fa-fade]="isSyncingAllRosters"></i>
-        {{ isSyncingAllRosters ? 'Bezig... (kan even duren)' : 'Alle Rosters Syncen' }}
+        {{ isSyncingAllRosters ? 'Bezig...' : 'Rosters Syncen' }}
       </button>
       <button class="btn-toevoegen" (click)="toggleFormulier()">
-        {{ toonFormulier ? 'Annuleren' : '+ Nieuw Team' }}
+        <i class="fa-solid" [class.fa-xmark]="toonFormulier" [class.fa-plus]="!toonFormulier"></i>
+        {{ toonFormulier ? 'Annuleren' : 'Nieuw Team' }}
       </button>
     </div>
   </div>
@@ -69,7 +60,13 @@
             @for (training of trainingen; track $index) {
               <div
                 class="training-rij"
-                style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center"
+                style="
+                  display: flex;
+                  gap: 0.5rem;
+                  margin-bottom: 0.5rem;
+                  align-items: center;
+                  flex-wrap: wrap;
+                "
               >
                 <select
                   [(ngModel)]="training.dag"
@@ -136,7 +133,7 @@
             (click)="voegTrainingToe()"
             style="margin-top: 0.5rem; font-size: 0.9rem; padding: 0.5rem 1rem"
           >
-            + Trainingsmoment toevoegen
+            <i class="fa-solid fa-plus"></i> Trainingsmoment toevoegen
           </button>
         </div>
         <div class="form-groep">
@@ -203,7 +200,8 @@
           />
         </div>
         <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
-          {{ isAanHetOpslaan ? 'Opslaan & Uploaden...' : 'Opslaan' }}
+          <i class="fa-solid fa-floppy-disk"></i>
+          {{ isAanHetOpslaan ? 'Opslaan...' : 'Opslaan' }}
         </button>
       </form>
     </div>
@@ -224,29 +222,32 @@
             <td>{{ team.categorie }}</td>
             <td>{{ team.omschrijving }}</td>
             <td class="tabel-acties">
-              <button class="btn-bewerken" (click)="bewerkTeam(team)">Bewerken</button>
-              <button class="btn-verwijderen" (click)="verwijderTeam(team.id)">Verwijderen</button>
+              <button class="btn-bewerken" (click)="bewerkTeam(team)">
+                <i class="fa-solid fa-pen-to-square"></i> Bewerken
+              </button>
+              <button class="btn-verwijderen" (click)="verwijderTeam(team.id)">
+                <i class="fa-solid fa-trash"></i> Verwijderen
+              </button>
               @if (team.wbscTeamUrl) {
-                <div style="display: inline-flex; gap: 0.5rem; margin-left: 0.5rem">
-                  <button
-                    class="btn-opslaan"
-                    style="padding: 0.5rem 1rem; font-size: 0.9rem"
-                    (click)="syncKalender(team)"
-                    [disabled]="syncingTeamId === team.id"
-                  >
-                    <i class="fa-solid fa-rotate"></i>
-                    {{ syncingTeamId === team.id ? 'Bezig...' : 'Kalender' }}
-                  </button>
-                  <button
-                    class="btn-opslaan"
-                    style="padding: 0.5rem 1rem; font-size: 0.9rem; background-color: #27ae60"
-                    (click)="syncRoster(team)"
-                    [disabled]="syncingRosterTeamId === team.id"
-                  >
-                    <i class="fa-solid fa-users"></i>
-                    {{ syncingRosterTeamId === team.id ? 'Bezig...' : 'Roster' }}
-                  </button>
-                </div>
+                <button
+                  class="btn-sync"
+                  (click)="syncKalender(team)"
+                  [disabled]="syncingTeamId === team.id"
+                >
+                  <i class="fa-solid fa-rotate" [class.fa-spin]="syncingTeamId === team.id"></i>
+                  {{ syncingTeamId === team.id ? 'Bezig...' : 'Kalender' }}
+                </button>
+                <button
+                  class="btn-opslaan"
+                  (click)="syncRoster(team)"
+                  [disabled]="syncingRosterTeamId === team.id"
+                >
+                  <i
+                    class="fa-solid fa-users"
+                    [class.fa-fade]="syncingRosterTeamId === team.id"
+                  ></i>
+                  {{ syncingRosterTeamId === team.id ? 'Bezig...' : 'Roster' }}
+                </button>
               }
             </td>
           </tr>
