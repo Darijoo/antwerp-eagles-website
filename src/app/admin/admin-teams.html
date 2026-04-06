@@ -15,7 +15,7 @@
         [disabled]="isSyncingAll"
       >
         <i class="fa-solid fa-rotate" [class.fa-spin]="isSyncingAll"></i>
-        {{ isSyncingAll ? 'Bezig met syncen...' : 'Alle Kalenders Syncen' }}
+        {{ isSyncingAll ? 'Bezig... (kan even duren)' : 'Alle Kalenders Syncen' }}
       </button>
       <button
         class="btn-opslaan"
@@ -24,7 +24,7 @@
         [disabled]="isSyncingAllRosters"
       >
         <i class="fa-solid fa-users" [class.fa-fade]="isSyncingAllRosters"></i>
-        {{ isSyncingAllRosters ? 'Bezig met syncen...' : 'Alle Rosters Syncen' }}
+        {{ isSyncingAllRosters ? 'Bezig... (kan even duren)' : 'Alle Rosters Syncen' }}
       </button>
       <button class="btn-toevoegen" (click)="toggleFormulier()">
         {{ toonFormulier ? 'Annuleren' : '+ Nieuw Team' }}
