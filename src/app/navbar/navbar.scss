@@ -200,8 +200,14 @@
     padding: 0;
     margin: 0;
     border-bottom: 5px solid var(--eagle-red);
-    max-height: calc(100vh - 70px);
+    height: auto; /* Overschrijft de stiekeme 'height: 100%' van de desktop-versie */
+    max-height: calc(100dvh - 87px); /* 100dvh houdt wél rekening met de mobiele adresbalk! (87px is exacte navbar hoogte) */
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Voor soepel 'native' scrollen op iOS */
+    scrollbar-width: none; /* Verberg scrollbalk Firefox */
+    &::-webkit-scrollbar {
+      display: none; /* Verberg scrollbalk Chrome, Safari & Edge */
+    }
 
     /* Animatie: laat het menu van boven komen */
     transform: translateY(-100%); /* Zet hem standaard een heel stuk naar boven */
@@ -221,12 +227,13 @@
     width: 100%;
     border-bottom: 1px solid rgba(255,255,255,0.05);
     flex-direction: column;
+    height: auto; /* Reset desktop hoogte */
     align-items: stretch;
   }
 
   .nav-links > li > a {
-    padding: 1.2rem 2rem;
-    font-size: 1.1rem;
+    padding: 0.8rem 1.5rem; /* Nóg iets strakker voor dat echte 'native app' gevoel */
+    font-size: 1.05rem;
     justify-content: space-between;
   }
 
@@ -244,15 +251,17 @@
     overflow: hidden;
     padding: 0;
     opacity: 0;
+    visibility: hidden; /* Voorkomt dat hij de desktop-waarden pakt */
+    transform: none; /* Reset het naar-beneden-schuif effect van desktop */
     transition: max-height 0.4s ease, opacity 0.4s ease;
     
     a {
-      padding: 1rem 2rem 1rem 3rem; /* Extra indentatie zodat het duidelijk een submenu is */
-      font-size: 0.95rem;
+      padding: 0.65rem 1.5rem 0.65rem 2.5rem; /* Sub-items strakker op elkaar zodat alles perfect past */
+      font-size: 0.9rem;
       border-bottom: 1px solid rgba(255,255,255,0.02);
       
       &:hover {
-        padding-left: 3rem; /* Reset hover inspring effect voor mobiel */
+        padding-left: 2.5rem; /* Reset hover inspring effect voor mobiel */
         background-color: rgba(255,255,255,0.05);
       }
       
@@ -263,8 +272,9 @@
   }
 
   .dropdown.open .dropdown-menu {
-    max-height: 500px; /* Groot genoeg om alle items te tonen */
+    max-height: 800px; /* Groot genoeg zodat hij NOOIT afknipt (voorkomt interne scrolls) */
     opacity: 1;
+    visibility: visible; /* Maakt de knoppen weer klikbaar en zichtbaar! */
   }
 
   .dropdown.open > a .fa-chevron-down {
