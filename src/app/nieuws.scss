@@ -3,32 +3,116 @@
   margin: 0 auto;
 }
 
-.sectie-titel {
+.header-tekst {
   text-align: center;
+  margin-bottom: 4rem;
+}
+
+.sectie-titel {
   color: var(--eagle-blue);
-  font-size: 2.8rem;
-  margin-bottom: 0.5rem;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
   text-transform: uppercase;
 }
 
 .sectie-ondertitel {
-  text-align: center;
   color: var(--text-dark);
   font-size: 1.2rem;
-  margin-bottom: 3rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
+/* --- ZOEKBALK --- */
+.nieuws-zoekbalk {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto 4rem auto;
+  
+  i {
+    position: absolute;
+    left: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+    font-size: 1.2rem;
+  }
+  input {
+    width: 100%;
+    padding: 1.2rem 1.5rem 1.2rem 3.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-family: inherit;
+    background-color: white; /* Forceert een witte achtergrond zodat hij eruit knalt */
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    &:focus { outline: none; border-color: var(--eagle-blue); box-shadow: 0 4px 20px rgba(21, 34, 105, 0.1); }
+  }
+}
+
+/* --- UITGELICHT BERICHT --- */
+.hoofd-nieuws-kaart {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  display: flex;
+  margin-bottom: 3rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    
+    .kaart-afbeelding img {
+      transform: scale(1.05);
+    }
+  }
+
+  .kaart-afbeelding {
+    flex: 1 1 50%;
+    height: auto;
+    min-height: 350px;
+  }
+
+  .nieuws-inhoud {
+    flex: 1 1 50%;
+    padding: 3rem;
+    justify-content: center;
+
+    .uitgelicht-tag {
+      color: var(--eagle-red);
+      text-transform: uppercase;
+      font-weight: 900;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    h3 {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+    p {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+/* --- NORMALE BERICHTEN --- */
 .nieuws-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2rem;
 }
 
 .nieuws-kaart {
   background-color: white;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
@@ -40,8 +124,17 @@
 }
 
 .kaart-afbeelding {
+  position: relative;
   width: 100%;
   height: 220px;
+
+  background-color: var(--eagle-blue); /* Fallback als er geen foto is */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.2);
+
+  .foto-placeholder { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
 
   img {
     width: 100%;
@@ -57,13 +150,35 @@
 }
 
 .nieuws-datum {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
   background-color: var(--eagle-red);
   color: white;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  font-weight: 900;
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.nieuws-badges {
+  position: absolute; top: 1rem; left: 1rem; z-index: 2;
+  display: flex; gap: 0.5rem; flex-wrap: wrap;
+
+  .badge {
+    background-color: var(--eagle-red);
+    color: white;
+    font-weight: 900;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    display: inline-flex; align-items: center; gap: 0.4rem;
+  }
 }
 
 .nieuws-inhoud {
@@ -85,6 +200,36 @@
     line-height: 1.6;
     margin-bottom: 1.5rem;
     flex-grow: 1;
+  }
+}
+
+/* --- KAART ACTIES & DELEN --- */
+.kaart-acties {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+
+  .btn-deel {
+    background: #f0f4f8;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    color: #4a5568;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #25D366; /* WhatsApp groen! */
+      color: white;
+      transform: scale(1.1);
+      box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+    }
   }
 }
 
@@ -111,9 +256,103 @@
   }
 }
 
+/* --- LINE CLAMPING (Zorgt voor perfect gelijke kaarten) --- */
+.clamp-titel {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clamp-titel-klein {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clamp-tekst {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --- ANIMATIES --- */
+.reveal-animatie {
+  opacity: 0;
+  animation: cardFadeIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+.nieuws-kaart.reveal-animatie {
+  &:nth-child(1) { animation-delay: 0.05s; }
+  &:nth-child(2) { animation-delay: 0.10s; }
+  &:nth-child(3) { animation-delay: 0.15s; }
+  &:nth-child(4) { animation-delay: 0.20s; }
+  &:nth-child(5) { animation-delay: 0.25s; }
+  &:nth-child(6) { animation-delay: 0.30s; }
+}
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- SKELETON LOADERS --- */
+.skeleton-bg {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton-kaart { pointer-events: none; }
+.skeleton-afbeelding { width: 100%; height: 100%; min-height: 350px; }
+.skeleton-badge { width: 120px; height: 30px; border-radius: 30px; margin-bottom: 1.5rem; }
+.skeleton-titel { width: 80%; height: 40px; border-radius: 6px; margin-bottom: 1.5rem; }
+.skeleton-titel-klein { width: 90%; height: 25px; border-radius: 4px; margin-bottom: 1rem; }
+.skeleton-text-line { width: 100%; height: 14px; border-radius: 4px; margin-bottom: 0.6rem; }
+.skeleton-text-line.w-70 { width: 70%; margin-bottom: 1.5rem; }
+
+/* --- LEGE STATUS --- */
+.lege-status {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 1rem;
+  background-color: white;
+  border-radius: 12px;
+  border: 2px dashed #cbd5e1;
+  color: #718096;
+  
+  i { opacity: 0.5; margin-bottom: 1rem; }
+  p { font-size: 1.1rem; font-weight: 600; margin: 0; }
+
+  .btn-wis-zoek {
+    margin-top: 1.5rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 30px;
+    border: none;
+    background: var(--eagle-blue);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover { background: var(--eagle-red); transform: translateY(-2px); }
+  }
+}
+
 /* --- MOBIELE OPTIMALISATIE --- */
 @media (max-width: 768px) {
-  .sectie-titel {
-    font-size: 2rem;
+  .header-tekst {
+    margin-bottom: 2rem;
+    .sectie-titel { font-size: 2rem; }
+  }
+  
+  .hoofd-nieuws-kaart {
+    flex-direction: column;
+    .kaart-afbeelding { min-height: 250px; }
+    .nieuws-inhoud {
+      padding: 1.5rem;
+      h3 { font-size: 1.6rem; }
+    }
   }
 }

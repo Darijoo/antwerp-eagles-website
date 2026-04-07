@@ -1,36 +1,141 @@
 <div class="standaard-pagina">
   <div class="container">
-    <h2 class="sectie-titel">Club Nieuws</h2>
-    <p class="sectie-ondertitel">Blijf op de hoogte van alle nieuwtjes rondom de Antwerp Eagles!</p>
+    <div class="header-tekst">
+      <h2 class="sectie-titel">Club Nieuws</h2>
+      <p class="sectie-ondertitel">Blijf op de hoogte van alle nieuwtjes rondom de Antwerp Eagles!</p>
+    </div>
 
     @if (isLaden) {
-      <div class="laden-sectie">
-        <div class="spinner">⚾</div>
-        <p>Nieuws laden...</p>
+      <!-- SKELETON LOADERS -->
+      <div class="hoofd-nieuws-kaart skeleton-kaart">
+        <div class="skeleton-afbeelding skeleton-bg"></div>
+        <div class="nieuws-inhoud">
+          <div class="skeleton-badge skeleton-bg"></div>
+          <div class="skeleton-titel skeleton-bg"></div>
+          <div class="skeleton-text-line skeleton-bg"></div>
+          <div class="skeleton-text-line w-70 skeleton-bg"></div>
+        </div>
       </div>
-    } @else {
       <div class="nieuws-grid">
-        @for (bericht of nieuwsBerichten; track bericht.id) {
-          <article class="nieuws-kaart">
-            @if (bericht.afbeeldingUrl) {
-              <div class="kaart-afbeelding">
-                <img [src]="bericht.afbeeldingUrl" [alt]="bericht.titel" />
-              </div>
-            }
-
-            <div class="nieuws-datum">{{ bericht.datum | date: 'dd-MM-yyyy' }}</div>
+        @for (i of [1, 2, 3]; track i) {
+          <div class="nieuws-kaart skeleton-kaart">
+            <div class="kaart-afbeelding skeleton-bg"></div>
             <div class="nieuws-inhoud">
-              <h3>{{ bericht.titel }}</h3>
-              <p>{{ bericht.samenvatting }}</p>
-              <a [routerLink]="['/nieuws', bericht.id]" class="lees-meer">Lees verder <span class="arrow">&rarr;</span></a>
+              <div class="skeleton-titel-klein skeleton-bg"></div>
+              <div class="skeleton-text-line skeleton-bg"></div>
+              <div class="skeleton-text-line w-70 skeleton-bg"></div>
             </div>
-          </article>
-        } @empty {
-          <p style="text-align: center; grid-column: 1 / -1; color: var(--text-dark);">
-            Er zijn nog geen nieuwsberichten gepubliceerd.
-          </p>
+          </div>
         }
       </div>
+    } @else {
+      
+      <!-- ZOEKBALK (Wordt alleen getoond als er überhaupt nieuws is) -->
+      @if (alleBerichten.length > 0) {
+        <div class="nieuws-zoekbalk">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" [(ngModel)]="zoekTerm" placeholder="Zoek naar verslagen, events of namen..." />
+        </div>
+      }
+      
+      <!-- STANDAARD WEERGAVE (Als je NIET aan het zoeken bent) -->
+      @if (!zoekTerm) {
+        
+        @if (hoofdBericht) {
+          <!-- UITGELICHT BERICHT (HERO KAART) -->
+          <article class="hoofd-nieuws-kaart reveal-animatie">
+            <div class="kaart-afbeelding">
+              <div class="nieuws-badges">
+                <span class="badge"><i class="fa-regular fa-clock"></i> {{ hoofdBericht.datum | date: 'd MMM yyyy' }}</span>
+              </div>
+              @if (hoofdBericht.afbeeldingUrl) {
+                <img [src]="hoofdBericht.afbeeldingUrl" [alt]="hoofdBericht.titel" />
+              } @else {
+                <div class="foto-placeholder"><i class="fa-regular fa-newspaper fa-4x"></i></div>
+              }
+            </div>
+            <div class="nieuws-inhoud">
+              <span class="uitgelicht-tag">Laatste Nieuws</span>
+              <h3 class="clamp-titel">{{ hoofdBericht.titel }}</h3>
+              <p class="clamp-tekst">{{ hoofdBericht.samenvatting }}</p>
+              <div class="kaart-acties">
+                <a [routerLink]="['/nieuws', hoofdBericht.id]" class="lees-meer">Lees heel artikel <span class="arrow">&rarr;</span></a>
+                <button class="btn-deel" (click)="deelOpWhatsApp(hoofdBericht, $event)" title="Deel via WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
+              </div>
+            </div>
+          </article>
+        }
+
+        <!-- OVERIGE BERICHTEN GRID -->
+        @if (overigeBerichten.length > 0) {
+          <div class="nieuws-grid">
+            @for (bericht of overigeBerichten; track bericht.id) {
+              <article class="nieuws-kaart reveal-animatie">
+                <div class="kaart-afbeelding">
+                  <div class="nieuws-badges">
+                    <span class="badge"><i class="fa-regular fa-clock"></i> {{ bericht.datum | date: 'd MMM yyyy' }}</span>
+                  </div>
+                  @if (bericht.afbeeldingUrl) {
+                    <img [src]="bericht.afbeeldingUrl" [alt]="bericht.titel" />
+                  } @else {
+                    <div class="foto-placeholder"><i class="fa-regular fa-newspaper fa-3x"></i></div>
+                  }
+                </div>
+                <div class="nieuws-inhoud">
+                  <h3 class="clamp-titel-klein">{{ bericht.titel }}</h3>
+                  <p class="clamp-tekst">{{ bericht.samenvatting }}</p>
+                  <div class="kaart-acties">
+                    <a [routerLink]="['/nieuws', bericht.id]" class="lees-meer">Lees verder <span class="arrow">&rarr;</span></a>
+                    <button class="btn-deel" (click)="deelOpWhatsApp(bericht, $event)" title="Deel via WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        }
+        
+        @if (alleBerichten.length === 0) {
+          <div class="lege-status">
+            <i class="fa-regular fa-folder-open fa-3x"></i>
+            <p>Er is momenteel geen nieuws gepubliceerd.</p>
+          </div>
+        }
+
+      } @else {
+        <!-- ZOEKRESULTATEN WEERGAVE (Actief zodra je typt!) -->
+        @if (gefilterdeBerichten.length > 0) {
+          <div class="nieuws-grid">
+            @for (bericht of gefilterdeBerichten; track bericht.id) {
+              <article class="nieuws-kaart reveal-animatie">
+                <div class="kaart-afbeelding">
+                  <div class="nieuws-badges">
+                    <span class="badge"><i class="fa-regular fa-clock"></i> {{ bericht.datum | date: 'd MMM yyyy' }}</span>
+                  </div>
+                  @if (bericht.afbeeldingUrl) {
+                    <img [src]="bericht.afbeeldingUrl" [alt]="bericht.titel" />
+                  } @else {
+                    <div class="foto-placeholder"><i class="fa-regular fa-newspaper fa-3x"></i></div>
+                  }
+                </div>
+                <div class="nieuws-inhoud">
+                  <h3 class="clamp-titel-klein">{{ bericht.titel }}</h3>
+                  <p class="clamp-tekst">{{ bericht.samenvatting }}</p>
+                  <div class="kaart-acties">
+                    <a [routerLink]="['/nieuws', bericht.id]" class="lees-meer">Lees verder <span class="arrow">&rarr;</span></a>
+                    <button class="btn-deel" (click)="deelOpWhatsApp(bericht, $event)" title="Deel via WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="lege-status">
+            <i class="fa-solid fa-magnifying-glass fa-3x"></i>
+            <p>Geen nieuwsberichten gevonden voor "{{ zoekTerm }}".</p>
+            <button (click)="zoekTerm = ''" class="btn-wis-zoek">Wis zoekopdracht</button>
+          </div>
+        }
+      }
     }
   </div>
 </div>
