@@ -127,6 +127,29 @@
   }
 }
 
+.btn-export {
+  background-color: var(--eagle-blue);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  
+  &:hover {
+    background-color: var(--eagle-red);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+}
+
 /* --- KALENDER NAVIGATIE --- */
 .kalender-navigatie {
   display: flex;
@@ -586,6 +609,7 @@
   .filter-selects {
     flex-direction: column;
     width: 100%;
+    gap: 1rem;
   }
   .filter-pills {
     width: 100%;

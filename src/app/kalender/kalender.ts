@@ -31,6 +31,8 @@ export class Kalender implements OnInit {
   geselecteerdTeam = '';
   geselecteerdLocatie = '';
   beschikbareTeams: string[] = [];
+  
+  gefilterdeWedstrijden: Match[] = []; // Slaat de actieve selectie op voor de export
 
   // Voor de desktop raster weergave
   kalenderDagen: { datum: Date; isHuidigeMaand: boolean; events: Match[] }[] = [];
@@ -96,7 +98,7 @@ export class Kalender implements OnInit {
     const startDatum = new Date(this.jaar, maand, 1 - startDag);
 
     // Pas de geselecteerde filters toe op de volledige lijst met activiteiten
-    const gefilterdeWedstrijden = this.alleWedstrijden.filter((w) => {
+    this.gefilterdeWedstrijden = this.alleWedstrijden.filter((w) => {
       const matchType =
         this.geselecteerdType === '' || (w.type || 'wedstrijd') === this.geselecteerdType;
       const matchTeam = this.geselecteerdTeam === '' || w.team === this.geselecteerdTeam;
@@ -113,7 +115,7 @@ export class Kalender implements OnInit {
       datum.setDate(startDatum.getDate() + i);
 
       const isHuidigeMaand = datum.getMonth() === maand;
-      const events = gefilterdeWedstrijden.filter((w) => {
+      const events = this.gefilterdeWedstrijden.filter((w) => {
         const wDatum = w.datum.toDate();
         return (
           wDatum.getDate() === datum.getDate() &&
@@ -126,7 +128,7 @@ export class Kalender implements OnInit {
     }
 
     // Vul de lijst voor de mobiele weergave (alleen de geselecteerde maand)
-    this.maandEvents = gefilterdeWedstrijden
+    this.maandEvents = this.gefilterdeWedstrijden
       .filter(
         (w) =>
           w.datum.toDate().getMonth() === maand && w.datum.toDate().getFullYear() === this.jaar,
@@ -287,5 +289,54 @@ export class Kalender implements OnInit {
       return { icoon: 'fa-sun', temp: '22°' };
     }
     return null;
+  }
+
+  // Exporteer alle gefilterde evenementen naar een .ics bestand!
+  exporteerNaarAgenda() {
+    if (this.gefilterdeWedstrijden.length === 0) {
+      alert('Er zijn geen wedstrijden of evenementen gevonden om te exporteren.');
+      return;
+    }
+
+    let icsContent = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Antwerp Eagles//Wedstrijdkalender//NL\r\n";
+
+    this.gefilterdeWedstrijden.forEach(event => {
+      const titel = event.type === 'evenement' ? event.titel : `${event.thuisploeg} vs ${event.uitploeg}`;
+      let omschrijving = event.omschrijving || '';
+      if (event.team) omschrijving = `Team: ${event.team}\\n\\n` + omschrijving;
+
+      const startDatum = event.datum.toDate();
+      if (event.tijd) {
+         const [u, m] = event.tijd.split(':');
+         startDatum.setHours(parseInt(u, 10), parseInt(m, 10), 0);
+      }
+      const eindDatum = new Date(startDatum.getTime() + 2 * 60 * 60 * 1000); // We reserveren standaard 2 uur in de agenda
+
+      // .ics bestanden verwachten een specifieke UTC datumnotatie (YYYYMMDDThhmmssZ)
+      const formatIcsDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').substring(0, 15) + 'Z';
+
+      icsContent += "BEGIN:VEVENT\r\n";
+      icsContent += `UID:${event.id || Math.random().toString(36).substring(2, 11)}@antwerpeagles.be\r\n`;
+      icsContent += `DTSTAMP:${formatIcsDate(new Date())}\r\n`;
+      icsContent += `DTSTART:${formatIcsDate(startDatum)}\r\n`;
+      icsContent += `DTEND:${formatIcsDate(eindDatum)}\r\n`;
+      icsContent += `SUMMARY:${titel}\r\n`;
+      if (event.locatie) {
+        icsContent += `LOCATION:${event.locatie}\r\n`;
+      }
+      if (omschrijving) {
+        icsContent += `DESCRIPTION:${omschrijving.replace(/\n/g, '\\n')}\r\n`;
+      }
+      icsContent += "END:VEVENT\r\n";
+    });
+
+    icsContent += "END:VCALENDAR\r\n";
+
+    // Simuleer een download-klik voor de gebruiker
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'antwerp-eagles-kalender.ics';
+    link.click();
   }
 }
