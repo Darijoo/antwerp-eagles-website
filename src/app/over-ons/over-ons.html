@@ -1,57 +1,71 @@
 <div class="historie-sectie">
+  
+  <!-- IMMERSIVE HERO -->
+  <div class="historie-hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <span class="hero-badge">Est. 1923</span>
+      <h1 class="hero-titel">De Geschiedenis van<br>Antwerp Eagles</h1>
+      <p class="hero-ondertitel">De absolute pioniers van het Belgische baseball en softball.</p>
+    </div>
+  </div>
+
   <div class="container">
-    <h2 class="sectie-titel">Over Antwerp Eagles</h2>
-    <p class="sectie-ondertitel">De pioniers van het Belgische honkbal en softbal.</p>
-
-    <div class="historie-content">
-      <div class="tekst-blok">
-        <h3>De Ontdekking (Jaren '20)</h3>
-        <p>
-          In het begin van de jaren twintig wandelden enkele jongeren langs het Wilrijkse Plein in
-          Antwerpen. Daar zagen zij een groepje Japanse zeelui een vreemd spel spelen en besloten
-          een kijkje te gaan nemen. De zeelui bleken baseball te spelen, een zeer populaire sport in
-          Japan, ook vandaag nog. De jongeren speelden algauw een spelletje mee en werden zo de
-          eerste "baseballers" van ons landje. Zij namen later ook het initiatief om de eerste club
-          op te richten.
-        </p>
-
-        <h3>De Oprichting (1923)</h3>
-        <p>
-          In 1923 besloten enkele Antwerpse jongeren, samen met Japanse zakenlui, om een
-          baseballclub op te richten. Zo gezegd, zo gedaan en op 18 augustus 1923 werd de eerste
-          officiële baseballclub in België gesticht onder de naam
-          <strong>Antwerp Black Cats</strong>.
-        </p>
-
-        <h3>Groei en Fusies (1945 - 1975)</h3>
-        <p>
-          Door een verspreiding van het baseball in het Antwerpse na 1945, ontstond een regelmatige
-          Belgische competitie, waarin wij echter nooit de hoogste top konden bereiken. Toch deden
-          we het niet slecht; in 1950 behaalden we de kampioenstitel in de reservenreeks. In 1974
-          werd besloten R. Antwerp B.C. en Rizla B.C. tot één club te smelten: uit deze fusie
-          ontstond de R.A.E. Scaldia Shipping B.C. Een jaar later werd een dames softbalploeg
-          opgericht. Dit was een succes, waardoor een jaar later de clubnaam voor de laatste keer
-          wijzigde. Vanaf dat moment ontstond uiteindelijk de benaming
-          <strong>Royal Antwerp Eagles Baseball & Softball Club</strong>.
-        </p>
-
-        <h3>De Gouden Jaren</h3>
-        <p>
-          De resultaten groeiden en de bekroning van het vele gepresteerde werk kwam in 1983: het
-          eerste team werd landskampioen. Deze titel konden we in handen houden tot voor het seizoen
-          1989, met in 1985 en 1987 topjaren waarin drie kampioenstitels werden behaald.
-        </p>
-      </div>
-
-      <div class="foto-blok">
-        <div class="historie-foto-container">
-          <!-- We gebruiken het logo, mocht je een oude teamfoto hebben, kun je deze link later vervangen! -->
-          <img src="/eagles_logo_transparant.png" alt="Antwerp Eagles Logo" class="historie-foto" />
+    <!-- VERTICALE TIJDLIJN -->
+    <div class="timeline">
+      
+      <!-- Tijdperk 1 -->
+      <div class="timeline-item" #timelineItem>
+        <div class="timeline-marker">1920</div>
+        <div class="timeline-content-wrapper">
+          <div class="timeline-tekst">
+            <h3>De Ontdekking</h3>
+            <p>In het begin van de jaren twintig wandelden enkele jongeren langs het Wilrijkse Plein in Antwerpen. Daar zagen zij een groepje Japanse zeelui een vreemd spel spelen en besloten een kijkje te gaan nemen. De zeelui bleken baseball te spelen, een zeer populaire sport in Japan. De jongeren speelden algauw een spelletje mee en werden zo de allereerste "baseballers" van ons landje.</p>
+          </div>
+          <div class="timeline-visual"><i class="fa-solid fa-anchor"></i></div>
         </div>
       </div>
+
+      <!-- Tijdperk 2 -->
+      <div class="timeline-item" #timelineItem>
+        <div class="timeline-marker">1923</div>
+        <div class="timeline-content-wrapper">
+          <div class="timeline-tekst">
+            <h3>De Oprichting</h3>
+            <p>In 1923 besloten de Antwerpse jongeren, samen met Japanse zakenlui, om een officiële baseballclub op te richten. Zo gezegd, zo gedaan: op 18 augustus 1923 werd de allereerste baseballclub in België gesticht onder de naam <strong>Antwerp Black Cats</strong>.</p>
+          </div>
+          <div class="timeline-visual"><i class="fa-solid fa-handshake-angle"></i></div>
+        </div>
+      </div>
+
+      <!-- Tijdperk 3 -->
+      <div class="timeline-item" #timelineItem>
+        <div class="timeline-marker">1945</div>
+        <div class="timeline-content-wrapper">
+          <div class="timeline-tekst">
+            <h3>Groei en Fusies (1945 - 1975)</h3>
+            <p>Door de verspreiding van het baseball na de Tweede Wereldoorlog, ontstond een regelmatige competitie. In 1950 behaalden we de kampioenstitel in de reservenreeks. In 1974 fuseerden R. Antwerp B.C. en Rizla B.C. tot de R.A.E. Scaldia Shipping B.C. Een jaar later werd met succes een dames softbalploeg opgericht, waarna de club haar definitieve naam kreeg: <strong>Royal Antwerp Eagles Baseball & Softball Club</strong>.</p>
+          </div>
+          <div class="timeline-visual"><i class="fa-solid fa-code-merge"></i></div>
+        </div>
+      </div>
+
+      <!-- Tijdperk 4 -->
+      <div class="timeline-item" #timelineItem>
+        <div class="timeline-marker">1980</div>
+        <div class="timeline-content-wrapper">
+          <div class="timeline-tekst">
+            <h3>De Gouden Jaren</h3>
+            <p>De resultaten groeiden gestaag en de bekroning van het vele harde werk kwam in 1983: het eerste team werd landskampioen! Deze majestueuze titel wisten we stevig in handen te houden tot voor het seizoen 1989, met absolute topjaren in 1985 en 1987 waarin we maarliefst drie kampioenstitels op rij behaalden.</p>
+          </div>
+          <div class="timeline-visual"><i class="fa-solid fa-trophy"></i></div>
+        </div>
+      </div>
+
     </div>
 
     <div class="call-to-action-balk">
+      <div class="cta-icon"><i class="fa-solid fa-baseball-bat-ball"></i></div>
       <h3>Klaar om geschiedenis te schrijven?</h3>
       <p>
         Word onderdeel van onze club en ontdek zelf waarom honkbal en softbal zo fantastisch zijn!
