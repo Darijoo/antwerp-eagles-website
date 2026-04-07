@@ -75,7 +75,7 @@ export class Home implements OnInit {
         // Sorteer nieuws: nieuwste datum bovenaan
         this.laatsteNieuws = data.sort(
           (a, b) => new Date(b.datum).getTime() - new Date(a.datum).getTime(),
-        );
+        ).slice(0, 3); // Laat maximaal 3 nieuwsberichten zien op de homepagina
         this.cdr.detectChanges(); // <-- 3. DWING Angular om de HTML NU opnieuw te tekenen!
       },
       error: (fout) => {

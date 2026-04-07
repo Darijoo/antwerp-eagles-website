@@ -17,6 +17,7 @@ import { Aansluiten } from './aansluiten/aansluiten';
 import { HuishoudelijkReglement } from './huishoudelijk-reglement';
 import { Sportreglement } from './sportreglement';
 import { UnderConstruction } from './under-construction';
+import { Nieuws } from './nieuws';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -34,7 +35,7 @@ export const routes: Routes = [
   { path: 'klassementen', component: UnderConstruction },
   { path: 'toernooien', component: UnderConstruction },
   { path: 'evenementen', component: UnderConstruction },
-  { path: 'nieuws', component: UnderConstruction },
+  { path: 'nieuws', component: Nieuws },
   { path: 'historiek', component: UnderConstruction },
 
   { path: 'login', component: Login },

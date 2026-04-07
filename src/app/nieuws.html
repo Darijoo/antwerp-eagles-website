@@ -1,0 +1,36 @@
+<div class="nieuws-pagina">
+  <div class="container">
+    <h2 class="sectie-titel">Club Nieuws</h2>
+    <p class="sectie-ondertitel">Blijf op de hoogte van alle nieuwtjes rondom de Antwerp Eagles!</p>
+
+    @if (isLaden) {
+      <div class="laden-sectie">
+        <div class="spinner">⚾</div>
+        <p>Nieuws laden...</p>
+      </div>
+    } @else {
+      <div class="nieuws-grid">
+        @for (bericht of nieuwsBerichten; track bericht.id) {
+          <article class="nieuws-kaart">
+            @if (bericht.afbeeldingUrl) {
+              <div class="kaart-afbeelding">
+                <img [src]="bericht.afbeeldingUrl" [alt]="bericht.titel" />
+              </div>
+            }
+
+            <div class="nieuws-datum">{{ bericht.datum | date: 'dd-MM-yyyy' }}</div>
+            <div class="nieuws-inhoud">
+              <h3>{{ bericht.titel }}</h3>
+              <p>{{ bericht.samenvatting }}</p>
+              <a [routerLink]="['/nieuws', bericht.id]" class="lees-meer">Lees verder &rarr;</a>
+            </div>
+          </article>
+        } @empty {
+          <p style="text-align: center; grid-column: 1 / -1; color: var(--text-dark);">
+            Er zijn nog geen nieuwsberichten gepubliceerd.
+          </p>
+        }
+      </div>
+    }
+  </div>
+</div>
