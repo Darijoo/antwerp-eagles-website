@@ -34,6 +34,7 @@
           <button
             class="hotspot"
             [class.actief]="geselecteerdOnderdeel?.id === onderdeel.id"
+            [class.is-optioneel]="!onderdeel.verplicht"
             [style.top.%]="onderdeel.top"
             [style.left.%]="onderdeel.left"
             (click)="selecteerOnderdeel(onderdeel)"
@@ -41,6 +42,7 @@
           >
             <span class="pulse"></span>
             <span class="dot"></span>
+            <span class="tooltip">{{ onderdeel.naam }}</span>
           </button>
         }
       </div>
@@ -67,7 +69,7 @@
                 <i class="fa-solid fa-tag"></i>
                 <div>
                   <span class="label">Prijsindicatie</span
-                  ><span class="waarde">{{ geselecteerdOnderdeel.prijsIndicatie }}</span>
+                  ><span class="waarde">&euro; {{ geselecteerdOnderdeel.prijsIndicatie }}</span>
                 </div>
               </div>
               <div class="detail-item">

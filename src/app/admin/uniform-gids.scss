@@ -66,17 +66,18 @@
 /* --- VISUAL (FOTO KANT) --- */
 .visual-container {
   position: relative;
-  border-radius: 12px;
-  overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  aspect-ratio: 3/4; /* Verhouding portret */
-  background-color: #eee;
+  background-color: transparent;
+  justify-self: center;
+  display: inline-block;
+  border-radius: 12px;
 
   .speler-afbeelding {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 100%;
+    max-height: 75vh;
+    height: auto;
     display: block;
+    border-radius: 12px;
   }
 }
 
@@ -118,6 +119,37 @@
     animation: pulse-anim 2s infinite;
   }
 
+  .tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    background-color: var(--eagle-blue);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none; /* Zorgt dat de tooltip zelf niet klikbaar is */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+    /* Het kleine pijltje onder de tooltip */
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px;
+      border-style: solid;
+      border-color: var(--eagle-blue) transparent transparent transparent;
+    }
+  }
+
   /* Bij hover OF als hij momenteel geselecteerd is */
   &:hover .dot,
   &.actief .dot {
@@ -129,6 +161,27 @@
   &.actief .pulse {
     animation: none;
     opacity: 0;
+  }
+
+  /* Toon de tooltip zodra je er met de muis overheen gaat */
+  &:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-5px);
+  }
+
+  /* --- Optionele kledingstukken krijgen een blauwe stip --- */
+  &.is-optioneel {
+    .dot, .pulse {
+      background-color: var(--eagle-blue);
+    }
+    
+    /* Bij hover of actief draaien we de kleuren om (rode rand) */
+    &:hover .dot,
+    &.actief .dot {
+      background-color: white;
+      border-color: var(--eagle-red);
+    }
   }
 }
 
@@ -263,12 +316,46 @@
 }
 
 @media (max-width: 768px) {
+  .uniform-sectie {
+    padding: 2rem 1rem;
+  }
+  .header-tekst {
+    margin-bottom: 2rem;
+    .sectie-titel {
+      font-size: 2rem;
+    }
+  }
+  .categorie-tabs {
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+  .tab-btn {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.85rem;
+    flex: 1 1 calc(33.333% - 0.5rem);
+    text-align: center;
+  }
   .gids-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
   .visual-container {
-    max-width: 400px;
-    margin: 0 auto;
+    max-width: 100%;
+    .speler-afbeelding {
+      max-height: 65vh; /* Voorkomt dat de foto te hoog wordt op kleine schermen */
+    }
+  }
+  .hotspot .tooltip {
+    white-space: normal;
+    width: 130px;
+    text-align: center;
+  }
+  .info-kaart {
+    padding: 1.5rem;
+    .kaart-header {
+      flex-direction: column;
+      gap: 0.5rem;
+      h3 { font-size: 1.4rem; }
+    }
   }
 }

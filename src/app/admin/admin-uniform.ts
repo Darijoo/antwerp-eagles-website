@@ -1,8 +1,9 @@
 import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { UniformService, UniformOnderdeel } from '../diensten/uniform';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-admin-uniform',
@@ -14,18 +15,31 @@ import { FormsModule } from '@angular/forms';
 export class AdminUniform {
   private uniformService = inject(UniformService);
   private cdr = inject(ChangeDetectorRef);
+  private storage = inject(Storage);
 
   onderdelen$: Observable<UniformOnderdeel[]> = this.uniformService.haalAlleOnderdelenOp();
+  afbeeldingen$: Observable<Record<string, string>> = this.uniformService.haalAfbeeldingenOp();
+  huidigeAfbeeldingen: Record<string, string> = {};
 
   isAanHetOpslaan = false;
   toonFormulier = false;
   bewerkId: string | null = null;
+  
+  geselecteerdeCategorieFoto = 'Baseball';
+  geselecteerdeFoto: File | null = null;
+  isFotoAanHetOpslaan = false;
+
+  constructor() {
+    this.afbeeldingen$.subscribe((data) => {
+      if (data) this.huidigeAfbeeldingen = data;
+    });
+  }
 
   nieuwOnderdeel: UniformOnderdeel = {
     naam: '',
     beschrijving: '',
     verplicht: true,
-    prijsIndicatie: '',
+    prijsIndicatie: null,
     winkelNaam: '',
     winkelLink: '',
     top: 50,
@@ -72,12 +86,42 @@ export class AdminUniform {
       naam: '',
       beschrijving: '',
       verplicht: true,
-      prijsIndicatie: '',
+      prijsIndicatie: null,
       winkelNaam: '',
       winkelLink: '',
       top: 50,
       left: 50,
       categorie: 'Baseball',
     };
+  }
+
+  onFotoSelected(event: any) {
+    this.geselecteerdeFoto = event.target.files[0] || null;
+  }
+
+  async uploadFoto() {
+    if (!this.geselecteerdeFoto) return;
+    
+    this.isFotoAanHetOpslaan = true;
+    this.cdr.detectChanges();
+
+    try {
+      const bestandsNaam = `uniform/${this.geselecteerdeCategorieFoto}_${Date.now()}_${this.geselecteerdeFoto.name}`;
+      const opslagRef = ref(this.storage, bestandsNaam);
+      
+      const uploadResultaat = await uploadBytes(opslagRef, this.geselecteerdeFoto);
+      const url = await getDownloadURL(uploadResultaat.ref);
+
+      await firstValueFrom(this.uniformService.updateAfbeelding(this.geselecteerdeCategorieFoto, url));
+
+      this.geselecteerdeFoto = null;
+      alert('Achtergrondfoto succesvol geüpdatet!');
+    } catch (error) {
+      console.error('Fout bij uploaden foto:', error);
+      alert('Er ging iets mis bij het uploaden van de foto.');
+    }
+
+    this.isFotoAanHetOpslaan = false;
+    this.cdr.detectChanges();
   }
 }

@@ -25,6 +25,14 @@ export class UniformGids implements OnInit {
   };
 
   ngOnInit() {
+    // Haal de geüploade foto's op uit de database
+    this.uniformService.haalAfbeeldingenOp().subscribe((fotos: Record<string, string>) => {
+      if (fotos) {
+        this.afbeeldingen = { ...this.afbeeldingen, ...fotos };
+        this.cdr.detectChanges();
+      }
+    });
+
     this.uniformService.haalAlleOnderdelenOp().subscribe((data) => {
       this.onderdelen = data;
       if (!this.geselecteerdOnderdeel) {
