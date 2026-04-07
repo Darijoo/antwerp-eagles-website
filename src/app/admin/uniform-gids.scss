@@ -1,30 +1,48 @@
 .uniform-sectie {
-  padding: 4rem 2rem;
   background-color: var(--bg-light);
-  min-height: calc(100vh - 200px);
+  min-height: 100vh;
+  padding-bottom: 4rem;
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
-.header-tekst {
+/* --- IMMERSIVE LOCKER ROOM HERO --- */
+.uniform-hero {
+  width: 100%;
+  min-height: 50vh;
+  margin-top: -133px; /* Trekt de sectie onder de navbar! */
+  padding-top: 133px;
+  background-color: var(--eagle-blue);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  margin-bottom: 4rem;
+  padding-bottom: 6rem; /* Ruimte voor de overlapping! */
 
-  .sectie-titel {
-    color: var(--eagle-blue);
-    font-size: 2.5rem;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
+  .hero-overlay {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(21, 34, 105, 0.95), rgba(21, 34, 105, 0.7));
   }
-  .sectie-ondertitel {
-    color: var(--text-dark);
-    font-size: 1.2rem;
-    max-width: 600px;
-    margin: 0 auto;
+
+  .hero-content { position: relative; z-index: 1; color: white; max-width: 800px; }
+
+  .hero-badge {
+    display: inline-block; background-color: var(--eagle-red); color: white;
+    padding: 0.4rem 1.2rem; border-radius: 30px; font-size: 1rem; font-weight: 900;
+    text-transform: uppercase; margin-bottom: 1rem; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   }
+  
+  .hero-titel {
+    font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 900; text-transform: uppercase;
+    margin: 0 0 1rem 0; line-height: 1.1; text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  }
+
+  .hero-ondertitel { font-size: clamp(1.1rem, 2vw, 1.3rem); opacity: 0.9; margin-bottom: 3rem; }
 }
 
 /* --- CATEGORIE TABS --- */
@@ -32,28 +50,33 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-bottom: 3rem;
   flex-wrap: wrap;
 }
 
 .tab-btn {
   background-color: white;
-  border: 2px solid var(--eagle-blue);
+  border: 2px solid white;
   color: var(--eagle-blue);
   padding: 0.8rem 2rem;
   font-size: 1.1rem;
-  font-weight: bold;
+  font-weight: 900;
   border-radius: 30px;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 
   &:hover, &.actief {
-    background-color: var(--eagle-blue);
+    background-color: var(--eagle-red);
+    border-color: var(--eagle-red);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(21, 34, 105, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   }
+}
+
+.overlap-container {
+  margin-top: -3rem; /* Trekt grid omhoog over de blauwe hero! */
 }
 
 .gids-grid {
@@ -69,6 +92,7 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   background-color: transparent;
   justify-self: center;
+  align-self: flex-start;
   display: inline-block;
   border-radius: 12px;
 
@@ -115,27 +139,35 @@
     height: 100%;
     background-color: var(--eagle-red);
     border-radius: 50%;
-    opacity: 0.6;
-    animation: pulse-anim 2s infinite;
+    opacity: 0.5;
+    animation: pulse-anim 2.5s infinite ease-out;
+  }
+  
+  /* De sonar-ring als hij actief is */
+  .sonar-ring {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 50%; border: 2px solid var(--eagle-red); opacity: 0;
   }
 
   .tooltip {
     position: absolute;
     bottom: 100%;
     left: 50%;
-    transform: translateX(-50%) translateY(-10px);
-    background-color: var(--eagle-blue);
+    transform: translateX(-50%) translateY(-15px);
+    background-color: rgba(21, 34, 105, 0.95);
+    backdrop-filter: blur(4px);
     color: white;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 900;
     white-space: nowrap;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
     pointer-events: none; /* Zorgt dat de tooltip zelf niet klikbaar is */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255,255,255,0.1);
 
     /* Het kleine pijltje onder de tooltip */
     &::after {
@@ -146,7 +178,7 @@
       transform: translateX(-50%);
       border-width: 6px;
       border-style: solid;
-      border-color: var(--eagle-blue) transparent transparent transparent;
+      border-color: rgba(21, 34, 105, 0.95) transparent transparent transparent;
     }
   }
 
@@ -155,8 +187,13 @@
   &.actief .dot {
     background-color: white;
     border-color: var(--eagle-blue);
-    transform: translate(-50%, -50%) scale(1.3);
+    transform: translate(-50%, -50%) scale(1.4);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
   }
+  &.actief .sonar-ring {
+    animation: sonar-anim 1.5s infinite ease-out;
+  }
+  
   &:hover .pulse,
   &.actief .pulse {
     animation: none;
@@ -167,7 +204,8 @@
   &:hover .tooltip {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(-5px);
+    transform: translateX(-50%) translateY(-8px);
+    z-index: 20;
   }
 
   /* --- Optionele kledingstukken krijgen een blauwe stip --- */
@@ -181,19 +219,29 @@
     &.actief .dot {
       background-color: white;
       border-color: var(--eagle-red);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     }
   }
 }
 
 @keyframes pulse-anim {
-  0% {
-    transform: scale(0.6);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(2.2);
-    opacity: 0;
-  }
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes sonar-anim {
+  0% { transform: scale(1); opacity: 1; border-width: 4px; }
+  100% { transform: scale(2); opacity: 0; border-width: 1px; }
+}
+
+/* --- ANIMATIES --- */
+.reveal-animatie {
+  opacity: 0;
+  animation: slideUpFade 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* --- INFO PANEEL KANT --- */
@@ -209,19 +257,29 @@
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   margin-bottom: 2rem;
-  border-top: 5px solid var(--eagle-red);
   animation: slideIn 0.3s ease-out;
 
   h3 {
     margin-top: 0;
     color: var(--eagle-blue);
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+    i { color: var(--eagle-red); margin-right: 0.5rem; }
+  }
+
+  .lijst-subkop {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #7f8c8d;
+    margin-bottom: 0.8rem;
+    letter-spacing: 1px;
   }
 
   .lijst-knoppen {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr; /* Onder elkaar is overzichtelijker voor leesbaarheid */
     gap: 0.8rem;
   }
 
@@ -244,9 +302,11 @@
       min-width: 12px;
       height: 12px;
       border-radius: 50%;
-      background-color: var(--eagle-blue);
       &.verplicht {
         background-color: var(--eagle-red);
+      }
+      &.optioneel {
+        background-color: var(--eagle-blue);
       }
     }
 
@@ -258,17 +318,18 @@
     }
 
     &.actief {
-      background: var(--eagle-blue);
-      color: white;
-      border-color: var(--eagle-blue);
+      background: white;
+      color: var(--eagle-blue);
+      border-color: var(--eagle-red);
       transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(21, 34, 105, 0.2);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
 
       .status-indicator {
-        background-color: white;
         &.verplicht {
-          background-color: var(--eagle-red);
-          border: 2px solid white;
+          box-shadow: 0 0 0 3px rgba(153, 25, 25, 0.2);
+        }
+        &.optioneel {
+          box-shadow: 0 0 0 3px rgba(21, 34, 105, 0.2);
         }
       }
     }
@@ -282,6 +343,13 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   border-left: 5px solid var(--eagle-blue);
   animation: slideIn 0.3s ease-out;
+
+  /* Dynamische border gebaseerd op type kledingstuk! */
+  border-left: 5px solid var(--eagle-blue);
+  transition: border-color 0.3s ease;
+  &.is-verplicht-kaart {
+    border-left-color: var(--eagle-red);
+  }
 
   .kaart-header {
     display: flex;
@@ -392,24 +460,23 @@
 }
 
 @media (max-width: 768px) {
-  .uniform-sectie {
-    padding: 2rem 1rem;
+  .uniform-hero {
+    margin-top: -87px; padding-top: 87px;
+    min-height: 45vh; padding-bottom: 5rem;
   }
-  .header-tekst {
-    margin-bottom: 2rem;
-    .sectie-titel {
-      font-size: 2rem;
-    }
+  .hero-titel { font-size: 2.2rem !important; }
+  
+  .overlap-container {
+    margin-top: -3.5rem;
   }
   .categorie-tabs {
     gap: 0.5rem;
     margin-bottom: 2rem;
   }
   .tab-btn {
-    padding: 0.6rem 0.5rem;
+    padding: 0.6rem 1rem;
     font-size: 0.85rem;
-    flex: 1 1 calc(33.333% - 0.5rem);
-    text-align: center;
+    flex: 1;
   }
   .gids-grid {
     grid-template-columns: 1fr;
