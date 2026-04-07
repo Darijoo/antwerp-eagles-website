@@ -1,65 +1,110 @@
 <div class="aansluiten-sectie">
+  
+  <!-- IMMERSIVE HERO -->
+  <div class="aansluiten-hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <span class="hero-badge">Seizoen 2026</span>
+      <h1 class="hero-titel">Word lid van de Eagles</h1>
+      <p class="hero-ondertitel">Klaar om het veld op te stappen? Sluit je aan bij de pioniers van het Belgische baseball en softball!</p>
+    </div>
+  </div>
+
   <div class="container">
-    <h2 class="sectie-titel">Aansluiten als speler</h2>
-    <p class="sectie-ondertitel">Kalenderjaar 2026</p>
-
-    <div class="content-grid">
-      <!-- Linker kolom: Tarieven en Betaling -->
-      <div class="info-kaart">
-        <p class="intro-tekst">
-          De leeftijd die de speler bereikt in 2026 bepaalt de categorie en het inschrijvingsgeld. 
-          De licentie geldt voor het gehele kalenderjaar 2026.
-        </p>
-
-        <h3>Inschrijvingsbedragen</h3>
-        <ul class="tarieven-lijst">
-          <li><span>Baseball Seniors</span> <strong>€ 230</strong></li>
-          <li><span>Baseball (16-18j)</span> <strong>€ 185</strong></li>
-          <li><span>Softball Dames Div 1</span> <strong>€ 230</strong></li>
-          <li><span>Softball Dames Div 3</span> <strong>€ 185</strong></li>
-          <li><span>Softball Dames (16-18j)</span> <strong>€ 185</strong></li>
-          <li><span>Softball Heren Reserven</span> <strong>€ 185</strong></li>
-          <li><span>Jeugdspelers U15 / U12</span> <strong>€ 185</strong></li>
-          <li class="steunend"><span>Steunend lid</span> <strong>€ 20 / € 50 / € 100</strong></li>
-        </ul>
-
-        <div class="korting-alert">
-          <i class="fa-solid fa-tag"></i>
-          <div>
-            <strong>Vroegboekkorting:</strong> € 10 korting voor spelende leden bij betaling vóór 31 december 2025.
-          </div>
+    <div class="overlap-container reveal-animatie">
+      
+      <!-- VISUEEL STAPPENPLAN -->
+      <div class="stappen-plan">
+        <div class="stap">
+          <div class="stap-icoon"><i class="fa-solid fa-laptop-file"></i></div>
+          <h4>1. Inschrijven</h4>
+          <p>Vul het online formulier in.</p>
         </div>
-
-        <h3>Betalingsgegevens</h3>
-        <div class="betaling-box">
-          <p>Bedrag te storten op rekeningnummer:</p>
-          <div class="rekeningnummer">Belfius BE67 0682 4999 4487</div>
-          <p class="mededeling">
-            <strong>Vermelding:</strong> Naam speler - categorie<br>
-            <em>(bv. "Jan Peeters - Jeugdspeler U15")</em>
-          </p>
+        <div class="stap-lijn"></div>
+        <div class="stap">
+          <div class="stap-icoon"><i class="fa-solid fa-euro-sign"></i></div>
+          <h4>2. Betalen</h4>
+          <p>Maak het lidgeld over.</p>
+        </div>
+        <div class="stap-lijn"></div>
+        <div class="stap">
+          <div class="stap-icoon highlight"><i class="fa-solid fa-baseball-bat-ball"></i></div>
+          <h4>3. Play Ball!</h4>
+          <p>Kom naar de training!</p>
         </div>
       </div>
 
-      <!-- Rechter kolom: Documenten & Contact -->
-      <div class="zij-kolom">
-        <div class="info-kaart documenten-kaart">
-          <h3>Publieke Documenten</h3>
-          <p>Bekijk hier de officiële reglementen van Royal Antwerp Eagles:</p>
-          <div class="documenten-links">
-            <a routerLink="/huishoudelijk-reglement" class="btn-doc">
-              <i class="fa-solid fa-file-lines"></i> RAE Huishoudelijk Reglement
-            </a>
-            <a routerLink="/sportreglement" class="btn-doc">
-              <i class="fa-solid fa-file-lines"></i> RAE Sportreglement
-            </a>
+      <div class="content-grid">
+        <!-- Linker kolom: Tarieven en Betaling -->
+        <div class="info-kaart reveal-animatie" style="animation-delay: 0.1s;">
+          <p class="intro-tekst">
+            De leeftijd die de speler bereikt in het kalenderjaar bepaalt de categorie en het inschrijvingsgeld. De licentie geldt voor het gehele jaar 2026.
+          </p>
+
+          <h3><i class="fa-solid fa-tags" style="color: var(--eagle-red); margin-right: 8px;"></i> Inschrijvingsbedragen</h3>
+          <ul class="tarieven-lijst">
+            <li class="categorie-header">Senioren (18+)</li>
+            <li><span><i class="fa-solid fa-baseball"></i> Baseball Seniors</span> <strong>€ 230</strong></li>
+            <li><span><i class="fa-solid fa-baseball" style="color: #f1c40f;"></i> Softball Dames Div 1</span> <strong>€ 230</strong></li>
+            <li><span><i class="fa-solid fa-baseball" style="color: #f1c40f;"></i> Softball Dames Div 3</span> <strong>€ 185</strong></li>
+            <li><span><i class="fa-solid fa-baseball" style="color: #f1c40f;"></i> Softball Heren Reserven</span> <strong>€ 185</strong></li>
+            
+            <li class="categorie-header" style="margin-top: 1rem;">Jeugd</li>
+            <li><span><i class="fa-solid fa-child-reaching"></i> Baseball (16-18j)</span> <strong>€ 185</strong></li>
+            <li><span><i class="fa-solid fa-child-reaching"></i> Softball Dames (16-18j)</span> <strong>€ 185</strong></li>
+            <li><span><i class="fa-solid fa-child-reaching"></i> Jeugdspelers U15 / U12</span> <strong>€ 185</strong></li>
+            
+            <li class="steunend"><span><i class="fa-solid fa-heart"></i> Steunend lid</span> <strong>€ 20 / € 50 / € 100</strong></li>
+          </ul>
+
+          <div class="korting-alert">
+            <i class="fa-solid fa-sack-dollar"></i>
+            <div>
+              <strong>Vroegboekkorting:</strong> € 10 korting voor spelende leden bij betaling vóór 31 december 2025.
+            </div>
+          </div>
+
+          <h3><i class="fa-solid fa-building-columns" style="color: var(--eagle-blue); margin-right: 8px;"></i> Betalingsgegevens</h3>
+          <div class="betaling-box">
+            <p>Maak het totale bedrag over op rekeningnummer:</p>
+            <div class="rekeningnummer">BE67 0682 4999 4487</div>
+            <p class="mededeling">
+              <strong>Mededeling:</strong> Naam speler - categorie<br>
+              <em>(bv. "Jan Peeters - U15")</em>
+            </p>
           </div>
         </div>
 
-        <div class="info-kaart contact-kaart">
-          <h3>Nog vragen?</h3>
-          <p>Voor meer informatie kan u terecht bij het algemene secretariaat of via ons contactformulier.</p>
-          <a routerLink="/contact" class="btn-contact">Neem Contact Op</a>
+        <!-- Rechter kolom: Documenten & Contact -->
+        <div class="zij-kolom">
+          <div class="info-kaart inschrijf-kaart reveal-animatie" style="animation-delay: 0.2s;">
+            <h3>Online Inschrijven</h3>
+            <p>Klaar om het veld op te stappen? Vul eerst het officiële online inschrijvingsformulier in voordat je de betaling in orde brengt.</p>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfh8Aoc3jHnK7xRRflJv9IkacPIefTzvPCAZrsCZ6OdqP7f5g/viewform?usp=dialog" 
+               target="_blank" rel="noopener noreferrer" 
+               class="btn-inschrijven">
+              Schrijf je nu in <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.9em;"></i>
+            </a>
+          </div>
+
+          <div class="info-kaart documenten-kaart reveal-animatie" style="animation-delay: 0.3s;">
+            <h3>Publieke Documenten</h3>
+            <p>Bekijk hier de officiële reglementen van Royal Antwerp Eagles:</p>
+            <div class="documenten-links">
+              <a routerLink="/huishoudelijk-reglement" class="btn-doc">
+                <i class="fa-solid fa-file-lines"></i> RAE Huishoudelijk Reglement
+              </a>
+              <a routerLink="/sportreglement" class="btn-doc">
+                <i class="fa-solid fa-file-lines"></i> RAE Sportreglement
+              </a>
+            </div>
+          </div>
+
+          <div class="info-kaart contact-kaart reveal-animatie" style="animation-delay: 0.4s;">
+            <h3>Nog vragen?</h3>
+            <p>Voor meer informatie kan u terecht bij het algemene secretariaat of via ons contactformulier.</p>
+            <a routerLink="/contact" class="btn-contact">Neem Contact Op</a>
+          </div>
         </div>
       </div>
     </div>

@@ -1,24 +1,131 @@
+.aansluiten-sectie {
+  background-color: var(--bg-light);
+  min-height: 100vh;
+  padding-bottom: 4rem;
+}
+
 .container {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
-.sectie-titel {
+/* --- IMMERSIVE HERO --- */
+.aansluiten-hero {
+  width: 100%;
+  min-height: 50vh;
+  margin-top: -133px; /* Trekt de foto onder de navbar! */
+  padding-top: 133px;
+  background-color: var(--eagle-blue);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  color: var(--eagle-blue);
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  margin-top: 4rem;
-  text-transform: uppercase;
+  padding-bottom: 6rem; /* Ruimte voor de overlapping! */
+
+  .hero-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(21, 34, 105, 0.95), rgba(153, 25, 25, 0.8));
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    max-width: 800px;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background-color: var(--eagle-red);
+    color: white;
+    padding: 0.4rem 1.2rem;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .hero-titel {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    margin: 0 0 1rem 0;
+    line-height: 1.1;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  }
+
+  .hero-ondertitel {
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    opacity: 0.9;
+  }
 }
 
-.sectie-ondertitel {
-  text-align: center;
-  color: var(--text-dark);
-  font-size: 1.2rem;
+/* --- OVERLAPPING PAPER CONTAINER --- */
+.overlap-container {
+  margin-top: -4rem; /* Dit trekt de content OMHOOG over de blauwe hero! */
+  position: relative;
+  z-index: 10;
+}
+
+/* --- STAPPENPLAN --- */
+.stappen-plan {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   margin-bottom: 3rem;
-  opacity: 0.8;
-  font-weight: bold;
+
+  .stap {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stap-icoon {
+    width: 70px;
+    height: 70px;
+    background-color: var(--bg-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--eagle-blue);
+    margin-bottom: 1rem;
+    border: 3px solid white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+
+    &.highlight {
+      background-color: var(--eagle-red);
+      color: white;
+    }
+  }
+
+  .stap:hover .stap-icoon {
+    transform: translateY(-5px);
+  }
+
+  h4 { color: var(--eagle-blue); font-size: 1.2rem; margin-bottom: 0.5rem; }
+  p { color: var(--text-dark); font-size: 0.95rem; margin: 0; }
+
+  .stap-lijn {
+    flex: 1;
+    height: 2px;
+    background-color: #e2e8f0;
+    margin-top: 35px; /* Uitgelijnd met het midden van het icoon */
+    opacity: 0.5;
+  }
 }
 
 .content-grid {
@@ -30,16 +137,16 @@
 
 .info-kaart {
   background-color: white;
-  padding: 2.5rem;
+  padding: 3rem;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 
   h3 {
     color: var(--eagle-blue);
-    margin-top: 2rem;
+    font-size: 1.5rem;
+    margin-top: 2.5rem;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #eee;
   }
   
   h3:first-of-type {
@@ -62,19 +169,44 @@
   li {
     display: flex;
     justify-content: space-between;
-    padding: 0.8rem 0;
+    align-items: center;
+    padding: 0.8rem 1rem;
     border-bottom: 1px solid #f0f0f0;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
+    transition: background-color 0.2s ease;
+    border-radius: 6px;
+
+    &:hover:not(.categorie-header) {
+      background-color: #f8fbff;
+    }
 
     &:last-child {
       border-bottom: none;
     }
 
+    span i {
+      width: 20px;
+      text-align: center;
+      margin-right: 8px;
+      color: #a0aec0;
+    }
+
+    &.categorie-header {
+      background-color: transparent;
+      color: var(--text-dark);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 0.5rem 0;
+      border-radius: 0;
+    }
+
     &.steunend {
       margin-top: 1rem;
-      background-color: #f8f9fa;
-      padding: 1rem;
-      border-radius: 8px;
+      background-color: #fff9f9;
+      border: 1px solid #ffeeba;
     }
   }
 }
@@ -105,7 +237,7 @@
 
   .rekeningnummer {
     font-size: 1.3rem;
-    font-weight: 900;
+    font-weight: 700;
     color: var(--eagle-red);
     letter-spacing: 1px;
     margin-bottom: 1rem;
@@ -148,6 +280,39 @@
   }
 }
 
+.inschrijf-kaart {
+  border-left: 5px solid var(--eagle-red);
+  background-color: #fff9f9;
+  
+  h3 {
+    color: var(--eagle-red);
+    border-bottom-color: #ffdada;
+  }
+}
+
+.btn-inschrijven {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--eagle-red);
+  color: white;
+  text-decoration: none;
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 900;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    background-color: #7a1414;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  }
+}
+
 .btn-contact {
   display: inline-block;
   background-color: var(--eagle-red);
@@ -164,12 +329,40 @@
   }
 }
 
+/* --- ANIMATIES --- */
+.reveal-animatie {
+  opacity: 0;
+  animation: slideUpFade 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Mobiele weergave */
 @media (max-width: 900px) {
+  .aansluiten-hero {
+    margin-top: -87px; padding-top: 87px;
+    min-height: 40vh; padding-bottom: 4rem;
+  }
+  .overlap-container {
+    margin-top: -3rem;
+  }
   .content-grid {
     grid-template-columns: 1fr;
   }
   
+  .stappen-plan {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem 1.5rem;
+    
+    .stap-lijn {
+      width: 2px; height: 30px; margin: -10px 0;
+    }
+  }
+
   .info-kaart {
     padding: 1.5rem;
   }
