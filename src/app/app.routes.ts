@@ -18,12 +18,14 @@ import { HuishoudelijkReglement } from './huishoudelijk-reglement';
 import { Sportreglement } from './sportreglement';
 import { UnderConstruction } from './under-construction';
 import { Nieuws } from './nieuws';
+import { Privacybeleid } from './privacybeleid/privacybeleid';
 
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'aansluiten', component: Aansluiten },
   { path: 'huishoudelijk-reglement', component: HuishoudelijkReglement },
   { path: 'sportreglement', component: Sportreglement },
+  { path: 'privacybeleid', component: Privacybeleid },
   { path: 'teams', component: Teams },
   { path: 'team/:id', component: TeamDetail }, // <-- Hier hoort de publieke detailpagina
   { path: 'contact', component: Contact },
