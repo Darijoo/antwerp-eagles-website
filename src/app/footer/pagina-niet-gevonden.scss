@@ -1,0 +1,51 @@
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 50vh;
+  padding: 2rem 1rem;
+}
+
+.fout-code {
+  font-size: 8rem;
+  font-weight: 900;
+  color: var(--eagle-red);
+  line-height: 1;
+  margin-bottom: 1rem;
+  text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.05);
+}
+
+.titel {
+  color: var(--eagle-blue);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  margin-bottom: 1rem;
+}
+
+.beschrijving {
+  color: var(--text-dark);
+  font-size: 1.15rem;
+  max-width: 600px;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.terug-knop {
+  background-color: var(--eagle-blue);
+  color: white;
+  text-decoration: none;
+  padding: 1rem 2.5rem;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: var(--eagle-red);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+}

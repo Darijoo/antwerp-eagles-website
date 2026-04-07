@@ -18,7 +18,8 @@ import { HuishoudelijkReglement } from './huishoudelijk-reglement';
 import { Sportreglement } from './sportreglement';
 import { UnderConstruction } from './under-construction';
 import { Nieuws } from './nieuws';
-import { Privacybeleid } from './privacybeleid/privacybeleid';
+import { Privacybeleid } from '../privacybeleid';
+import { PaginaNietGevonden } from './footer/pagina-niet-gevonden';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -59,4 +60,7 @@ export const routes: Routes = [
       { path: 'kalender', component: AdminKalender },
     ],
   },
+  
+  // De "Catch-all" 404 route (MOET altijd helemaal onderaan staan!)
+  { path: '**', component: PaginaNietGevonden }
 ];
