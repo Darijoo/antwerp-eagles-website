@@ -1,0 +1,16 @@
+@if (toonBanner) {
+  <div class="cookie-banner">
+    <div class="cookie-content">
+      <div class="cookie-text">
+        <h4>🍪 Wij gebruiken cookies!</h4>
+        <p>
+          We gebruiken functionele en analytische cookies om te meten hoeveel fans onze pagina's bezoeken (via Google Analytics) en om de website sneller te maken. Ga je hiermee akkoord?
+        </p>
+      </div>
+      <div class="cookie-knoppen">
+        <button class="btn-weiger" (click)="weiger()">Liever niet</button>
+        <button class="btn-accepteer" (click)="accepteer()">Akkoord <i class="fa-solid fa-check" style="margin-left: 5px;"></i></button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,103 @@
+.cookie-banner {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(21, 34, 105, 0.95); /* Eagle Blue met een lichte transparantie */
+  backdrop-filter: blur(10px);
+  color: var(--text-light);
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  border-left: 5px solid var(--eagle-red);
+  z-index: 9999; /* Blijft altijd boven alles (ook de back-to-top knop) */
+  width: 90%;
+  max-width: 800px;
+  animation: slideUp 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+.cookie-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.cookie-text {
+  h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    color: white;
+  }
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    opacity: 0.85;
+  }
+}
+
+.cookie-knoppen {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+
+  button {
+    padding: 0.7rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    border: none;
+  }
+
+  .btn-weiger {
+    background-color: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: white;
+    }
+  }
+
+  .btn-accepteer {
+    background-color: var(--eagle-red);
+    color: white;
+    &:hover {
+      background-color: #b71c1c;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translate(-50%, 50px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* --- MOBIELE WEERGAVE --- */
+@media (max-width: 768px) {
+  .cookie-banner {
+    bottom: 0;
+    width: 100%;
+    border-radius: 16px 16px 0 0; /* Alleen afronding aan de bovenkant */
+    border-left: none;
+    border-top: 5px solid var(--eagle-red);
+    padding: 1.5rem 1rem;
+  }
+
+  .cookie-content {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  .cookie-knoppen {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Knoppen mooi naast elkaar over de volle breedte */
+  }
+}
