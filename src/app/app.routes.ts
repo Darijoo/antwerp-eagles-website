@@ -16,6 +16,7 @@ import { Kalender } from './kalender/kalender';
 import { Aansluiten } from './aansluiten/aansluiten';
 import { HuishoudelijkReglement } from './huishoudelijk-reglement';
 import { Sportreglement } from './sportreglement';
+import { UnderConstruction } from './under-construction';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -28,9 +29,17 @@ export const routes: Routes = [
   { path: 'contact', component: Contact },
   { path: 'kalender', component: Kalender },
   { path: 'nieuws/:id', component: NieuwsArtikel }, // <-- 2. Voeg de dynamische route toe
+  
+  // Tijdelijke 'In Aanbouw' pagina's voor de nieuwe navigatiebalk
+  { path: 'klassementen', component: UnderConstruction },
+  { path: 'toernooien', component: UnderConstruction },
+  { path: 'evenementen', component: UnderConstruction },
+  { path: 'nieuws', component: UnderConstruction },
+  { path: 'historiek', component: UnderConstruction },
+
   { path: 'login', component: Login },
   {
-    path: 'uniform-gids',
+    path: 'uniform',
     loadComponent: () => import('./admin/uniform-gids').then((m) => m.UniformGids),
   },
   {
