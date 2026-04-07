@@ -39,3 +39,18 @@ h1 {
   text-transform: uppercase;
   letter-spacing: 2px;
 }
+
+/* 6. Globale Pagina Wrapper 
+   Handige class om direct je achtergrond, zijmarges en minimale hoogte in te stellen 
+   zonder dat je per pagina alles hoeft uit te vinden. */
+.standaard-pagina {
+  padding: 4rem 2rem; /* Geen 10rem compensatie-ruimte meer nodig dankzij de sticky navbar! */
+  background-color: var(--bg-light);
+  min-height: calc(100vh - 200px); /* Voorkomt dat de footer halverwege het scherm zweeft op korte pagina's */
+}
+
+@media (max-width: 768px) {
+  .standaard-pagina {
+    padding: 3rem 1rem;
+  }
+}

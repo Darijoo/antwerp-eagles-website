@@ -15,6 +15,8 @@
 
   /* We maken deze sectie lekker hoog, afhankelijk van de schermhoogte */
   min-height: 85vh;
+  
+  margin-top: -133px; /* Trekt de hero-foto ónder de sticky navbar voor het glazen effect! */
 
   /* Flexbox om alles perfect in het midden te zetten */
   display: flex;
@@ -23,7 +25,7 @@
   justify-content: center;
   text-align: center;
   color: var(--text-light);
-  padding: 2rem;
+  padding: 8rem 2rem 2rem 2rem; /* Zorgt dat de tekst niet onder de navbar verdwijnt */
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Voor nog betere leesbaarheid */
 }
 
@@ -443,6 +445,10 @@
 
 /* --- MOBIELE OPTIMALISATIE --- */
 @media (max-width: 768px) {
+  .hero-sectie {
+    margin-top: -87px; /* Aangepast voor de dunnere mobiele menubalk */
+  }
+
   .aankomend-sectie {
     padding: 3rem 1rem;
   }

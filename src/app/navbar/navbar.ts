@@ -22,6 +22,8 @@ export class Navbar {
   sluitMenu() {
     this.menuOpen = false;
     this.activeDropdown = null;
+    // Zorgt ervoor dat je bij het navigeren naar een andere pagina altijd weer netjes bovenaan begint
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }
 
   toggleDropdown(menu: string, event: Event) {
