@@ -30,7 +30,7 @@
           class="speler-afbeelding"
         />
 
-        @for (onderdeel of gefilterdeOnderdelen; track onderdeel.id) {
+        @for (onderdeel of gesorteerdeOnderdelen; track onderdeel.id) {
           <button
             class="hotspot"
             [class.actief]="geselecteerdOnderdeel?.id === onderdeel.id"
@@ -49,6 +49,25 @@
 
       <!-- RECHTER KANT: Het Informatie Paneel -->
       <div class="info-paneel">
+        
+        <!-- Zichtbare lijst van alle kledingstukken -->
+        <div class="item-lijst-publiek">
+          <h3>Overzicht Uitrusting</h3>
+          <div class="lijst-knoppen">
+            @for (onderdeel of gesorteerdeOnderdelen; track onderdeel.id) {
+              <button 
+                class="lijst-item-btn" 
+                [class.actief]="geselecteerdOnderdeel?.id === onderdeel.id"
+                (click)="selecteerOnderdeel(onderdeel)"
+                [attr.aria-label]="onderdeel.naam"
+              >
+                <span class="status-indicator" [class.verplicht]="onderdeel.verplicht" [title]="onderdeel.verplicht ? 'Verplicht' : 'Optioneel'"></span>
+                {{ onderdeel.naam }}
+              </button>
+            }
+          </div>
+        </div>
+
         @if (geselecteerdOnderdeel) {
           <div class="info-kaart">
             <div class="kaart-header">

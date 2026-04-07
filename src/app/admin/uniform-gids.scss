@@ -202,6 +202,79 @@
   flex-direction: column;
 }
 
+/* --- LIJST WEERGAVE KANT --- */
+.item-lijst-publiek {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+  border-top: 5px solid var(--eagle-red);
+  animation: slideIn 0.3s ease-out;
+
+  h3 {
+    margin-top: 0;
+    color: var(--eagle-blue);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .lijst-knoppen {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+
+  .lijst-item-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: var(--bg-light);
+    border: 1px solid #e9ecef;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+
+    .status-indicator {
+      min-width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--eagle-blue);
+      &.verplicht {
+        background-color: var(--eagle-red);
+      }
+    }
+
+    &:hover {
+      background: white;
+      border-color: var(--eagle-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    &.actief {
+      background: var(--eagle-blue);
+      color: white;
+      border-color: var(--eagle-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(21, 34, 105, 0.2);
+
+      .status-indicator {
+        background-color: white;
+        &.verplicht {
+          background-color: var(--eagle-red);
+          border: 2px solid white;
+        }
+      }
+    }
+  }
+}
+
 .info-kaart {
   background: white;
   padding: 2.5rem;
@@ -301,6 +374,9 @@
     &:hover {
       background-color: #b71c1c;
     }
+  }
+  .item-lijst-publiek .lijst-knoppen {
+    grid-template-columns: 1fr; /* Zet ze op kleine smartphones netjes onder elkaar */
   }
 }
 

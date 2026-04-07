@@ -46,6 +46,7 @@
     transform: translateY(-10px);
   }
 }
+@import '../admin-shared.css';
 
 .admin-grid {
   display: grid;
@@ -136,6 +137,8 @@
   display: flex;
   gap: 1rem;
   margin-bottom: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
 
   select {
     flex: 1;
@@ -168,6 +171,7 @@
 
   @media (max-width: 768px) {
     flex-direction: column;
+    align-items: stretch;
   }
 }
 

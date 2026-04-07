@@ -27,6 +27,7 @@ export class AdminKalender {
 
   filterType$ = new BehaviorSubject<string>('');
   filterTeam$ = new BehaviorSubject<string>('');
+  toonVerledenEvents$ = new BehaviorSubject<boolean>(false);
 
   wedstrijden$: Observable<Match[]>;
   wedstrijdForm = this.fb.group({
@@ -60,16 +61,17 @@ export class AdminKalender {
         map((wedstrijden) =>
           wedstrijden
             .slice()
-            .sort((a, b) => b.datum.toDate().getTime() - a.datum.toDate().getTime()),
+            .sort((a, b) => a.datum.toDate().getTime() - b.datum.toDate().getTime()),
         ),
       );
 
-    this.wedstrijden$ = combineLatest([alleWedstrijden$, this.filterType$, this.filterTeam$]).pipe(
-      map(([wedstrijden, type, team]) => {
+    this.wedstrijden$ = combineLatest([alleWedstrijden$, this.filterType$, this.filterTeam$, this.toonVerledenEvents$]).pipe(
+      map(([wedstrijden, type, team, toonVerleden]) => {
         return wedstrijden.filter((w) => {
           const matchType = type === '' || (w.type || 'wedstrijd') === type;
           const matchTeam = team === '' || w.team === team;
-          return matchType && matchTeam;
+          const matchVerleden = toonVerleden ? true : !this.isGespeeld(w.datum);
+          return matchType && matchTeam && matchVerleden;
         });
       }),
     );
@@ -201,6 +203,10 @@ export class AdminKalender {
   onFilterTeamWijziging(event: Event) {
     const team = (event.target as HTMLSelectElement).value;
     this.filterTeam$.next(team);
+  }
+
+  toggleVerledenEvents() {
+    this.toonVerledenEvents$.next(!this.toonVerledenEvents$.value);
   }
 
   // Controleert of een wedstrijd in het verleden ligt

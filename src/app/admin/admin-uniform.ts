@@ -2,6 +2,7 @@ import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { UniformService, UniformOnderdeel } from '../diensten/uniform';
 import { Observable, firstValueFrom } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { map } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 
@@ -17,7 +18,14 @@ export class AdminUniform {
   private cdr = inject(ChangeDetectorRef);
   private storage = inject(Storage);
 
-  onderdelen$: Observable<UniformOnderdeel[]> = this.uniformService.haalAlleOnderdelenOp();
+  onderdelen$: Observable<UniformOnderdeel[]> = this.uniformService.haalAlleOnderdelenOp().pipe(
+    map(items => items.sort((a, b) => {
+      if (a.categorie !== b.categorie) return (a.categorie || '').localeCompare(b.categorie || '');
+      if (a.verplicht && !b.verplicht) return -1;
+      if (!a.verplicht && b.verplicht) return 1;
+      return a.naam.localeCompare(b.naam);
+    }))
+  );
   afbeeldingen$: Observable<Record<string, string>> = this.uniformService.haalAfbeeldingenOp();
   huidigeAfbeeldingen: Record<string, string> = {};
 

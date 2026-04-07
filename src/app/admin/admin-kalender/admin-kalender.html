@@ -106,7 +106,7 @@
             {{ bewerkId ? 'Opslaan' : 'Toevoegen' }}
           </button>
           @if (bewerkId) {
-            <button type="button" class="btn-annuleren" (click)="annuleerBewerken()">
+            <button type="button" class="btn-toevoegen" (click)="annuleerBewerken()">
               <i class="fa-solid fa-xmark"></i> Annuleren
             </button>
           }
@@ -151,6 +151,11 @@
             <option [value]="team.naam">{{ team.naam }}</option>
           }
         </select>
+
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; white-space: nowrap; font-weight: bold; color: var(--eagle-blue); padding: 0.5rem;">
+          <input type="checkbox" [checked]="toonVerledenEvents$ | async" (change)="toggleVerledenEvents()" style="width: auto; transform: scale(1.2); padding: 0; margin: 0;" />
+          Toon verleden events
+        </label>
       </div>
 
       <div class="item-lijst">

@@ -16,12 +16,11 @@ export class UniformGids implements OnInit {
   onderdelen: UniformOnderdeel[] = [];
   geselecteerdOnderdeel: UniformOnderdeel | null = null;
   actieveCategorie = 'Baseball';
-  categorieen = ['Baseball', 'Softball', 'Jeugd'];
+  categorieen = ['Baseball', 'Softball'];
   
   afbeeldingen: Record<string, string> = {
     'Baseball': 'https://images.unsplash.com/photo-1508344928928-7165b67de128?auto=format&fit=crop&w=600&q=80',
-    'Softball': 'https://images.unsplash.com/photo-1544098485-2a2ed6da40ba?auto=format&fit=crop&w=600&q=80',
-    'Jeugd': 'https://images.unsplash.com/photo-1510825316025-a131b7b049d5?auto=format&fit=crop&w=600&q=80'
+    'Softball': 'https://images.unsplash.com/photo-1544098485-2a2ed6da40ba?auto=format&fit=crop&w=600&q=80'
   };
 
   ngOnInit() {
@@ -47,9 +46,18 @@ export class UniformGids implements OnInit {
     return this.onderdelen.filter(o => (o.categorie || 'Baseball') === this.actieveCategorie);
   }
 
+  get gesorteerdeOnderdelen() {
+    // Maak een kopie met slice() en sorteer: verplicht eerst, daarna alfabetisch
+    return this.gefilterdeOnderdelen.slice().sort((a, b) => {
+      if (a.verplicht && !b.verplicht) return -1;
+      if (!a.verplicht && b.verplicht) return 1;
+      return a.naam.localeCompare(b.naam);
+    });
+  }
+
   wisselCategorie(cat: string) {
     this.actieveCategorie = cat;
-    const items = this.gefilterdeOnderdelen;
+    const items = this.gesorteerdeOnderdelen;
     this.geselecteerdOnderdeel = items.length > 0 ? items[0] : null;
   }
 
