@@ -24,7 +24,6 @@ export const routes: Routes = [
   { path: 'aansluiten', component: Aansluiten },
   { path: 'huishoudelijk-reglement', component: HuishoudelijkReglement },
   { path: 'sportreglement', component: Sportreglement },
-  { path: 'over-ons', component: OverOns },
   { path: 'teams', component: Teams },
   { path: 'team/:id', component: TeamDetail }, // <-- Hier hoort de publieke detailpagina
   { path: 'contact', component: Contact },
@@ -36,7 +35,7 @@ export const routes: Routes = [
   { path: 'toernooien', component: UnderConstruction },
   { path: 'evenementen', component: UnderConstruction },
   { path: 'nieuws', component: Nieuws },
-  { path: 'historiek', component: UnderConstruction },
+  { path: 'historiek', component: OverOns },
 
   { path: 'login', component: Login },
   {
