@@ -7,6 +7,7 @@ export interface WbscSpeler {
   naam: string;
   positie: string;
   slagWorp: string;
+  geboortejaar?: string;
 }
 
 // Een 'woordenboek' om de afkortingen van de bond om te zetten naar echte namen en velden!
@@ -61,13 +62,14 @@ export class WbscService {
           const kolommen = Array.from(rij.querySelectorAll('td')).map((td) =>
             (td.textContent || '').trim().replace(/\s+/g, ' '),
           );
-          // Check of we echt een speler-rij hebben (minimaal 5 kolommen en een naam)
-          if (kolommen.length >= 5 && kolommen[1]) {
+          // Check of we een speler of coach hebben (minimaal 3 kolommen en een naam)
+          if (kolommen.length >= 3 && kolommen[1]) {
             spelers.push({
               rugnummer: kolommen[0],
               naam: kolommen[1],
               positie: kolommen[2],
-              slagWorp: kolommen[3],
+              slagWorp: kolommen[3] || '',
+              geboortejaar: kolommen[4] || '',
             });
           }
         });
@@ -90,30 +92,19 @@ export class WbscService {
 
     const matchen: any[] = [];
 
-    // Zoek alle wedstrijdblokken op de pagina!
-    const rijen = doc.querySelectorAll('.game-row');
+    // Zoek alle wedstrijdblokken (kalender layout gebruikt .schedule-item, team pagina heeft .game-row)
+    let rijen = doc.querySelectorAll('.schedule-item, .game-row');
+    if (rijen.length === 0) {
+      rijen = doc.querySelectorAll('table tbody tr');
+    }
+
+    let wedstrijdDatum = new Date(); // We onthouden de datum voor het geval hij in een apart header-blokje boven de teams staat!
 
     rijen.forEach((rij) => {
-      // Haal de teamnamen eruit (meestal [0] = Uitploeg, [1] = Thuisploeg)
-      const teams = Array.from(rij.querySelectorAll('.team-name')).map((el) =>
-        (el.textContent || '').trim(),
-      );
-
-      const afkortingUit = teams[0] || 'Onbekend';
-      const afkortingThuis = teams[1] || 'Onbekend';
-
-      const uitPloeg = CLUB_MAPPING[afkortingUit] || { naam: afkortingUit, locatie: 'Uit' };
-      const thuisPloeg = CLUB_MAPPING[afkortingThuis] || { naam: afkortingThuis, locatie: 'Uit' };
-
-      // Haal het uitslag blokje eruit
-      const uitslagBlok = rij.querySelector('.game-score, .score');
-      const uitslagTekst = uitslagBlok
-        ? (uitslagBlok.textContent || '').replace(/\s+/g, ' ').trim()
-        : '';
+      const rijTekst = (rij.textContent || '').replace(/\s+/g, ' ').trim();
 
       // 1. Datum filteren
-      let wedstrijdDatum = new Date();
-      const datumMatch = uitslagTekst.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+      const datumMatch = rijTekst.match(/(\d{2})\/(\d{2})\/(\d{4})/);
       if (datumMatch) {
         const dag = parseInt(datumMatch[1], 10);
         const maand = parseInt(datumMatch[2], 10) - 1; // JavaScript maanden zijn 0-11
@@ -121,9 +112,59 @@ export class WbscService {
         wedstrijdDatum = new Date(jaar, maand, dag, 14, 0); // Standaard op 14:00
       }
 
-      // 2. Score filteren (0:0 in de toekomst is 'nog niet gespeeld')
+      // Haal de teamnamen eruit
+      let teams = Array.from(rij.querySelectorAll('.team-name, [class*="team-name"]')).map((el) => (el.textContent || '').trim());
+      
+      // Fallback voor kalenderpagina's waar teams soms gewone HTML-links (a-tags) zijn
+      if (teams.length < 2) {
+        teams = Array.from(rij.querySelectorAll('a[href*="/teams/"]')).map((el) => (el.textContent || '').trim());
+      }
+
+      // NIEUWE FALLBACK: Zoek in de ruwe tekst direct naar clubnamen op volgorde van verschijning
+      if (teams.length < 2) {
+        const alleNamen = Object.values(CLUB_MAPPING).map(c => c.naam);
+        const regex = new RegExp(alleNamen.join('|'), 'g');
+        const gevonden = rijTekst.match(regex);
+        if (gevonden && gevonden.length >= 2) {
+          teams = [...new Set(gevonden)].slice(0, 2); // Verwijder eventuele dubbele vermeldingen
+        }
+      }
+
+      // Geen teams gevonden? Dan is het waarschijnlijk alleen een datum-header of een lege rij. Sla deze over!
+      if (teams.length < 2) return;
+
+      const afkortingUit = teams[0] || 'Onbekend';
+      const afkortingThuis = teams[1] || 'Onbekend';
+
+      // Hulpfunctie om de ploeg op te zoeken via de afkorting (Bv 'ANT') óf direct via de volledige naam
+      const vindPloeg = (zoekTerm: string) => {
+        if (CLUB_MAPPING[zoekTerm]) return CLUB_MAPPING[zoekTerm];
+        const ploeg = Object.values(CLUB_MAPPING).find(c => c.naam === zoekTerm);
+        return ploeg || { naam: zoekTerm, locatie: 'Uit' };
+      };
+
+      const uitPloeg = vindPloeg(afkortingUit);
+      const thuisPloeg = vindPloeg(afkortingThuis);
+
+      // 2. Tijd filteren (Zoek naar uren/minuten formaat, bv 14:00 of 15:30)
+      let wedstrijdTijd = '14:00';
+      const tijdMatch = rijTekst.match(/\b(\d{2}:\d{2})\b/);
+      if (tijdMatch) {
+        wedstrijdTijd = tijdMatch[1];
+        const [uur, min] = wedstrijdTijd.split(':');
+        wedstrijdDatum.setHours(parseInt(uur, 10), parseInt(min, 10));
+      }
+
+      // 3. Score filteren
       let score = '';
-      const scoreMatch = uitslagTekst.match(/(\d+)\s*:\s*(\d+)/);
+      
+      // Verwijder tijd, datum en teams uit de string zodat we die getallen (bijv. 12:30 of U12) niet verwarren met de uitslag
+      let schoneTekst = rijTekst;
+      if (tijdMatch) schoneTekst = schoneTekst.replace(tijdMatch[0], '');
+      if (datumMatch) schoneTekst = schoneTekst.replace(datumMatch[0], '');
+      teams.forEach(t => schoneTekst = schoneTekst.replace(t, ''));
+
+      const scoreMatch = schoneTekst.match(/\b(\d+)\s*[-:]\s*(\d+)\b/);
       if (scoreMatch) {
         if (
           scoreMatch[1] !== '0' ||
@@ -134,19 +175,22 @@ export class WbscService {
         }
       }
 
+      // 4. Locatie bepalen (Soms wordt er een veld genoemd op de kalender, anders fallback naar thuisploeg)
+      let locatie = thuisPloeg.locatie;
+
       matchen.push({
         thuisploeg: thuisPloeg.naam,
         uitploeg: uitPloeg.naam,
-        datum: wedstrijdDatum,
-        tijd: '14:00', // Tijd wordt helaas niet vermeld in deze blokken
-        locatie: thuisPloeg.locatie,
+        datum: new Date(wedstrijdDatum), // Maak een kopie, anders krijgen alle matchen dezelfde datum!
+        tijd: wedstrijdTijd,
+        locatie: locatie,
         uitslag: score,
       });
     });
 
     return {
       status: 'Klaar om te synchroniseren!',
-      aantalGevonden: rijen.length,
+      aantalGevonden: matchen.length,
       matchen: matchen,
     };
   }

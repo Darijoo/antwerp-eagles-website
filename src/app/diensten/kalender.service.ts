@@ -24,6 +24,7 @@ export interface Match {
   tijd: string;
   locatie: string;
   uitslag?: string; // Optioneel
+  isHandmatigBewerkt?: boolean;
 }
 
 @Injectable({

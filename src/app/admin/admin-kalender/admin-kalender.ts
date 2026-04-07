@@ -41,6 +41,7 @@ export class AdminKalender {
     omschrijving: [''],
     locatie: ['Eglantierlaan, Wilrijk', Validators.required],
     uitslag: [''],
+    isHandmatigBewerkt: [false],
     geannuleerd: [false],
   });
 
@@ -103,6 +104,7 @@ export class AdminKalender {
       omschrijving: formValue.omschrijving || '',
       locatie: formValue.locatie || '',
       uitslag: formValue.uitslag || '',
+      isHandmatigBewerkt: formValue.isHandmatigBewerkt || false,
       geannuleerd: formValue.geannuleerd || false,
     };
 
@@ -139,6 +141,7 @@ export class AdminKalender {
       omschrijving: wedstrijd.omschrijving || '',
       locatie: wedstrijd.locatie,
       uitslag: wedstrijd.uitslag || '',
+      isHandmatigBewerkt: (wedstrijd as any).isHandmatigBewerkt || false,
       geannuleerd: (wedstrijd as any).geannuleerd || false,
     });
 
@@ -156,6 +159,7 @@ export class AdminKalender {
       titel: '',
       omschrijving: '',
       locatie: 'Eglantierlaan, Wilrijk',
+      isHandmatigBewerkt: false,
       geannuleerd: false,
     });
   }

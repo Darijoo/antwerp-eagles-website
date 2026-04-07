@@ -246,12 +246,23 @@ export class AdminTeams {
 
   async syncKalender(team: Team) {
     const teamUrl = team.wbscTeamUrl;
-    if (!teamUrl) return;
+    if (!teamUrl) {
+      this.toonNotificatie('Geen WBSC URL ingesteld voor dit team.', 'fout');
+      return;
+    }
+
+    // Vorm de Team-URL om naar een Kalender-URL indien nodig
+    let fetchUrl = teamUrl;
+    const match = teamUrl.match(/events\/([^\/]+)\/teams\/([^\/?#]+)/);
+    if (match) {
+      fetchUrl = `https://www.baseballsoftball.be/en/events/${match[1]}/calendars?team=${match[2]}`;
+    }
+
     this.syncingTeamId = team.id;
 
     try {
       const bestaandeMatchen = await firstValueFrom(this.kalenderService.haalAlleWedstrijdenOp());
-      const result = await firstValueFrom(this.wbscService.haalTeamMatchenOp(teamUrl));
+      const result = await firstValueFrom(this.wbscService.haalTeamMatchenOp(fetchUrl));
 
       if (result.matchen && result.matchen.length > 0) {
         let aantalToegevoegd = 0;
@@ -271,17 +282,20 @@ export class AdminTeams {
           });
 
           if (bestaandeMatch) {
+            const behoudUitslag = (bestaandeMatch as any).isHandmatigBewerkt;
+            const nieuweUitslag = behoudUitslag ? bestaandeMatch.uitslag : match.uitslag;
+
             if (
-              bestaandeMatch.uitslag !== match.uitslag ||
+              bestaandeMatch.uitslag !== nieuweUitslag ||
               bestaandeMatch.tijd !== match.tijd ||
               bestaandeMatch.locatie !== match.locatie
             ) {
               await this.kalenderService.updateWedstrijd(bestaandeMatch.id!, {
-                uitslag: match.uitslag,
+                uitslag: nieuweUitslag,
                 tijd: match.tijd,
                 locatie: match.locatie,
               });
-              bestaandeMatch.uitslag = match.uitslag;
+              bestaandeMatch.uitslag = nieuweUitslag;
               bestaandeMatch.tijd = match.tijd;
               bestaandeMatch.locatie = match.locatie;
               aantalGeupdate++;
@@ -349,8 +363,16 @@ export class AdminTeams {
 
       for (const team of teamsMetUrl) {
         try {
+          let fetchUrl = team.wbscTeamUrl!;
+          
+          // Vorm de Team-URL om naar een Kalender-URL
+          const match = fetchUrl.match(/events\/([^\/]+)\/teams\/([^\/?#]+)/);
+          if (match) {
+            fetchUrl = `https://www.baseballsoftball.be/en/events/${match[1]}/calendars?team=${match[2]}`;
+          }
+
           const result = await firstValueFrom(
-            this.wbscService.haalTeamMatchenOp(team.wbscTeamUrl!),
+            this.wbscService.haalTeamMatchenOp(fetchUrl),
           );
           if (result.matchen && result.matchen.length > 0) {
             for (const match of result.matchen) {
@@ -367,17 +389,20 @@ export class AdminTeams {
               });
 
               if (bestaandeMatch) {
+                const behoudUitslag = (bestaandeMatch as any).isHandmatigBewerkt;
+                const nieuweUitslag = behoudUitslag ? bestaandeMatch.uitslag : match.uitslag;
+
                 if (
-                  bestaandeMatch.uitslag !== match.uitslag ||
+                  bestaandeMatch.uitslag !== nieuweUitslag ||
                   bestaandeMatch.tijd !== match.tijd ||
                   bestaandeMatch.locatie !== match.locatie
                 ) {
                   await this.kalenderService.updateWedstrijd(bestaandeMatch.id!, {
-                    uitslag: match.uitslag,
+                    uitslag: nieuweUitslag,
                     tijd: match.tijd,
                     locatie: match.locatie,
                   });
-                  bestaandeMatch.uitslag = match.uitslag;
+                  bestaandeMatch.uitslag = nieuweUitslag;
                   bestaandeMatch.tijd = match.tijd;
                   bestaandeMatch.locatie = match.locatie;
                   totaalGeupdate++;

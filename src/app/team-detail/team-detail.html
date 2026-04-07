@@ -80,6 +80,7 @@
                       <th class="col-naam">Naam</th>
                       <th class="col-pos">Positie</th>
                       <th class="col-slag">Slag/Worp</th>
+                      <th class="col-geb">Geb. Jaar</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -95,6 +96,7 @@
                           <span class="positie-badge">{{ speler.positie }}</span>
                         </td>
                         <td class="col-slag">{{ speler.slagWorp }}</td>
+                        <td class="col-geb">{{ speler.geboortejaar ? speler.geboortejaar : '-' }}</td>
                       </tr>
                     }
                   </tbody>
