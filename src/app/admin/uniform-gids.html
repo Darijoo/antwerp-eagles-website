@@ -8,17 +8,29 @@
       </p>
     </div>
 
+    <!-- Categorie Tabs -->
+    <div class="categorie-tabs">
+      @for (cat of categorieen; track cat) {
+        <button 
+          class="tab-btn" 
+          [class.actief]="actieveCategorie === cat"
+          (click)="wisselCategorie(cat)">
+          {{ cat }}
+        </button>
+      }
+    </div>
+
     <div class="gids-grid">
       <!-- LINKER KANT: De Interactieve Afbeelding -->
       <div class="visual-container">
         <!-- Vervang deze src="..." later door je eigen Anime/3D render -->
         <img
-          src="https://images.unsplash.com/photo-1508344928928-7165b67de128?auto=format&fit=crop&w=600&q=80"
-          alt="Baseball Uniform"
+          [src]="afbeeldingen[actieveCategorie]"
+          [alt]="actieveCategorie + ' Uniform'"
           class="speler-afbeelding"
         />
 
-        @for (onderdeel of onderdelen; track onderdeel.id) {
+        @for (onderdeel of gefilterdeOnderdelen; track onderdeel.id) {
           <button
             class="hotspot"
             [class.actief]="geselecteerdOnderdeel?.id === onderdeel.id"

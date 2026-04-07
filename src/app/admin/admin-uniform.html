@@ -80,6 +80,15 @@
           />
         </div>
 
+        <div class="form-groep">
+          <label for="categorie">Voor welk team/categorie is dit item?</label>
+          <select id="categorie" name="categorie" [(ngModel)]="nieuwOnderdeel.categorie">
+            <option value="Baseball">Baseball (Heren)</option>
+            <option value="Softball">Softball (Dames)</option>
+            <option value="Jeugd">Jeugd</option>
+          </select>
+        </div>
+
         <div
           class="form-groep"
           style="
@@ -143,6 +152,7 @@
       <thead>
         <tr>
           <th>Onderdeel</th>
+          <th>Categorie</th>
           <th>Verplicht</th>
           <th>Winkel</th>
           <th>Acties</th>
@@ -153,6 +163,9 @@
           <tr>
             <td>
               <strong>{{ item.naam }}</strong>
+            </td>
+            <td>
+              <span class="badge" style="background: #e2e8f0; color: #333; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">{{ item.categorie || 'Baseball' }}</span>
             </td>
             <td>
               <span

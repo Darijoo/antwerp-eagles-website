@@ -32,11 +32,14 @@ export interface Match {
 export class KalenderService {
   private firestore: Firestore = inject(Firestore);
   private matchesCollection = collection(this.firestore, 'wedstrijden');
+  private matchenQuery = query(this.matchesCollection, orderBy('datum', 'asc'));
+
+  // De observable één keer aanmaken tijdens de opstart (wanneer de Injection Context nog actief is)
+  private wedstrijden$ = collectionData(this.matchenQuery, { idField: 'id' }) as Observable<Match[]>;
 
   // Haal alle wedstrijden op, gesorteerd op datum
   haalAlleWedstrijdenOp(): Observable<Match[]> {
-    const q = query(this.matchesCollection, orderBy('datum', 'asc'));
-    return collectionData(q, { idField: 'id' }) as Observable<Match[]>;
+    return this.wedstrijden$;
   }
 
   // Voeg een nieuwe wedstrijd toe

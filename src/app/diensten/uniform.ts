@@ -20,6 +20,7 @@ export interface UniformOnderdeel {
   winkelLink: string;
   top: number;
   left: number;
+  categorie?: string;
 }
 
 @Injectable({

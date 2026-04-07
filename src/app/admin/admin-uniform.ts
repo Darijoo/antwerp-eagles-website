@@ -30,6 +30,7 @@ export class AdminUniform {
     winkelLink: '',
     top: 50,
     left: 50,
+    categorie: 'Baseball',
   };
 
   toggleFormulier() {
@@ -76,6 +77,7 @@ export class AdminUniform {
       winkelLink: '',
       top: 50,
       left: 50,
+      categorie: 'Baseball',
     };
   }
 }

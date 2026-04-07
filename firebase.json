@@ -19,10 +19,6 @@
     ],
     "rewrites": [
       {
-        "source": "/api/wbsc",
-        "function": "wbscProxy"
-      },
-      {
         "source": "**",
         "destination": "/index.html"
       }
@@ -52,8 +48,7 @@
         "*.local"
       ],
       "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint",
-        "npm --prefix \"$RESOURCE_DIR\" run build"
+        "npm --prefix functions run build"
       ]
     }
   ]

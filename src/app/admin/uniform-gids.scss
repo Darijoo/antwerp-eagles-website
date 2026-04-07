@@ -27,6 +27,35 @@
   }
 }
 
+/* --- CATEGORIE TABS --- */
+.categorie-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background-color: white;
+  border: 2px solid var(--eagle-blue);
+  color: var(--eagle-blue);
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+
+  &:hover, &.actief {
+    background-color: var(--eagle-blue);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(21, 34, 105, 0.2);
+  }
+}
+
 .gids-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -44,19 +44,11 @@ const CLUB_MAPPING: Record<string, { naam: string; locatie: string }> = {
 export class WbscService {
   private http = inject(HttpClient);
 
-  // --- SLIMME PROXY KIEZER ---
   private haalHtmlOp(doelUrl: string): Observable<string> {
-    const isLocalhost = window.location.hostname === 'localhost';
-
-    if (isLocalhost) {
-      // Lokaal testen we via corsproxy.io (want lokaal werkt de rewrite URL niet zonder emulator)
-      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(doelUrl)}`;
-      return this.http.get(proxyUrl, { responseType: 'text' });
-    } else {
-      // Live op Firebase gebruiken we onze eigen supersnelle Cloud Function!
-      const proxyUrl = `/api/wbsc?url=${encodeURIComponent(doelUrl)}`;
-      return this.http.get(proxyUrl, { responseType: 'text' });
-    }
+    // Gebruik altijd onze eigen supersnelle Cloud Function!
+    // Omdat we CORS in de functie hebben ingesteld, werkt deze ook perfect vanaf localhost.
+    const proxyUrl = `https://us-central1-antwerp-eagles-d0a87.cloudfunctions.net/wbscProxy?url=${encodeURIComponent(doelUrl)}`;
+    return this.http.get(proxyUrl, { responseType: 'text' });
   }
 
   // --- 1. SPELERSLIJST (ROSTER) OPHALEN ---
