@@ -2,16 +2,19 @@
   <h2>Play Ball! ⚾</h2>
   <p>Welkom op de officiële website van de Antwerp Eagles.</p>
   <a routerLink="/aansluiten" class="cta-knop">Word Lid</a>
+  <div class="scroll-indicator">
+    <i class="fa-solid fa-chevron-down"></i>
+  </div>
 </div>
 
 <section class="aankomend-sectie">
   <div class="container">
-    <h2 class="sectie-titel">Binnenkort bij de Eagles</h2>
+    <h2 class="sectie-titel reveal-on-scroll">Binnenkort bij de Eagles</h2>
 
     <div class="aankomend-grid">
       @for (item of aankomendeActiviteiten$ | async; track item.id) {
         <div
-          class="aankomend-kaart"
+          class="aankomend-kaart reveal-on-scroll"
           [class.is-evenement]="item.type === 'evenement'"
           [class.geannuleerd]="$any(item).geannuleerd"
           [style.border-left-color]="item.team ? getTeamKleur(item.team) : null"
@@ -69,9 +72,10 @@
           </div>
         </div>
       } @empty {
-        <p class="lege-status" style="grid-column: 1 / -1">
-          Er staan momenteel geen activiteiten op de planning.
-        </p>
+        <div class="lege-status">
+          <i class="fa-regular fa-calendar-xmark fa-3x"></i>
+          <p>Er staan momenteel geen activiteiten op de planning.</p>
+        </div>
       }
     </div>
 
@@ -83,12 +87,12 @@
 
 <section class="uitslagen-sectie">
   <div class="container">
-    <h2 class="sectie-titel">Laatste Uitslagen</h2>
+    <h2 class="sectie-titel reveal-on-scroll">Laatste Uitslagen</h2>
 
     <div class="aankomend-grid">
       @for (match of laatsteUitslagen$ | async; track match.id) {
         <div
-          class="aankomend-kaart"
+          class="aankomend-kaart reveal-on-scroll"
           [style.border-left-color]="match.team ? getTeamKleur(match.team) : null"
         >
           <div class="datum-blok" [style.background-color]="match.team ? getTeamKleur(match.team) : null">
@@ -144,9 +148,10 @@
           }
         </div>
       } @empty {
-        <p class="lege-status" style="grid-column: 1 / -1">
-          Er zijn recent geen uitslagen geregistreerd.
-        </p>
+        <div class="lege-status">
+          <i class="fa-solid fa-baseball-bat-ball fa-3x"></i>
+          <p>Er zijn recent geen uitslagen geregistreerd.</p>
+        </div>
       }
     </div>
 
@@ -158,11 +163,11 @@
 
 <section class="nieuws-sectie">
   <div class="container">
-    <h2 class="sectie-titel">Laatste Nieuws</h2>
+    <h2 class="sectie-titel reveal-on-scroll">Laatste Nieuws</h2>
 
     <div class="nieuws-grid">
       @for (bericht of laatsteNieuws; track bericht.id) {
-        <article class="nieuws-kaart">
+        <article class="nieuws-kaart reveal-on-scroll">
           @if (bericht.afbeeldingUrl) {
             <div class="kaart-afbeelding">
               <img [src]="bericht.afbeeldingUrl" [alt]="bericht.titel" />
@@ -173,7 +178,7 @@
           <div class="nieuws-inhoud">
             <h3>{{ bericht.titel }}</h3>
             <p>{{ bericht.samenvatting }}</p>
-            <a [routerLink]="['/nieuws', bericht.id]" class="lees-meer">Lees verder &rarr;</a>
+            <a [routerLink]="['/nieuws', bericht.id]" class="lees-meer">Lees verder <span class="arrow">&rarr;</span></a>
           </div>
         </article>
       }

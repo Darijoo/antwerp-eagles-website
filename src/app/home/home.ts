@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core'; // <-- 1. Importeer de ChangeDetectorRef
+import { Component, OnInit, AfterViewChecked, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NieuwsService, NieuwsBericht } from '../diensten/nieuws';
 import { DatePipe, AsyncPipe } from '@angular/common';
@@ -14,7 +14,7 @@ import { TeamService } from '../diensten/team';
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class Home implements OnInit {
+export class Home implements OnInit, AfterViewChecked {
   private nieuwsService = inject(NieuwsService);
   private cdr = inject(ChangeDetectorRef); // <-- 2. Haal de 'schilder' naar binnen
   private kalenderService = inject(KalenderService);
@@ -25,6 +25,9 @@ export class Home implements OnInit {
   laatsteNieuws: NieuwsBericht[] = [];
   aankomendeActiviteiten$: Observable<Match[]>;
   laatsteUitslagen$: Observable<Match[]>;
+
+  private observer: IntersectionObserver | null = null;
+  private viewCheckedTimer: any;
 
   constructor() {
     this.aankomendeActiviteiten$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
@@ -82,6 +85,27 @@ export class Home implements OnInit {
         console.error('Oeps, we konden Strapi niet bereiken:', fout);
       },
     });
+  }
+
+  // Deze Angular lifecycle-hook kijkt of er nieuwe elementen (zoals ingeladen uitslagen) op het scherm zijn getekend
+  ngAfterViewChecked() {
+    clearTimeout(this.viewCheckedTimer);
+    this.viewCheckedTimer = setTimeout(() => {
+      if (!this.observer) {
+        this.observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible'); // Zet de animatie in gang!
+              this.observer?.unobserve(entry.target); // Speel de animatie maar 1x af
+            }
+          });
+        }, { threshold: 0.15 }); // Start de animatie zodra 15% van het kaartje in beeld is
+      }
+      document.querySelectorAll('.reveal-on-scroll:not(.is-visible):not(.is-observed)').forEach(el => {
+        el.classList.add('is-observed');
+        this.observer?.observe(el);
+      });
+    }, 200);
   }
 
   // Genereer een vaste kleur op basis van de letters uit de teamnaam

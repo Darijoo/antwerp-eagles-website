@@ -6,9 +6,18 @@
   align-items: center;
   padding: 1.5rem 3rem;
   border-bottom: 5px solid var(--eagle-red);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
   z-index: 1000; /* Zorgt ervoor dat de navbar altijd over andere elementen (zoals foto's) heen valt */
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  /* De "Smart Hide" class schuift de balk omhoog buiten beeld */
+  &.navbar-hidden {
+    transform: translateY(-100%);
+  }
 }
 
 .logo {
@@ -46,10 +55,26 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    position: relative;
 
     /* Als je met je muis over de link gaat, wordt hij club-rood! */
     &:hover {
       color: var(--eagle-red);
+    }
+
+    /* Actieve link styling */
+    &.actief-link {
+      color: var(--eagle-red);
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--eagle-red);
+      }
     }
   }
 
@@ -97,6 +122,10 @@
       background-color: rgba(255,255,255,0.1);
       color: white;
       padding-left: 2rem; /* Klein inspring effectje */
+    }
+
+    &.actief-link::after {
+      display: none; /* Geen streepje onder sub-items, alleen de rode kleur is voldoende */
     }
   }
 }
@@ -225,6 +254,10 @@
       &:hover {
         padding-left: 3rem; /* Reset hover inspring effect voor mobiel */
         background-color: rgba(255,255,255,0.05);
+      }
+      
+      &.actief-link::after {
+        display: none;
       }
     }
   }

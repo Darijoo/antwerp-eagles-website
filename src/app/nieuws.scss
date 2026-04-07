@@ -54,7 +54,12 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.5s ease;
   }
+}
+
+.nieuws-kaart:hover .kaart-afbeelding img {
+  transform: scale(1.08);
 }
 
 .nieuws-datum {
@@ -92,12 +97,23 @@
 .lees-meer {
   color: var(--eagle-red);
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-weight: bold;
   align-self: flex-start;
   transition: color 0.3s ease;
 
+  .arrow {
+    transition: transform 0.3s ease;
+  }
+
   &:hover {
     color: var(--eagle-blue);
+    
+    .arrow {
+      transform: translateX(4px);
+    }
   }
 }
 

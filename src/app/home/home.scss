@@ -3,17 +3,18 @@
   background-image:
     linear-gradient(
       to bottom,
-      rgba(21, 34, 105, 0.9),
-      rgba(21, 34, 105, 0.6) 50%,
-      rgba(21, 34, 105, 0.9)
+      rgba(21, 34, 105, 0.75),
+      rgba(21, 34, 105, 0.4) 50%,
+      rgba(21, 34, 105, 0.75)
     ),
     url('../../assets/bb_field.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed; /* Zorgt voor een subtiel parallax effect */
+  position: relative;
 
   /* We maken deze sectie lekker hoog, afhankelijk van de schermhoogte */
-  min-height: 70vh;
+  min-height: 85vh;
 
   /* Flexbox om alles perfect in het midden te zetten */
   display: flex;
@@ -82,9 +83,30 @@
   }
 }
 
+/* Animatie voor het scroll-pijltje */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 2rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-15px);
+  }
+  60% {
+    transform: translateY(-7px);
+  }
+}
+
 /* --- AANKOMENDE ACTIVITEITEN SECTIE --- */
 .aankomend-sectie {
-  padding: 4rem 2rem 0 2rem;
+  padding: 4rem 2rem;
   background-color: var(--bg-light);
 }
 
@@ -209,7 +231,7 @@
 
 /* --- UITSLAGEN SECTIE --- */
 .uitslagen-sectie {
-  padding: 4rem 2rem 0 2rem;
+  padding: 4rem 2rem;
   background-color: white; /* Een witte achtergrond om te breken met de grijze secties erboven en eronder */
 }
 
@@ -322,11 +344,30 @@
   }
 }
 
-.nieuws-kaart {
-  /* Zorgt ervoor dat de foto netjes binnen de (eventueel) ronde hoekjes van je kaartje blijft */
-  overflow: hidden;
+/* De 'Empty States' liefde! */
+.lege-status {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: white;
+  border-radius: 8px;
+  border: 2px dashed #e2e8f0;
+  color: #7f8c8d;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  
+  i {
+    color: #bdc3c7;
+    opacity: 0.5;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
 }
 
 .kaart-afbeelding {
@@ -337,8 +378,13 @@
     width: 100%;
     height: 100%;
     object-fit: cover; /* Snijdt de foto perfect bij als een uitsnede, zonder hem plat te drukken! */
+    transition: transform 0.5s ease; /* Zorgt voor de vloeiende zoom */
     display: block;
   }
+}
+
+.nieuws-kaart:hover .kaart-afbeelding img {
+  transform: scale(1.08); /* De 'wow-factor' image zoom */
 }
 
 .nieuws-datum {
@@ -375,23 +421,34 @@
 .lees-meer {
   color: var(--eagle-red);
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-weight: bold;
   align-self: flex-start; /* Zet de link netjes links uitgelijnd */
   transition: color 0.3s ease;
 
+  .arrow {
+    transition: transform 0.3s ease;
+  }
+
   &:hover {
     color: var(--eagle-blue);
+    
+    .arrow {
+      transform: translateX(4px); /* Pijltje schuift opzij */
+    }
   }
 }
 
 /* --- MOBIELE OPTIMALISATIE --- */
 @media (max-width: 768px) {
   .aankomend-sectie {
-    padding: 3rem 1rem 0 1rem;
+    padding: 3rem 1rem;
   }
 
   .uitslagen-sectie {
-    padding: 3rem 1rem 0 1rem;
+    padding: 3rem 1rem;
   }
 
   .nieuws-sectie {
@@ -401,5 +458,17 @@
   .sectie-titel {
     font-size: 2rem; /* Iets kleinere titel op mobiel */
     margin-bottom: 2rem;
+  }
+}
+
+/* --- SCROLL REVEAL ANIMATIE --- */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(40px); /* Kaartjes starten iets lager dan hun eindpositie */
+  transition: opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  &.is-visible {
+    opacity: 1;
+    transform: translateY(0); /* Zweef zachtjes omhoog! */
   }
 }
