@@ -1,69 +1,96 @@
 .artikel-sectie {
-  padding: 4rem 2rem;
   background-color: var(--bg-light);
-  min-height: calc(100vh - 200px);
+  min-height: 100vh;
+  padding-bottom: 4rem;
 }
 
 .container {
-  max-width: 800px; /* Smallere breedte leest veel fijner voor lange teksten! */
+  max-width: 850px;
   margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .terug-knop {
-  display: inline-block;
-  color: var(--eagle-blue);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255,255,255,0.7);
   text-decoration: none;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   margin-bottom: 2rem;
   transition: color 0.3s ease;
 
   &:hover {
-    color: var(--eagle-red);
+    color: white;
   }
 }
 
-.artikel-kaart {
+/* --- IMMERSIVE HERO --- */
+.artikel-hero {
+  width: 100%;
+  min-height: 50vh;
+  margin-top: -133px; /* Trekt de foto onder de navbar! */
+  padding-top: 133px;
+  background-color: var(--eagle-blue);
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 6rem; /* Ruimte voor de overlapping! */
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  .hero-meta { margin-bottom: 1rem; }
+  
+  .hero-titel {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 900;
+    color: white;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1.1;
+  }
+}
+
+.artikel-badge {
+  display: inline-block;
+  background-color: var(--eagle-red);
+  color: white;
+  padding: 0.4rem 1.2rem;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* --- OVERLAPPING PAPER (Leesgedeelte) --- */
+.reading-container {
   background-color: white;
   border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-.artikel-inhoud {
-  padding: 1.5rem 2rem;
-}
-
-.artikel-header {
-  margin-bottom: 1rem;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 1rem;
-
-  h1 {
-    color: white !important; /* Maak de tekst geforceerd wit */
-    font-size: 2.2rem;
-    font-weight: 900;
-    margin: 0 0 0.5rem 0;
-    line-height: 1.2;
-  }
-}
-
-.artikel-meta {
-  color: #7f8c8d;
-  font-size: 0.9rem;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+  margin-top: -4rem; /* Dit trekt het papier OMHOOG over de foto! */
+  position: relative;
+  z-index: 10;
+  padding: 3rem 4rem;
 }
 
 .artikel-hoofdfoto {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
   border-radius: 8px;
   overflow: hidden;
   position: relative;
-  cursor: pointer;
+  cursor: zoom-in;
   background-color: #f8f9fa; /* Zachte achtergrond voor foto's die niet de volle breedte hebben */
+  
   img {
     width: 100%;
     max-height: 600px;
-    object-fit: contain; /* Voorkomt dat de foto wordt afgesneden! */
+    object-fit: contain; /* Zorgt dat de HELE foto zichtbaar blijft, zonder af te snijden! */
     display: block;
   }
 
@@ -73,31 +100,56 @@
     right: 1rem;
     background-color: rgba(21, 34, 105, 0.8);
     color: white;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.2rem;
     opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: scale(0.8);
   }
 
   &:hover {
     .vergroot-icoon {
       opacity: 1;
+      transform: scale(1);
     }
   }
 }
 
 .artikel-tekst {
   color: var(--text-dark);
-  line-height: 1.8;
-  font-size: 1.1rem;
+  line-height: 1.9;
+  font-size: 1.15rem;
 
-  p {
-    margin-bottom: 1.5rem;
+  p { margin-bottom: 1.5rem; }
+}
+
+.behoud-enters { white-space: pre-line; }
+
+/* --- SOCIAL SHARE --- */
+.artikel-delen {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #eee;
+
+  .deel-tekst { font-weight: bold; color: var(--eagle-blue); font-size: 1.1rem; }
+
+  .btn-deel {
+    width: 45px; height: 45px; border-radius: 50%; border: none;
+    color: white; font-size: 1.3rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+    &.whatsapp { background-color: #25D366; }
+    &.facebook { background-color: #1877F2; }
   }
 }
 
@@ -150,37 +202,85 @@
 
   h3 {
     color: var(--eagle-blue);
+    font-size: 1.5rem;
     margin-bottom: 1.5rem;
   }
 }
 
 .galerij-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
+}
+
+.galerij-item {
+  position: relative;
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  .hover-overlay {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(21, 34, 105, 0.7); display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 2rem; opacity: 0; transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    .hover-overlay { opacity: 1; }
+    .galerij-foto { transform: scale(1.05); }
+  }
 }
 
 .galerij-foto {
   width: 100%;
-  height: 150px;
+  height: 200px;
   object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-  &:hover {
-    transform: scale(1.05);
-  }
+  display: block;
+  transition: transform 0.5s ease;
 }
 
 /* --- MOBIELE OPTIMALISATIE --- */
 @media (max-width: 768px) {
-  .artikel-sectie {
-    padding: 1.5rem 1rem;
+  .artikel-hero {
+    margin-top: -87px; padding-top: 87px;
+    min-height: 40vh; padding-bottom: 4rem;
   }
-  .artikel-inhoud {
-    padding: 1rem;
+  .reading-container {
+    padding: 2rem 1.5rem; margin-top: -3rem;
   }
-  .artikel-header h1 {
-    font-size: 1.5rem;
-  }
+}
+
+/* --- ANIMATIES & SKELETONS --- */
+.reveal-animatie {
+  opacity: 0;
+  animation: slideUpFade 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.skeleton-bg {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-kaart { pointer-events: none; }
+.skeleton-hero {
+  width: 100%; height: 50vh; min-height: 400px;
+  @extend .skeleton-bg;
+}
+.skeleton-text-line {
+  width: 100%; height: 16px; border-radius: 4px; margin-bottom: 0.8rem;
+  @extend .skeleton-bg;
+  
+  &.w-80 { width: 80%; }
+  &.w-70 { width: 70%; }
+  &.w-60 { width: 60%; }
 }

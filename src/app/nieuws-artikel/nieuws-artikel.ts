@@ -39,4 +39,16 @@ export class NieuwsArtikel implements OnInit {
   sluitFoto() {
     this.geselecteerdeFoto = null;
   }
+
+  deelOpWhatsApp(artikel: NieuwsBericht, event: Event) {
+    event.preventDefault();
+    const url = window.location.origin + '/nieuws/' + artikel.id;
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(artikel.titel + ' - Lees meer op: ' + url)}`, '_blank');
+  }
+
+  deelOpFacebook(artikel: NieuwsBericht, event: Event) {
+    event.preventDefault();
+    const url = window.location.origin + '/nieuws/' + artikel.id;
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+  }
 }
