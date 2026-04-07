@@ -203,6 +203,7 @@
     <table class="beheer-tabel">
       <thead>
         <tr>
+          <th style="width: 40px;"></th>
           <th>Teamnaam</th>
           <th>Categorie</th>
           <th>Omschrijving</th>
@@ -210,8 +211,17 @@
         </tr>
       </thead>
       <tbody>
-        @for (team of teams$ | async; track team.id) {
-          <tr>
+        @for (team of teamsLijst; track team.id; let i = $index) {
+          <tr
+            draggable="true"
+            (dragstart)="onDragStart(i)"
+            (dragover)="onDragOver($event, i)"
+            (drop)="onDrop($event, i)"
+            (dragend)="onDragEnd()"
+            [class.dragging]="draggedIndex === i"
+            [class.drag-over]="dragOverIndex === i"
+          >
+            <td class="drag-handle" title="Sleep om volgorde aan te passen"><i class="fa-solid fa-grip-vertical"></i></td>
             <td>{{ team.naam }}</td>
             <td>{{ team.categorie }}</td>
             <td>{{ team.omschrijving }}</td>
@@ -247,7 +257,7 @@
           </tr>
         } @empty {
           <tr>
-            <td colspan="4">Geen teams gevonden.</td>
+            <td colspan="5">Geen teams gevonden.</td>
           </tr>
         }
       </tbody>

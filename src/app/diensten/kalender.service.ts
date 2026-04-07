@@ -50,12 +50,18 @@ export class KalenderService {
 
   // Verwijder een wedstrijd
   verwijderWedstrijd(id: string) {
+    if (!id) {
+      return Promise.reject(new Error('Kan wedstrijd niet verwijderen: Geen geldig ID'));
+    }
     const docRef = doc(this.firestore, `wedstrijden/${id}`);
     return deleteDoc(docRef);
   }
 
   // Update een bestaande wedstrijd (bijv. om een uitslag toe te voegen)
   updateWedstrijd(id: string, data: Partial<Match>) {
+    if (!id) {
+      return Promise.reject(new Error('Kan wedstrijd niet updaten: Geen geldig ID'));
+    }
     const docRef = doc(this.firestore, `wedstrijden/${id}`);
     return updateDoc(docRef, data);
   }

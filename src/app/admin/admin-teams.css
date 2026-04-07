@@ -60,3 +60,24 @@ select:focus {
     transform: translateY(-10px);
   }
 }
+
+/* --- DRAG & DROP STYLING --- */
+.drag-handle {
+  cursor: grab;
+  color: #a0aec0;
+  text-align: center;
+  transition: color 0.2s;
+}
+.drag-handle:hover {
+  color: var(--eagle-blue);
+}
+.drag-handle:active {
+  cursor: grabbing;
+}
+tr.dragging {
+  opacity: 0.4;
+  background-color: #f1f5f9;
+}
+tr.drag-over {
+  border-top: 3px solid var(--eagle-blue);
+}

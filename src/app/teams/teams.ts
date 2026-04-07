@@ -37,8 +37,8 @@ export class Teams implements OnInit {
   ngOnInit() {
     this.teamService.haalAlleTeamsOp().subscribe({
       next: (data) => {
-        // Sorteer alfabetisch op teamnaam (A-Z)
-        this.alleTeams = data.sort((a, b) => a.naam.localeCompare(b.naam));
+        // Sorteer op jouw nieuwe drag & drop volgorde
+        this.alleTeams = data.sort((a: any, b: any) => (a.volgorde ?? 999) - (b.volgorde ?? 999) || a.naam.localeCompare(b.naam));
         this.isLaden = false;
         this.cdr.detectChanges();
       },

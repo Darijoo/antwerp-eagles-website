@@ -1,34 +1,33 @@
-.kalender-sectie {
-  padding: 4rem 2rem;
-  background-color: var(--bg-light);
-  min-height: calc(100vh - 200px);
-}
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.sectie-titel {
+.header-tekst {
   text-align: center;
-  color: var(--eagle-blue);
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-}
+  margin-bottom: 4rem;
 
-.sectie-ondertitel {
-  text-align: center;
-  color: var(--text-dark);
-  font-size: 1.1rem;
-  margin-bottom: 3rem;
-  opacity: 0.8;
+  .sectie-titel {
+    color: var(--eagle-blue);
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .sectie-ondertitel {
+    color: var(--text-dark);
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
 }
 
 /* --- KALENDER FILTERS --- */
 .kalender-filters {
   display: flex;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
   margin-bottom: 1.5rem;
   background: white;
   padding: 1.5rem 2rem;
@@ -36,24 +35,90 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
+.filter-pills {
+  display: flex;
+  gap: 0.5rem;
+  background-color: var(--bg-light);
+  padding: 0.4rem;
+  border-radius: 50px;
+
+  .pill-btn {
+    background: transparent;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &.actief {
+      background-color: var(--eagle-blue);
+      color: white;
+      box-shadow: 0 4px 10px rgba(21, 34, 105, 0.2);
+    }
+  }
+}
+
+.weergave-toggle {
+  display: flex;
+  background: var(--bg-light);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  
+  button {
+    border: none;
+    background: transparent;
+    padding: 0.6rem 1rem;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &.actief {
+      background: var(--eagle-blue);
+      color: white;
+    }
+    &:hover:not(.actief) {
+      background: #e2e8f0;
+    }
+  }
+}
+
+.filter-selects {
+  display: flex;
+  gap: 1.5rem;
+  flex: 1;
+  justify-content: flex-end;
+}
+
 .filter-groep {
   display: flex;
   flex-direction: column;
   flex: 1;
 
-  label {
-    font-weight: bold;
-    color: var(--eagle-blue);
-    margin-bottom: 0.5rem;
-  }
-
   select {
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    background-color: var(--bg-light);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23152269"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2rem;
+    padding: 0.8rem 2.5rem 0.8rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--eagle-blue);
+    background-color: white;
     cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: 2px solid var(--eagle-red);
+      border-color: var(--eagle-red);
+    }
 
     &:disabled {
       opacity: 0.5;
@@ -137,6 +202,11 @@
   display: flex;
   flex-direction: column;
   min-width: 0; /* Cruciaal: voorkomt dat de grid uittrekt door lange tekst! */
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f8fbff;
+  }
 
   &:nth-child(7n) {
     border-right: none;
@@ -149,15 +219,15 @@
     }
   }
 
-  &.vandaag .dag-nummer {
-    background-color: var(--eagle-red);
-    color: white;
-    width: 25px;
-    height: 25px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
+  &.vandaag {
+    background-color: rgba(153, 25, 25, 0.03); /* Lichte rode glow in het hele vakje */
+    box-shadow: inset 0 0 0 2px var(--eagle-red);
+    
+    .dag-nummer {
+      color: var(--eagle-red);
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
   }
 }
 
@@ -182,6 +252,12 @@
   border-radius: 4px;
   line-height: 1.2;
   overflow: hidden; /* Belangrijk voor het afkappen van lange namen */
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  }
 
   &.is-evenement {
     background-color: var(--eagle-red);
@@ -197,9 +273,20 @@
     text-decoration: line-through;
   }
 
+  .event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.2rem;
+    
+    .kalender-plus-btn {
+      color: rgba(255,255,255,0.7);
+      transition: color 0.2s;
+      &:hover { color: white; }
+    }
+  }
   .tijd {
     font-weight: bold;
-    margin-right: 0.3rem;
   }
   .uitslag {
     font-weight: bold;
@@ -217,6 +304,7 @@
   display: grid;
   grid-template-columns: 80px 1fr auto;
   align-items: center;
+  position: relative;
   gap: 1.5rem;
   background-color: white;
   padding: 1.5rem;
@@ -232,9 +320,19 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   }
 
+/* Het 'Ticket' effect scheidingslijntje */
+.kaart-ticket-rand {
+  position: absolute;
+  left: 100px;
+  top: 10%;
+  height: 80%;
+  border-left: 2px dashed #e2e8f0;
+}
+
   &.is-evenement {
     grid-template-columns: 80px 1fr; /* Geen uitslag-kolom voor evenementen */
     border-left-color: var(--eagle-red); /* Een rode rand in plaats van blauw voor evenementen */
+    .kaart-ticket-rand { display: none; }
   }
 }
 
@@ -311,6 +409,10 @@
   opacity: 0.8;
   display: flex;
   gap: 1rem;
+  
+  i {
+    color: var(--eagle-blue);
+  }
 }
 
 .scorebord {
@@ -398,7 +500,68 @@
   background-color: white;
   border-radius: 8px;
   font-size: 1.1rem;
-  color: var(--text-dark);
+  color: #7f8c8d;
+  border: 2px dashed #cbd5e1;
+  i { opacity: 0.5; margin-bottom: 1rem; }
+}
+
+/* --- SKELETON LOADERS --- */
+.reveal-animatie {
+  opacity: 0;
+  animation: slideUpFade 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-bg {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton-kaart {
+  pointer-events: none;
+  border-left-color: #eee !important;
+  .wedstrijd-datum { color: transparent; }
+}
+
+.skeleton-text-line {
+  width: 100%;
+  height: 16px;
+  border-radius: 4px;
+  margin-bottom: 0.6rem;
+  @extend .skeleton-bg;
+  &.w-70 { width: 70%; }
+  &.w-50 { width: 50%; }
+}
+
+.skeleton-kalender {
+  pointer-events: none;
+}
+.skeleton-vak {
+  background: transparent;
+  .skeleton-dag-nr {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    align-self: flex-end;
+    margin-bottom: 0.5rem;
+    @extend .skeleton-bg;
+  }
+  .skeleton-event {
+    width: 100%;
+    height: 24px;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+    @extend .skeleton-bg;
+  }
 }
 
 /* --- MOBIELE OPTIMALISATIE --- */
@@ -418,23 +581,31 @@
   .kalender-filters {
     flex-direction: column;
     gap: 1rem;
-    padding: 1rem;
+    padding: 1.5rem 1rem;
   }
-  .kalender-sectie {
-    padding: 2rem 1rem;
+  .filter-selects {
+    flex-direction: column;
+    width: 100%;
   }
+  .filter-pills {
+    width: 100%;
+    justify-content: space-between;
+    .pill-btn { padding: 0.6rem 0.8rem; font-size: 0.85rem; }
+  }
+
   .wedstrijd-info {
     min-width: 0;
     word-wrap: break-word;
   }
-  .sectie-titel {
-    font-size: 2rem;
+  .header-tekst .sectie-titel {
+    font-size: 2rem; 
   }
 
   .wedstrijd-kaart {
     grid-template-columns: 60px 1fr;
     padding: 1rem;
     gap: 1rem;
+    .kaart-ticket-rand { left: 80px; }
   }
   .wedstrijd-status-kolom {
     grid-column: 2 / 3;
@@ -477,6 +648,35 @@
   .event-blokje .uitslag {
     display: block;
     margin: 0;
+  }
+}
+
+.smart-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+  
+  &.locatie-link:hover {
+    color: var(--eagle-red);
+    text-decoration: underline;
+  }
+  &.calendar-link {
+    color: var(--eagle-blue);
+    font-weight: bold;
+    background: rgba(21,34,105,0.05);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    &:hover {
+      background: var(--eagle-blue);
+      color: white;
+      i { color: white; }
+    }
+  }
+}
+
+.desktop-verborgen {
+  @media (min-width: 769px) {
+    display: none !important;
   }
 }
 

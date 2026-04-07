@@ -1,7 +1,6 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, OnInit } from '@angular/core';
 import { TeamService, Team } from '../diensten/team';
 import { Observable, firstValueFrom } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { map } from 'rxjs/operators';
@@ -11,20 +10,20 @@ import { KalenderService } from '../diensten/kalender.service';
 @Component({
   selector: 'app-admin-teams',
   standalone: true,
-  imports: [AsyncPipe, FormsModule],
+  imports: [FormsModule],
   templateUrl: './admin-teams.html',
   styleUrls: ['./admin-teams.css'],
 })
-export class AdminTeams {
+export class AdminTeams implements OnInit {
   private teamService = inject(TeamService);
   private storage = inject(Storage);
   private cdr = inject(ChangeDetectorRef);
   private wbscService = inject(WbscService);
   private kalenderService = inject(KalenderService);
 
-  teams$: Observable<Team[]> = this.teamService
-    .haalAlleTeamsOp()
-    .pipe(map((teams) => teams.sort((a, b) => a.naam.localeCompare(b.naam))));
+  teamsLijst: Team[] = [];
+  draggedIndex: number | null = null;
+  dragOverIndex: number | null = null;
 
   // Status van het formulier
   isAanHetOpslaan = false;
@@ -62,6 +61,14 @@ export class AdminTeams {
     wbscTeamUrl: '',
     kleur: '#152269',
   };
+
+  ngOnInit() {
+    this.teamService.haalAlleTeamsOp().subscribe((teams) => {
+      // Sorteer op jouw eigen volgorde, en als terugval-optie alfabetisch!
+      this.teamsLijst = teams.sort((a: any, b: any) => (a.volgorde ?? 999) - (b.volgorde ?? 999) || a.naam.localeCompare(b.naam));
+      this.cdr.detectChanges();
+    });
+  }
 
   toonNotificatie(bericht: string, type: 'succes' | 'fout' = 'succes') {
     if (this.notificatieTimer) clearTimeout(this.notificatieTimer);
@@ -202,6 +209,7 @@ export class AdminTeams {
       if (this.bewerkId !== null) {
         await firstValueFrom(this.teamService.updateTeam(this.bewerkId, this.nieuwTeam));
       } else {
+        (this.nieuwTeam as any).volgorde = this.teamsLijst.length; // Zet een nieuw team standaard achteraan de lijst
         await firstValueFrom(this.teamService.voegTeamToe(this.nieuwTeam));
       }
 
@@ -242,6 +250,41 @@ export class AdminTeams {
 
   verwijderTraining(index: number) {
     this.trainingen.splice(index, 1);
+  }
+
+  // --- DRAG & DROP LOGICA ---
+  onDragStart(index: number) {
+    this.draggedIndex = index;
+  }
+  onDragOver(event: DragEvent, index: number) {
+    event.preventDefault(); // Noodzakelijk om het "droppen" toe te staan
+    this.dragOverIndex = index;
+  }
+  onDrop(event: DragEvent, index: number) {
+    event.preventDefault();
+    if (this.draggedIndex !== null && this.draggedIndex !== index) {
+      const draggedTeam = this.teamsLijst[this.draggedIndex];
+      this.teamsLijst.splice(this.draggedIndex, 1);
+      this.teamsLijst.splice(index, 0, draggedTeam);
+      this.updateVolgorde();
+    }
+    this.draggedIndex = null;
+    this.dragOverIndex = null;
+  }
+  onDragEnd() {
+    this.draggedIndex = null;
+    this.dragOverIndex = null;
+  }
+  async updateVolgorde() {
+    try {
+      const promises = this.teamsLijst.map((team, i) => {
+        (team as any).volgorde = i; // Bewaar tijdelijk lokaal
+        return firstValueFrom(this.teamService.updateTeam(team.id!, { volgorde: i } as Partial<Team>));
+      });
+      await Promise.all(promises);
+    } catch (e) {
+      this.toonNotificatie('Fout bij opslaan van de nieuwe volgorde.', 'fout');
+    }
   }
 
   async syncKalender(team: Team) {
@@ -301,7 +344,7 @@ export class AdminTeams {
               aantalGeupdate++;
             }
           } else {
-            await this.kalenderService.voegWedstrijdToe({
+            const docRef = await this.kalenderService.voegWedstrijdToe({
               type: 'wedstrijd',
               team: team.naam,
               thuisploeg: match.thuisploeg,
@@ -313,6 +356,7 @@ export class AdminTeams {
             });
 
             bestaandeMatchen.push({
+              id: docRef.id, // OPLOSSING: We bewaren het ID direct, zodat hij niet 'undefined' is bij de volgende loop!
               type: 'wedstrijd',
               team: team.naam,
               thuisploeg: match.thuisploeg,
@@ -408,7 +452,7 @@ export class AdminTeams {
                   totaalGeupdate++;
                 }
               } else {
-                await this.kalenderService.voegWedstrijdToe({
+                const docRef = await this.kalenderService.voegWedstrijdToe({
                   type: 'wedstrijd',
                   team: team.naam,
                   thuisploeg: match.thuisploeg,
@@ -420,6 +464,7 @@ export class AdminTeams {
                 });
 
                 bestaandeMatchen.push({
+                  id: docRef.id, // OPLOSSING: We bewaren het ID direct!
                   type: 'wedstrijd',
                   team: team.naam,
                   thuisploeg: match.thuisploeg,

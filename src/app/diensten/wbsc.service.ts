@@ -113,25 +113,41 @@ export class WbscService {
       }
 
       // Haal de teamnamen eruit
-      let teams = Array.from(rij.querySelectorAll('.team-name, [class*="team-name"]')).map((el) => (el.textContent || '').trim());
+      let teams: string[] = [];
       
-      // Fallback voor kalenderpagina's waar teams soms gewone HTML-links (a-tags) zijn
+      // Poging 1: WBSC team-name classes
+      teams = Array.from(rij.querySelectorAll('.team-name, [class*="team-name"]')).map((el) => (el.textContent || '').trim()).filter(t => t.length > 1);
+      
+      // Poging 2: Gewone HTML-links (a-tags)
       if (teams.length < 2) {
-        teams = Array.from(rij.querySelectorAll('a[href*="/teams/"]')).map((el) => (el.textContent || '').trim());
+        teams = Array.from(rij.querySelectorAll('a[href*="/teams/"]')).map((el) => (el.textContent || '').trim()).filter(t => t.length > 1);
       }
 
-      // NIEUWE FALLBACK: Zoek in de ruwe tekst direct naar clubnamen op volgorde van verschijning
+      // Poging 3: Tabel-kolommen (Dit is de redding voor kalender overzichten zonder links!)
+      const tds = Array.from(rij.querySelectorAll('td'));
+      if (teams.length < 2 && tds.length >= 5) {
+        // In WBSC kalenders staan Uit en Thuisploeg vaak in kolom 4 en 5 (index 3 en 4)
+        let t1 = tds[3].textContent?.trim().replace(/\n/g, '').replace(/\s{2,}/g, ' ') || '';
+        let t2 = tds[4].textContent?.trim().replace(/\n/g, '').replace(/\s{2,}/g, ' ') || '';
+        
+        // Controleer of het geen datums of uitslagen zijn
+        if (t1.length > 1 && !/^\d+$/.test(t1) && t2.length > 1 && !/^\d+$/.test(t2)) {
+          teams = [t1, t2];
+        }
+      }
+
+      // Poging 4: Image alt attributen (Vaak gebruikt WBSC logo's in plaats van tekst)
       if (teams.length < 2) {
-        const alleNamen = Object.values(CLUB_MAPPING).map(c => c.naam);
-        const regex = new RegExp(alleNamen.join('|'), 'g');
-        const gevonden = rijTekst.match(regex);
-        if (gevonden && gevonden.length >= 2) {
-          teams = [...new Set(gevonden)].slice(0, 2); // Verwijder eventuele dubbele vermeldingen
+        const altTeams = Array.from(rij.querySelectorAll('img')).map(img => img.getAttribute('alt') || '').filter(alt => alt.length > 2 && !alt.toLowerCase().includes('logo'));
+        if (altTeams.length >= 2) {
+          teams = [altTeams[0], altTeams[1]];
         }
       }
 
       // Geen teams gevonden? Dan is het waarschijnlijk alleen een datum-header of een lege rij. Sla deze over!
       if (teams.length < 2) return;
+      // Negeer de tabel-header rij (voorkomt dat 'Away' vs 'Home' als wedstrijd wordt opgeslagen)
+      if (teams[0].toLowerCase().includes('visitor') || teams[0].toLowerCase().includes('away')) return;
 
       const afkortingUit = teams[0] || 'Onbekend';
       const afkortingThuis = teams[1] || 'Onbekend';
@@ -177,6 +193,12 @@ export class WbscService {
 
       // 4. Locatie bepalen (Soms wordt er een veld genoemd op de kalender, anders fallback naar thuisploeg)
       let locatie = thuisPloeg.locatie;
+      if (tds.length >= 6) {
+        const ruweLocatie = tds[5].textContent?.trim();
+        if (ruweLocatie && ruweLocatie.length > 2 && ruweLocatie.toLowerCase() !== 'tbd') {
+          locatie = ruweLocatie;
+        }
+      }
 
       matchen.push({
         thuisploeg: thuisPloeg.naam,
@@ -185,6 +207,7 @@ export class WbscService {
         tijd: wedstrijdTijd,
         locatie: locatie,
         uitslag: score,
+        geannuleerd: (rijTekst.toLowerCase().includes('postponed') || rijTekst.toLowerCase().includes('canceled'))
       });
     });
 

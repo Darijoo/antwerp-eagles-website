@@ -1,43 +1,38 @@
-<div class="kalender-sectie" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
+<div class="standaard-pagina" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
   <div class="container">
-    <h2 class="sectie-titel">Wedstrijdkalender</h2>
-    <p class="sectie-ondertitel">Bekijk het aankomende programma en de uitslagen van onze teams.</p>
+    <div class="header-tekst">
+      <h2 class="sectie-titel">Wedstrijdkalender</h2>
+      <p class="sectie-ondertitel">Bekijk het aankomende programma en de uitslagen van onze teams.</p>
+    </div>
 
     <!-- FILTERS -->
     <div class="kalender-filters">
-      <div class="filter-groep">
-        <label for="filterType">Type Activiteit</label>
-        <select id="filterType" [(ngModel)]="geselecteerdType" (change)="onFilterWijziging()">
-          <option value="">Alles tonen</option>
-          <option value="wedstrijd">Alleen Wedstrijden</option>
-          <option value="evenement">Alleen Evenementen</option>
-        </select>
+      <div class="filter-pills" role="tablist" aria-label="Type activiteit">
+        <button class="pill-btn" role="tab" [attr.aria-selected]="geselecteerdType === ''" [class.actief]="geselecteerdType === ''" (click)="setFilterType('')">Alles tonen</button>
+        <button class="pill-btn" role="tab" [attr.aria-selected]="geselecteerdType === 'wedstrijd'" [class.actief]="geselecteerdType === 'wedstrijd'" (click)="setFilterType('wedstrijd')">Wedstrijden</button>
+        <button class="pill-btn" role="tab" [attr.aria-selected]="geselecteerdType === 'evenement'" [class.actief]="geselecteerdType === 'evenement'" (click)="setFilterType('evenement')">Evenementen</button>
       </div>
-      <div class="filter-groep">
-        <label for="filterTeam">Specifiek Team</label>
-        <select
-          id="filterTeam"
-          [(ngModel)]="geselecteerdTeam"
-          (change)="onFilterWijziging()"
-          [disabled]="geselecteerdType === 'evenement'"
-        >
-          <option value="">Alle Teams</option>
-          @for (team of beschikbareTeams; track team) {
-            <option [value]="team">{{ team }}</option>
-          }
-        </select>
+
+      <div class="weergave-toggle desktop-only">
+        <button [class.actief]="desktopWeergave === 'raster'" (click)="zetDesktopWeergave('raster')" title="Raster Weergave"><i class="fa-solid fa-calendar-days"></i></button>
+        <button [class.actief]="desktopWeergave === 'lijst'" (click)="zetDesktopWeergave('lijst')" title="Lijst Weergave"><i class="fa-solid fa-list"></i></button>
       </div>
-      <div class="filter-groep">
-        <label for="filterLocatie">Locatie</label>
-        <select
-          id="filterLocatie"
-          [(ngModel)]="geselecteerdLocatie"
-          (change)="onFilterWijziging()"
-          [disabled]="geselecteerdType === 'evenement'"
-        >
-          <option value="">Uit & Thuis</option>
-          <option value="thuis">Alleen Thuiswedstrijden</option>
-        </select>
+
+      <div class="filter-selects">
+        <div class="filter-groep">
+          <select id="filterTeam" [(ngModel)]="geselecteerdTeam" (change)="onFilterWijziging()" [disabled]="geselecteerdType === 'evenement'">
+            <option value="">Alle Teams</option>
+            @for (team of beschikbareTeams; track team) {
+              <option [value]="team">{{ team }}</option>
+            }
+          </select>
+        </div>
+        <div class="filter-groep">
+          <select id="filterLocatie" [(ngModel)]="geselecteerdLocatie" (change)="onFilterWijziging()" [disabled]="geselecteerdType === 'evenement'">
+            <option value="">Uit & Thuis</option>
+            <option value="thuis">Alleen Thuiswedstrijden</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -51,190 +46,243 @@
       </button>
     </div>
 
-    <!-- RASTER WEERGAVE (Nu overal zichtbaar) -->
-    <div class="kalender-raster">
-      <div class="weekdagen">
-        <div>Ma</div>
-        <div>Di</div>
-        <div>Wo</div>
-        <div>Do</div>
-        <div>Vr</div>
-        <div>Za</div>
-        <div>Zo</div>
-      </div>
-      <div class="dagen-grid">
-        @for (dag of kalenderDagen; track dag.datum.toISOString()) {
-          <div
-            class="dag-vak"
-            [class.andere-maand]="!dag.isHuidigeMaand"
-            [class.vandaag]="isVandaag(dag.datum)"
-          >
-            <span class="dag-nummer">{{ dag.datum | date: 'd' }}</span>
-
-            <div class="dag-events">
-              @for (event of dag.events; track event.id) {
-                <div
-                  class="event-blokje"
-                  [class.is-evenement]="event.type === 'evenement'"
-                  [class.gespeeld]="isGespeeld(event.datum)"
-                  [class.geannuleerd]="$any(event).geannuleerd"
-                  [style.background-color]="
-                    event.team && !isGespeeld(event.datum) ? getTeamKleur(event.team) : null
-                  "
-                >
-                  <span class="tijd">{{ event.tijd }}</span>
-                  @if (event.type === 'evenement') {
-                    <span class="titel">{{ event.titel }}</span>
-                  } @else {
-                    <span class="titel">
-                      <i
-                        class="fa-solid"
-                        [class.fa-house]="isThuisMatch(event)"
-                        [class.fa-bus]="!isThuisMatch(event)"
-                        [title]="isThuisMatch(event) ? 'Thuis' : 'Uit'"
-                        style="margin-right: 3px"
-                      ></i>
-                      {{ event.team ? event.team + ': ' : '' }}{{ event.thuisploeg }} vs
-                      {{ event.uitploeg }}
-                    </span>
-                    @if ($any(event).geannuleerd) {
-                      <span class="uitslag" style="color: #ffcccc">(Geannuleerd)</span>
-                    } @else if (event.uitslag) {
-                      <span class="uitslag">
-                        ({{ event.uitslag }})
-                        @if (getWedstrijdResultaat(event) === 'W') {<strong style="color: #2ecc71; margin-left: 2px;">W</strong>}
-                        @if (getWedstrijdResultaat(event) === 'L') {<strong style="color: #ffcccc; margin-left: 2px;">L</strong>}
-                        @if (getWedstrijdResultaat(event) === 'T') {<strong style="color: #f1c40f; margin-left: 2px;">T</strong>}
-                      </span>
-                    }
-                  }
-                </div>
-              }
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- LIJST WEERGAVE VOOR MOBIEL (Vergelijkbaar met de oude view) -->
-    <div class="wedstrijden-lijst mobiel-only">
-      @for (wedstrijd of maandEvents; track wedstrijd.id) {
-        <!-- Voeg de klasse toe als de wedstrijd al is gespeeld -->
-        <div
-          class="wedstrijd-kaart"
-          [class.gespeeld]="isGespeeld(wedstrijd.datum)"
-          [class.is-evenement]="wedstrijd.type === 'evenement'"
-          [class.geannuleerd]="$any(wedstrijd).geannuleerd"
-          [style.border-left-color]="
-            wedstrijd.team && !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null
-          "
-        >
-          <div
-            class="wedstrijd-datum"
-            [style.background-color]="
-              wedstrijd.team && !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null
-            "
-          >
-            <div class="dag">{{ wedstrijd.datum.toDate() | date: 'd' }}</div>
-            <div class="maand">{{ wedstrijd.datum.toDate() | date: 'MMM' }}</div>
-          </div>
-          <div class="wedstrijd-info">
-            @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
-              <div
-                style="
-                  display: flex;
-                  align-items: center;
-                  gap: 0.8rem;
-                  margin-bottom: 0.5rem;
-                  flex-wrap: wrap;
-                "
-              >
-                @if (wedstrijd.team) {
-                  <div
-                    class="team-naam"
-                    style="margin-bottom: 0"
-                    [style.color]="
-                      !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null
-                    "
-                  >
-                    {{ wedstrijd.team }}
-                  </div>
-                }
-                <span
-                  class="badge locatie-badge"
-                  [class.is-thuis]="isThuisMatch(wedstrijd)"
-                  [class.is-uit]="!isThuisMatch(wedstrijd)"
-                >
-                  <i
-                    class="fa-solid"
-                    [class.fa-house]="isThuisMatch(wedstrijd)"
-                    [class.fa-bus]="!isThuisMatch(wedstrijd)"
-                  ></i>
-                  {{ isThuisMatch(wedstrijd) ? 'THUIS' : 'UIT' }}
-                </span>
-                @if ($any(wedstrijd).geannuleerd) {
-                  <span class="badge" style="background-color: var(--eagle-red)">GEANNULEERD</span>
-                }
-              </div>
-              @if (wedstrijd.uitslag) {
-                <div class="scorebord">
-                  <div class="score-rij" [class.is-winnaar]="isWinnaar(wedstrijd, 'thuis')">
-                    <span class="ploeg">{{ wedstrijd.thuisploeg }}</span>
-                    <span class="score">{{ getScore(wedstrijd.uitslag, 0) }}</span>
-                  </div>
-                  <div class="score-rij" [class.is-winnaar]="isWinnaar(wedstrijd, 'uit')">
-                    <span class="ploeg">{{ wedstrijd.uitploeg }}</span>
-                    <span class="score">{{ getScore(wedstrijd.uitslag, 1) }}</span>
-                  </div>
-                </div>
-              } @else {
-                <div class="teams">
-                  <span class="thuis">{{ wedstrijd.thuisploeg }}</span>
-                  <span class="vs">vs</span>
-                  <span class="uit">{{ wedstrijd.uitploeg }}</span>
-                </div>
-              }
-              <div class="locatie-tijd">
-                <span>{{ wedstrijd.locatie }}</span>
-                <span>{{ wedstrijd.tijd }}</span>
-              </div>
-            } @else {
-              <div class="evenement-titel">{{ wedstrijd.titel }}</div>
-              @if ($any(wedstrijd).geannuleerd) {
-                <span
-                  class="badge"
-                  style="background-color: var(--eagle-red); margin-bottom: 0.5rem"
-                  >GEANNULEERD</span
-                >
-              }
-              <div class="locatie-tijd">
-                <span>{{ wedstrijd.locatie }}</span>
-                <span>{{ wedstrijd.tijd }}</span>
-              </div>
-              @if (wedstrijd.omschrijving) {
-                <p class="evenement-omschrijving">{{ wedstrijd.omschrijving }}</p>
-              }
-            }
-          </div>
-          @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
-            <div class="wedstrijd-status-kolom">
-              @if (wedstrijd.uitslag) {
-                @if (getWedstrijdResultaat(wedstrijd) === 'W') {
-                  <span class="resultaat-badge win">WIN</span>
-                } @else if (getWedstrijdResultaat(wedstrijd) === 'L') {
-                  <span class="resultaat-badge loss">LOSS</span>
-                } @else if (getWedstrijdResultaat(wedstrijd) === 'T') {
-                  <span class="resultaat-badge tie">TIE</span>
-                }
-              } @else {
-                <span class="resultaat-badge komend">VS</span>
+    @if (isLaden) {
+      <!-- SKELETON LOADER VOOR KALENDER RASTER -->
+      @if (desktopWeergave === 'raster') {
+      <div class="kalender-raster desktop-only skeleton-kalender">
+        <div class="weekdagen">
+          <div>Ma</div><div>Di</div><div>Wo</div><div>Do</div><div>Vr</div><div>Za</div><div>Zo</div>
+        </div>
+        <div class="dagen-grid">
+          @for (i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]; track i) {
+            <div class="dag-vak skeleton-vak">
+              <div class="skeleton-dag-nr"></div>
+              @if (i % 5 === 0 || i % 8 === 0) {
+                <div class="skeleton-event"></div>
               }
             </div>
           }
         </div>
-      } @empty {
-        <p class="lege-status">Er staan geen activiteiten gepland voor deze maand.</p>
+      </div>
       }
-    </div>
+      
+      <!-- SKELETON LOADER VOOR LIJST -->
+      <div class="wedstrijden-lijst" [class.mobiel-only]="desktopWeergave === 'raster'">
+        @for (i of [1, 2, 3]; track i) {
+          <div
+            class="wedstrijd-kaart skeleton-kaart"
+          >
+            <div class="wedstrijd-datum skeleton-bg"></div>
+            <div class="wedstrijd-info" style="width: 100%">
+              <div class="skeleton-text-line w-50"></div>
+              <div class="skeleton-text-line w-70"></div>
+              <div class="skeleton-text-line"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- RASTER WEERGAVE (ALLEEN DESKTOP INDIEN GESELECTEERD) -->
+      @if (desktopWeergave === 'raster') {
+      <div class="kalender-raster reveal-animatie desktop-only">
+        <div class="weekdagen">
+          <div>Ma</div>
+          <div>Di</div>
+          <div>Wo</div>
+          <div>Do</div>
+          <div>Vr</div>
+          <div>Za</div>
+          <div>Zo</div>
+        </div>
+        <div class="dagen-grid">
+          @for (dag of kalenderDagen; track dag.datum.toISOString()) {
+            <div
+              class="dag-vak"
+              [class.andere-maand]="!dag.isHuidigeMaand"
+              [class.vandaag]="isVandaag(dag.datum)"
+            >
+              <span class="dag-nummer">{{ dag.datum | date: 'd' }}</span>
+
+              <div class="dag-events">
+                @for (event of dag.events; track event.id) {
+                  <div
+                    class="event-blokje"
+                    [class.is-evenement]="event.type === 'evenement'"
+                    [class.gespeeld]="isGespeeld(event.datum)"
+                    [class.geannuleerd]="$any(event).geannuleerd"
+                    [style.background-color]="
+                      event.team && !isGespeeld(event.datum) ? getTeamKleur(event.team) : null
+                    "
+                  >
+                    <div class="event-header">
+                      <span class="tijd">{{ event.tijd }}</span>
+                      <a [href]="genereerGoogleCalendarLink(event)" target="_blank" class="kalender-plus-btn" title="Zet in agenda (Google Calendar)" (click)="$event.stopPropagation()"><i class="fa-regular fa-calendar-plus"></i></a>
+                    </div>
+                    @if (event.type === 'evenement') {
+                      <span class="titel">{{ event.titel }}</span>
+                    } @else {
+                      <span class="titel">
+                        <i
+                          class="fa-solid"
+                          [class.fa-house]="isThuisMatch(event)"
+                          [class.fa-bus]="!isThuisMatch(event)"
+                          [title]="isThuisMatch(event) ? 'Thuis' : 'Uit'"
+                          style="margin-right: 3px"
+                        ></i>
+                        {{ event.team ? event.team + ': ' : '' }}{{ event.thuisploeg }} vs
+                        {{ event.uitploeg }}
+                      </span>
+                      @if ($any(event).geannuleerd) {
+                        <span class="uitslag" style="color: #ffcccc">(Geannuleerd)</span>
+                      } @else if (event.uitslag) {
+                        <span class="uitslag">
+                          ({{ event.uitslag }})
+                          @if (getWedstrijdResultaat(event) === 'W') {<strong style="color: #2ecc71; margin-left: 2px;">W</strong>}
+                          @if (getWedstrijdResultaat(event) === 'L') {<strong style="color: #ffcccc; margin-left: 2px;">L</strong>}
+                          @if (getWedstrijdResultaat(event) === 'T') {<strong style="color: #f1c40f; margin-left: 2px;">T</strong>}
+                        </span>
+                      }
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+      }
+
+      <!-- LIJST WEERGAVE (ALTIJD OP MOBIEL, OPTIONEEL OP DESKTOP) -->
+      <div class="wedstrijden-lijst reveal-animatie" [class.desktop-verborgen]="desktopWeergave === 'raster'">
+        @for (wedstrijd of maandEvents; track wedstrijd.id) {
+          <!-- Voeg de klasse toe als de wedstrijd al is gespeeld -->
+          <div
+            class="wedstrijd-kaart"
+            [class.gespeeld]="isGespeeld(wedstrijd.datum)"
+            [class.is-evenement]="wedstrijd.type === 'evenement'"
+            [class.geannuleerd]="$any(wedstrijd).geannuleerd"
+            [style.border-left-color]="
+              wedstrijd.team && !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null
+            "
+          >
+            <div class="kaart-ticket-rand"></div> <!-- Voor de scheidingslijn -->
+            <div
+              class="wedstrijd-datum"
+              [style.background-color]="
+                wedstrijd.team && !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null
+              "
+            >
+              <div class="dag">{{ wedstrijd.datum.toDate() | date: 'd' }}</div>
+              <div class="maand">{{ wedstrijd.datum.toDate() | date: 'MMM' }}</div>
+              @if (getWeer(wedstrijd.datum); as weer) {
+                <div class="weer-badge" title="Weersverwachting (Schatting)">
+                  <i class="fa-solid" [class]="weer.icoon"></i> {{ weer.temp }}
+                </div>
+              }
+            </div>
+            <div class="wedstrijd-info">
+              @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 0.8rem;
+                    margin-bottom: 0.5rem;
+                    flex-wrap: wrap;
+                  "
+                >
+                  @if (wedstrijd.team) {
+                    <div
+                      class="team-naam"
+                      style="margin-bottom: 0"
+                      [style.color]="
+                        !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null
+                      "
+                    >
+                      {{ wedstrijd.team }}
+                    </div>
+                  }
+                  <span
+                    class="badge locatie-badge"
+                    [class.is-thuis]="isThuisMatch(wedstrijd)"
+                    [class.is-uit]="!isThuisMatch(wedstrijd)"
+                  >
+                    <i
+                      class="fa-solid"
+                      [class.fa-house]="isThuisMatch(wedstrijd)"
+                      [class.fa-bus]="!isThuisMatch(wedstrijd)"
+                    ></i>
+                    {{ isThuisMatch(wedstrijd) ? 'THUIS' : 'UIT' }}
+                  </span>
+                  @if ($any(wedstrijd).geannuleerd) {
+                    <span class="badge" style="background-color: var(--eagle-red)">GEANNULEERD</span>
+                  }
+                </div>
+                @if (wedstrijd.uitslag) {
+                  <div class="scorebord">
+                    <div class="score-rij" [class.is-winnaar]="isWinnaar(wedstrijd, 'thuis')">
+                      <span class="ploeg">{{ wedstrijd.thuisploeg }}</span>
+                      <span class="score">{{ getScore(wedstrijd.uitslag, 0) }}</span>
+                    </div>
+                    <div class="score-rij" [class.is-winnaar]="isWinnaar(wedstrijd, 'uit')">
+                      <span class="ploeg">{{ wedstrijd.uitploeg }}</span>
+                      <span class="score">{{ getScore(wedstrijd.uitslag, 1) }}</span>
+                    </div>
+                  </div>
+                } @else {
+                  <div class="teams">
+                    <span class="thuis">{{ wedstrijd.thuisploeg }}</span>
+                    <span class="vs">vs</span>
+                    <span class="uit">{{ wedstrijd.uitploeg }}</span>
+                  </div>
+                }
+                <div class="locatie-tijd">
+                  <a [href]="getGoogleMapsLink(wedstrijd.locatie)" target="_blank" class="smart-link locatie-link" title="Open in Google Maps"><i class="fa-solid fa-location-dot"></i> {{ wedstrijd.locatie }}</a>
+                  <span><i class="fa-regular fa-clock"></i> {{ wedstrijd.tijd }}</span>
+                  <a [href]="genereerGoogleCalendarLink(wedstrijd)" target="_blank" class="smart-link calendar-link"><i class="fa-regular fa-calendar-plus"></i> In agenda</a>
+                </div>
+              } @else {
+                <div class="evenement-titel">{{ wedstrijd.titel }}</div>
+                @if ($any(wedstrijd).geannuleerd) {
+                  <span
+                    class="badge"
+                    style="background-color: var(--eagle-red); margin-bottom: 0.5rem"
+                    >GEANNULEERD</span
+                  >
+                }
+                <div class="locatie-tijd">
+                  <a [href]="getGoogleMapsLink(wedstrijd.locatie)" target="_blank" class="smart-link locatie-link" title="Open in Google Maps"><i class="fa-solid fa-location-dot"></i> {{ wedstrijd.locatie }}</a>
+                  <span><i class="fa-regular fa-clock"></i> {{ wedstrijd.tijd }}</span>
+                  <a [href]="genereerGoogleCalendarLink(wedstrijd)" target="_blank" class="smart-link calendar-link"><i class="fa-regular fa-calendar-plus"></i> In agenda</a>
+                </div>
+                @if (wedstrijd.omschrijving) {
+                  <p class="evenement-omschrijving">{{ wedstrijd.omschrijving }}</p>
+                }
+              }
+            </div>
+            @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
+              <div class="wedstrijd-status-kolom">
+                @if (wedstrijd.uitslag) {
+                  @if (getWedstrijdResultaat(wedstrijd) === 'W') {
+                    <span class="resultaat-badge win">WIN</span>
+                  } @else if (getWedstrijdResultaat(wedstrijd) === 'L') {
+                    <span class="resultaat-badge loss">LOSS</span>
+                  } @else if (getWedstrijdResultaat(wedstrijd) === 'T') {
+                    <span class="resultaat-badge tie">TIE</span>
+                  }
+                } @else {
+                  <span class="resultaat-badge komend">VS</span>
+                }
+              </div>
+            }
+          </div>
+        } @empty {
+          <p class="lege-status">
+            <i class="fa-regular fa-calendar-xmark fa-3x"></i><br/>
+            Er staan geen activiteiten gepland voor deze maand.
+          </p>
+        }
+      </div>
+    }
   </div>
 </div>
