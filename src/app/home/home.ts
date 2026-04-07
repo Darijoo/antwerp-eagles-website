@@ -102,4 +102,42 @@ export class Home implements OnInit {
   isThuisMatch(match: Match): boolean {
     return match.thuisploeg ? match.thuisploeg.toLowerCase().includes('eagle') : false;
   }
+
+  // Haal alleen de thuis- of uitscore op uit "10 - 5"
+  getScore(uitslag: string | undefined, index: number): string {
+    if (!uitslag) return '';
+    const parts = uitslag.split('-');
+    if (parts.length === 2) {
+      return parts[index].trim();
+    }
+    return uitslag; // Fallback als de uitslag geen koppelteken heeft
+  }
+
+  isWinnaar(wedstrijd: Match, teamType: 'thuis' | 'uit'): boolean {
+    if (!wedstrijd.uitslag) return false;
+    const parts = wedstrijd.uitslag.split('-');
+    if (parts.length !== 2) return false;
+    const scoreThuis = parseInt(parts[0].trim(), 10);
+    const scoreUit = parseInt(parts[1].trim(), 10);
+    if (isNaN(scoreThuis) || isNaN(scoreUit)) return false;
+    
+    if (teamType === 'thuis') return scoreThuis > scoreUit;
+    if (teamType === 'uit') return scoreUit > scoreThuis;
+    return false;
+  }
+
+  getWedstrijdResultaat(wedstrijd: Match): 'W' | 'L' | 'T' | '' {
+    if (!wedstrijd.uitslag) return '';
+    if (this.isWinnaar(wedstrijd, 'thuis') && this.isWinnaar(wedstrijd, 'uit')) return ''; // Kan normaal niet
+    const scoreThuis = parseInt(wedstrijd.uitslag.split('-')[0], 10);
+    const scoreUit = parseInt(wedstrijd.uitslag.split('-')[1], 10);
+    if (scoreThuis === scoreUit) return 'T';
+
+    const thuisIsEagle = this.isThuisMatch(wedstrijd);
+    const uitIsEagle = wedstrijd.uitploeg?.toLowerCase().includes('eagle');
+
+    if (thuisIsEagle) return scoreThuis > scoreUit ? 'W' : 'L';
+    else if (uitIsEagle) return scoreUit > scoreThuis ? 'W' : 'L';
+    return '';
+  }
 }

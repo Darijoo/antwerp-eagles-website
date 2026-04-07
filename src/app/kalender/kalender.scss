@@ -240,27 +240,12 @@
 
 /* Styling voor wedstrijden die al gespeeld zijn */
 .wedstrijd-kaart.gespeeld {
-  opacity: 0.55; /* Maakt de hele kaart wat doorzichtiger/fletser */
-  border-left-color: #95a5a6 !important; /* Grijze rand in plaats van clubkleuren */
-  background-color: #f8f9fa; /* Maak de achtergrond ook lichtgrijs */
+  opacity: 0.85; /* Maar een héél klein beetje transparant, zodat je kleuren nog goed ziet! */
+  background-color: #fcfcfc; 
 
   &:hover {
-    transform: none; /* Zet de hover-animatie uit */
+    transform: none; 
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
-  }
-
-  .wedstrijd-datum {
-    background-color: #95a5a6 !important; /* Rode datumblok wordt netjes grijs */
-  }
-
-  .evenement-titel,
-  .team-naam,
-  .wedstrijd-uitslag {
-    color: #7f8c8d; /* Maakt alle felle blauwe en rode teksten netjes grijs */
-  }
-
-  .wedstrijd-uitslag {
-    background-color: #e9ecef;
   }
 }
 
@@ -328,15 +313,61 @@
   gap: 1rem;
 }
 
-.wedstrijd-uitslag {
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: var(--eagle-blue);
-  background-color: var(--bg-light);
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  min-width: 80px;
-  text-align: center;
+.scorebord {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+
+  .score-rij {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-light);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    color: var(--text-dark);
+    transition: all 0.2s;
+
+    .ploeg { font-weight: 700; font-size: 1.1rem; }
+    
+    .score {
+      font-weight: 900;
+      font-size: 1.3rem;
+      color: var(--eagle-blue);
+      background-color: white;
+      padding: 0.1rem 0.6rem;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    &.is-winnaar {
+      background-color: var(--eagle-blue);
+      color: white;
+      .ploeg { font-weight: 900; }
+      .score { color: var(--eagle-blue); }
+    }
+  }
+}
+
+.wedstrijd-status-kolom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .resultaat-badge {
+    font-size: 1.1rem;
+    font-weight: 900;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    
+    &.win { background-color: #27ae60; color: white; }
+    &.loss { background-color: var(--eagle-red); color: white; }
+    &.tie { background-color: #f39c12; color: white; }
+    &.komend { background-color: var(--bg-light); color: var(--eagle-blue); box-shadow: none; }
+  }
 }
 
 .badge {
@@ -405,13 +436,13 @@
     padding: 1rem;
     gap: 1rem;
   }
-  .wedstrijd-uitslag {
+  .wedstrijd-status-kolom {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    font-size: 1.2rem;
+    margin-top: 0.5rem;
     justify-self: start;
+    
+    .resultaat-badge { padding: 0.5rem 1rem; font-size: 1rem; }
   }
 
   /* Zorg dat het kalenderraster netjes meeschaalt op mobiel */

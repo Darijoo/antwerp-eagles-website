@@ -213,14 +213,62 @@
   background-color: white; /* Een witte achtergrond om te breken met de grijze secties erboven en eronder */
 }
 
-.uitslag-score {
-  font-size: 1.5rem;
-  font-weight: 900;
+.scorebord {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
   margin-top: 0.8rem;
-  background-color: var(--bg-light);
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+
+  .score-rij {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-light);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    color: var(--text-dark);
+    transition: all 0.2s;
+
+    .ploeg { font-weight: 700; font-size: 1rem; }
+    
+    .score {
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: var(--eagle-blue);
+      background-color: white;
+      padding: 0.1rem 0.6rem;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    &.is-winnaar {
+      background-color: var(--eagle-blue);
+      color: white;
+      .ploeg { font-weight: 900; }
+      .score { color: var(--eagle-blue); }
+    }
+  }
+}
+
+.wedstrijd-status-kolom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  padding-left: 0;
+
+  .resultaat-badge {
+    font-size: 1rem;
+    font-weight: 900;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    
+    &.win { background-color: #27ae60; color: white; }
+    &.loss { background-color: var(--eagle-red); color: white; }
+    &.tie { background-color: #f39c12; color: white; }
+  }
 }
 
 /* --- NIEUWS SECTIE --- */
@@ -264,6 +312,13 @@
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+  }
+  .wedstrijd-status-kolom {
+    padding: 0.5rem;
+    .resultaat-badge {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.85rem;
+    }
   }
 }
 

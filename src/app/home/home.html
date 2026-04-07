@@ -88,10 +88,10 @@
     <div class="aankomend-grid">
       @for (match of laatsteUitslagen$ | async; track match.id) {
         <div
-          class="aankomend-kaart gespeeld"
+          class="aankomend-kaart"
           [style.border-left-color]="match.team ? getTeamKleur(match.team) : null"
         >
-          <div class="datum-blok" style="background-color: #95a5a6">
+          <div class="datum-blok" [style.background-color]="match.team ? getTeamKleur(match.team) : null">
             <span class="dag">{{ match.datum.toDate() | date: 'd' }}</span>
             <span class="maand">{{ match.datum.toDate() | date: 'MMM' }}</span>
           </div>
@@ -116,11 +116,32 @@
                 {{ isThuisMatch(match) ? 'THUIS' : 'UIT' }}
               </span>
             </div>
-            <h4>{{ match.thuisploeg }} vs {{ match.uitploeg }}</h4>
-            <div class="uitslag-score" [style.color]="match.team ? getTeamKleur(match.team) : null">
-              {{ match.uitslag }}
-            </div>
+            @if (match.uitslag) {
+              <div class="scorebord">
+                <div class="score-rij" [class.is-winnaar]="isWinnaar(match, 'thuis')">
+                  <span class="ploeg">{{ match.thuisploeg }}</span>
+                  <span class="score">{{ getScore(match.uitslag, 0) }}</span>
+                </div>
+                <div class="score-rij" [class.is-winnaar]="isWinnaar(match, 'uit')">
+                  <span class="ploeg">{{ match.uitploeg }}</span>
+                  <span class="score">{{ getScore(match.uitslag, 1) }}</span>
+                </div>
+              </div>
+            } @else {
+              <h4>{{ match.thuisploeg }} vs {{ match.uitploeg }}</h4>
+            }
           </div>
+          @if (match.uitslag) {
+            <div class="wedstrijd-status-kolom">
+              @if (getWedstrijdResultaat(match) === 'W') {
+                <span class="resultaat-badge win">WIN</span>
+              } @else if (getWedstrijdResultaat(match) === 'L') {
+                <span class="resultaat-badge loss">LOSS</span>
+              } @else if (getWedstrijdResultaat(match) === 'T') {
+                <span class="resultaat-badge tie">TIE</span>
+              }
+            </div>
+          }
         </div>
       } @empty {
         <p class="lege-status" style="grid-column: 1 / -1">

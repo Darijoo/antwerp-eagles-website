@@ -100,7 +100,12 @@
                     @if ($any(event).geannuleerd) {
                       <span class="uitslag" style="color: #ffcccc">(Geannuleerd)</span>
                     } @else if (event.uitslag) {
-                      <span class="uitslag">({{ event.uitslag }})</span>
+                      <span class="uitslag">
+                        ({{ event.uitslag }})
+                        @if (getWedstrijdResultaat(event) === 'W') {<strong style="color: #2ecc71; margin-left: 2px;">W</strong>}
+                        @if (getWedstrijdResultaat(event) === 'L') {<strong style="color: #ffcccc; margin-left: 2px;">L</strong>}
+                        @if (getWedstrijdResultaat(event) === 'T') {<strong style="color: #f1c40f; margin-left: 2px;">T</strong>}
+                      </span>
                     }
                   }
                 </div>
@@ -171,11 +176,24 @@
                   <span class="badge" style="background-color: var(--eagle-red)">GEANNULEERD</span>
                 }
               </div>
-              <div class="teams">
-                <span class="thuis">{{ wedstrijd.thuisploeg }}</span>
-                <span class="vs">vs</span>
-                <span class="uit">{{ wedstrijd.uitploeg }}</span>
-              </div>
+              @if (wedstrijd.uitslag) {
+                <div class="scorebord">
+                  <div class="score-rij" [class.is-winnaar]="isWinnaar(wedstrijd, 'thuis')">
+                    <span class="ploeg">{{ wedstrijd.thuisploeg }}</span>
+                    <span class="score">{{ getScore(wedstrijd.uitslag, 0) }}</span>
+                  </div>
+                  <div class="score-rij" [class.is-winnaar]="isWinnaar(wedstrijd, 'uit')">
+                    <span class="ploeg">{{ wedstrijd.uitploeg }}</span>
+                    <span class="score">{{ getScore(wedstrijd.uitslag, 1) }}</span>
+                  </div>
+                </div>
+              } @else {
+                <div class="teams">
+                  <span class="thuis">{{ wedstrijd.thuisploeg }}</span>
+                  <span class="vs">vs</span>
+                  <span class="uit">{{ wedstrijd.uitploeg }}</span>
+                </div>
+              }
               <div class="locatie-tijd">
                 <span>{{ wedstrijd.locatie }}</span>
                 <span>{{ wedstrijd.tijd }}</span>
@@ -199,13 +217,18 @@
             }
           </div>
           @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
-            <div
-              class="wedstrijd-uitslag"
-              [style.color]="
-                wedstrijd.team && !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null
-              "
-            >
-              {{ wedstrijd.uitslag || '-' }}
+            <div class="wedstrijd-status-kolom">
+              @if (wedstrijd.uitslag) {
+                @if (getWedstrijdResultaat(wedstrijd) === 'W') {
+                  <span class="resultaat-badge win">WIN</span>
+                } @else if (getWedstrijdResultaat(wedstrijd) === 'L') {
+                  <span class="resultaat-badge loss">LOSS</span>
+                } @else if (getWedstrijdResultaat(wedstrijd) === 'T') {
+                  <span class="resultaat-badge tie">TIE</span>
+                }
+              } @else {
+                <span class="resultaat-badge komend">VS</span>
+              }
             </div>
           }
         </div>
