@@ -1,52 +1,51 @@
 @if (team) {
   <div class="standaard-pagina">
     <div class="container">
-      <a routerLink="/teams" class="terug-knop">&larr; Terug naar overzicht</a>
+      <a routerLink="/teams" class="terug-knop" aria-label="Terug naar overzicht teams">
+        <i class="fa-solid fa-arrow-left"></i> Terug naar overzicht
+      </a>
 
-      <article class="team-detail-kaart">
-        @if (team.afbeeldingUrl) {
-          <div class="team-hero">
-            <img [src]="team.afbeeldingUrl" [alt]="team.naam" />
+      <article class="team-detail-kaart reveal-animatie">
+        <!-- IMMERSIVE HERO -->
+        <div class="team-hero" [style.backgroundImage]="team.afbeeldingUrl ? 'url(' + team.afbeeldingUrl + ')' : 'none'">
+          <div class="hero-content">
+            <span class="team-badge">{{ team.categorie }}</span>
+            <h1 class="team-titel">{{ team.naam }}</h1>
           </div>
-        }
+        </div>
 
         <div class="team-inhoud">
-          <div class="team-header">
-            <h2>{{ team.naam }}</h2>
-            <span class="team-badge">{{ team.categorie }}</span>
-          </div>
-
-          <div
-            class="team-extra-info"
-            style="margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-dark)"
-          >
+          <div class="team-extra-info">
             @if (team.coach) {
-              <p style="margin-bottom: 0.5rem">
-                <i class="fa-solid fa-user-tie" style="color: var(--eagle-blue); width: 25px"></i>
-                <strong>Coach:</strong> {{ team.coach }}
-              </p>
+              <div class="info-tag">
+                <div class="icon-cirkel"><i class="fa-solid fa-user-tie"></i></div>
+                <div class="tag-tekst">
+                  <span class="tag-label">Coach</span>
+                  <strong>{{ team.coach }}</strong>
+                </div>
+              </div>
             }
             @if (team.trainingsdagen) {
-              <p style="margin-bottom: 0">
-                <i
-                  class="fa-regular fa-calendar-check"
-                  style="color: var(--eagle-blue); width: 25px"
-                ></i>
-                <strong>Trainingen:</strong> {{ team.trainingsdagen }}
-              </p>
+              <div class="info-tag">
+                <div class="icon-cirkel"><i class="fa-regular fa-calendar-check"></i></div>
+                <div class="tag-tekst">
+                  <span class="tag-label">Trainingen</span>
+                  <strong>{{ team.trainingsdagen }}</strong>
+                </div>
+              </div>
             }
 
             @if (team.facebookUrl || team.instagramUrl) {
               <div class="team-socials">
                 @if (team.facebookUrl) {
-                  <a [href]="team.facebookUrl" target="_blank" rel="noopener noreferrer"
-                    ><i class="fa-brands fa-facebook fa-2x" aria-label="Facebook"></i
-                  ></a>
+                  <a [href]="team.facebookUrl" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                    <i class="fa-brands fa-facebook fa-2x"></i>
+                  </a>
                 }
                 @if (team.instagramUrl) {
-                  <a [href]="team.instagramUrl" target="_blank" rel="noopener noreferrer"
-                    ><i class="fa-brands fa-instagram fa-2x" aria-label="Instagram"></i
-                  ></a>
+                  <a [href]="team.instagramUrl" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                    <i class="fa-brands fa-instagram fa-2x"></i>
+                  </a>
                 }
               </div>
             }
@@ -55,23 +54,23 @@
           <div class="info-grid">
             <div class="info-card">
               <h3>Over dit team</h3>
-              <p class="behoud-enters">{{ team.omschrijving }}</p>
+              <p class="behoud-enters">{{ team.omschrijving || 'Geen omschrijving beschikbaar voor dit team.' }}</p>
             </div>
 
             <div class="info-card highlight-card">
+              <div class="highlight-icon"><i class="fa-solid fa-baseball-bat-ball"></i></div>
               <h3>Meedoen?</h3>
               <p>
-                Lijkt het je leuk om bij {{ team.naam }} te komen spelen? Neem dan snel contact met
-                ons op voor meer informatie over trainingstijden en het lidmaatschap!
+                Lijkt het je leuk om bij <strong>{{ team.naam }}</strong> te komen spelen? Neem dan snel contact met ons op voor meer informatie over trainingstijden en het lidmaatschap!
               </p>
               <a routerLink="/contact" class="btn-actie">Neem Contact Op</a>
             </div>
           </div>
 
           <!-- WBSC SPELERSLIJST (ROSTER) -->
-          @if (team.roster && team.roster.length > 0) {
-            <div class="roster-sectie">
-              <h3>Spelerslijst</h3>
+          <div class="roster-sectie">
+            <h3>Spelerslijst (Roster)</h3>
+            @if (team.roster && team.roster.length > 0) {
               <div class="roster-tabel-container">
                 <table class="roster-tabel">
                   <thead>
@@ -86,26 +85,40 @@
                   <tbody>
                     @for (speler of team.roster; track speler.naam) {
                       <tr>
-                        <td class="col-nr">
-                          {{ speler.rugnummer ? speler.rugnummer : '-' }}
+                        <td class="col-nr" data-label="#">
+                          <span class="rugnummer">{{ speler.rugnummer ? speler.rugnummer : '-' }}</span>
                         </td>
-                        <td class="col-naam">
+                        <td class="col-naam" data-label="Naam">
                           <strong>{{ speler.naam }}</strong>
                         </td>
-                        <td class="col-pos">
+                        <td class="col-pos" data-label="Positie">
                           <span class="positie-badge">{{ speler.positie }}</span>
                         </td>
-                        <td class="col-slag">{{ speler.slagWorp }}</td>
-                        <td class="col-geb">{{ speler.geboortejaar ? speler.geboortejaar : '-' }}</td>
+                        <td class="col-slag" data-label="Slag/Worp">{{ speler.slagWorp }}</td>
+                        <td class="col-geb" data-label="Geb. Jaar">{{ speler.geboortejaar ? speler.geboortejaar : '-' }}</td>
                       </tr>
                     }
                   </tbody>
                 </table>
               </div>
-            </div>
-          }
+            } @else {
+              <div class="roster-leeg">
+                <i class="fa-solid fa-clipboard-user fa-3x"></i>
+                <p>Er is momenteel geen WBSC spelerslijst beschikbaar voor dit team.</p>
+              </div>
+            }
+          </div>
         </div>
       </article>
+
+      <!-- Sticky Mobile CTA Balk -->
+      <div class="mobiele-conversie-balk">
+        <div class="conversie-tekst">
+          <strong>Meedoen bij {{ team.naam }}?</strong>
+          <span>Kom een keer proeftrainen!</span>
+        </div>
+        <a routerLink="/contact" class="btn-conversie">Contact</a>
+      </div>
     </div>
   </div>
 } @else {
@@ -113,16 +126,17 @@
     <div class="container">
       <div class="skeleton-terug"></div>
       <article class="team-detail-kaart skeleton-kaart">
-        <div class="skeleton-hero"></div>
+        <div class="skeleton-hero-new">
+           <div class="skeleton-badge-new"></div>
+           <div class="skeleton-titel-new"></div>
+        </div>
         <div class="team-inhoud">
-          <div class="skeleton-header">
-            <div class="skeleton-titel"></div>
-            <div class="skeleton-badge"></div>
-          </div>
-          <div class="skeleton-text-line"></div>
-          <div class="skeleton-text-line w-70"></div>
-          <div class="skeleton-text-line w-50" style="margin-bottom: 3rem;"></div>
           
+          <div class="skeleton-tags-container">
+             <div class="skeleton-tag"></div>
+             <div class="skeleton-tag"></div>
+          </div>
+
           <div class="info-grid">
             <div>
               <div class="skeleton-titel-klein"></div>

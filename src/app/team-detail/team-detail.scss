@@ -4,7 +4,9 @@
 }
 
 .terug-knop {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   color: var(--eagle-blue);
   text-decoration: none;
   font-weight: 700;
@@ -27,13 +29,18 @@
 .team-hero {
   width: 100%;
   height: 400px;
-  background-color: #eee;
+  background-color: var(--eagle-blue);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 3rem;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    color: white;
   }
 }
 
@@ -41,37 +48,40 @@
   padding: 3rem;
 }
 
-.team-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 3rem;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 2rem;
-
-  h2 {
-    color: var(--eagle-blue);
-    font-size: 2.8rem;
-    margin: 0;
-    text-transform: uppercase;
-    line-height: 1.1;
-  }
+.team-titel {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.1;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.5); /* Versterkt om de tekst goed leesbaar te houden zonder de gradient overlay */
 }
 
 .team-badge {
+  display: inline-block;
   background-color: var(--eagle-red);
   color: white;
-  padding: 0.6rem 1.5rem;
+  padding: 0.4rem 1.5rem;
   border-radius: 30px;
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 900;
   text-transform: uppercase;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.team-extra-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #f0f0f0;
 }
 
 .team-socials {
-  margin-top: 1rem;
+  margin-left: auto;
+  align-items: center;
   display: flex;
   gap: 1rem;
 
@@ -88,6 +98,48 @@
     }
     &:hover .fa-instagram {
       color: #e1306c;
+    }
+  }
+}
+
+.info-tag {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: var(--bg-light);
+  padding: 0.8rem 1.5rem 0.8rem 0.8rem;
+  border-radius: 50px;
+  border: 1px solid #e2e8f0;
+
+  .icon-cirkel {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--eagle-blue);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    i { font-size: 1.2rem; }
+  }
+
+  .tag-tekst {
+    display: flex;
+    flex-direction: column;
+    
+    .tag-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: #7f8c8d;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+    strong {
+      color: var(--eagle-blue);
+      font-size: 1rem;
+      line-height: 1;
     }
   }
 }
@@ -115,10 +167,23 @@
 }
 
 .highlight-card {
+  position: relative;
+  overflow: hidden;
   background-color: #fff9f9;
   padding: 2rem;
   border-radius: 8px;
   border-left: 5px solid var(--eagle-red);
+
+  .highlight-icon {
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    font-size: 8rem;
+    color: var(--eagle-red);
+    opacity: 0.05;
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
 
   h3 {
     color: var(--eagle-red);
@@ -198,11 +263,19 @@
     background-color: #f8f9fa;
   }
 
-  .col-nr {
-    width: 60px;
+  .rugnummer {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    line-height: 31px;
+    text-align: center;
+    background-color: var(--bg-light);
+    border: 2px solid #e2e8f0;
+    border-radius: 50%;
     color: var(--eagle-red);
     font-weight: 900;
-    text-align: center;
+    font-size: 0.9rem;
+    font-family: 'Courier New', Courier, monospace; /* Sports jersey feel */
   }
 
   .col-naam {
@@ -224,45 +297,32 @@
   }
 }
 
-/* Styling voor het laadscherm (indien de data even op zich laat wachten) */
-.laden-sectie {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 8rem 2rem;
-  min-height: 50vh;
-
-  .spinner {
-    font-size: 4rem;
-    animation: spin 2s linear infinite;
-    margin-bottom: 1rem;
-  }
-
+.roster-leeg {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: var(--bg-light);
+  border-radius: 12px;
+  border: 2px dashed #cbd5e1;
+  color: #a0aec0;
+  
+  i { margin-bottom: 1rem; }
   p {
-    color: var(--eagle-blue);
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-
-  .roster-tabel {
-    font-size: 0.9rem;
-    th,
-    td {
-      padding: 0.75rem 1rem;
-    }
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #718096;
   }
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Animatie voor inladen pagina */
+.reveal-animatie {
+  opacity: 0;
+  animation: slideUpFade 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
-
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 /* --- SKELETON LOADERS --- */
 .skeleton-kaart {
   background-color: white;
@@ -270,12 +330,16 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
-.skeleton-hero {
+.skeleton-hero-new {
   width: 100%;
   height: 400px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s infinite;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 3rem;
 }
 
 .skeleton-terug {
@@ -288,27 +352,20 @@
   animation: skeleton-loading 1.5s infinite;
 }
 
-.skeleton-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid #eee;
+.skeleton-badge-new {
+  width: 100px; height: 30px; border-radius: 30px; margin-bottom: 1rem;
+  background: rgba(0,0,0,0.1);
 }
-
-.skeleton-titel {
-  width: 300px;
-  height: 40px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: skeleton-loading 1.5s infinite;
+.skeleton-titel-new {
+  width: 350px; height: 50px; border-radius: 8px;
+  background: rgba(0,0,0,0.1);
 }
-
-.skeleton-badge {
-  width: 120px;
-  height: 35px;
-  border-radius: 30px;
+.skeleton-tags-container {
+  display: flex; gap: 1.5rem; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 2px solid #eee;
+  flex-wrap: wrap;
+}
+.skeleton-tag {
+  width: 200px; height: 50px; border-radius: 50px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s infinite;
@@ -342,17 +399,118 @@
   100% { background-position: -200% 0; }
 }
 
+/* Mobiele conversiebalk (standaard verborgen op desktop) */
+.mobiele-conversie-balk {
+  display: none;
+}
+
 /* Responsief maken voor mobiel */
 @media (max-width: 768px) {
   .team-hero {
-    height: 250px;
+    height: 300px;
+    padding: 2rem 1.5rem;
   }
-
   .team-inhoud {
     padding: 2rem 1.5rem;
   }
+  .info-tag {
+    width: 100%;
+  }
+  .team-socials { 
+    margin-left: 0; 
+    width: 100%; 
+    justify-content: flex-start; 
+    margin-top: 1rem;
+  }
 
-  .team-header h2 {
-    font-size: 2rem;
+  .team-detail-kaart {
+    /* Zorgt dat de footer en content niet per ongeluk achter de sticky balk verdwijnen */
+    margin-bottom: 5rem; 
+  }
+
+  .mobiele-conversie-balk {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 900; /* Hoog, maar netjes onder de cookie banner en menubalk */
+    border-top: 3px solid var(--eagle-red);
+  }
+
+  .conversie-tekst {
+    display: flex;
+    flex-direction: column;
+    strong { color: var(--eagle-blue); font-size: 0.95rem; line-height: 1.2; }
+    span { color: var(--text-dark); font-size: 0.8rem; }
+  }
+
+  .btn-conversie {
+    background-color: var(--eagle-red);
+    color: white;
+    text-decoration: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Roster tabel transformeren naar mobiele 'cards' */
+  .roster-tabel-container {
+    border: none;
+    background: transparent;
+    overflow-x: visible; /* Schakelt het horizontaal scrollen definitief uit! */
+  }
+
+  .roster-tabel {
+    display: block;
+
+    thead {
+      display: none; /* Verberg de traditionele tabelkoppen */
+    }
+
+    tbody, tr {
+      display: block;
+      width: 100%;
+    }
+
+    tr {
+      background-color: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem;
+      border-bottom: 1px solid #f0f0f0;
+      text-align: right;
+      width: 100%;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &::before {
+        content: attr(data-label); /* Dit toont op magische wijze de tekst van ons HTML label! */
+        font-weight: 800;
+        color: #7f8c8d;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+      }
+    }
   }
 }
