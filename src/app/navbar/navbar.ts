@@ -10,12 +10,20 @@ import { RouterLink } from '@angular/router'; // <-- 1. Importeer RouterLink
 })
 export class Navbar {
   menuOpen = false;
+  activeDropdown: string | null = null;
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
+    if (!this.menuOpen) this.activeDropdown = null;
   }
 
   sluitMenu() {
     this.menuOpen = false;
+    this.activeDropdown = null;
+  }
+
+  toggleDropdown(menu: string, event: Event) {
+    event.preventDefault(); // Voorkom dat de pagina naar boven springt bij een '#' link
+    this.activeDropdown = this.activeDropdown === menu ? null : menu;
   }
 }
