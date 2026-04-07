@@ -1,4 +1,4 @@
-<div class="teams-sectie">
+<div class="standaard-pagina">
   <div class="container">
     <div class="header-tekst">
       <h2 class="sectie-titel">Onze Teams</h2>
@@ -7,33 +7,73 @@
       </p>
     </div>
 
-    <div class="teams-grid">
-      @for (team of alleTeams; track team.id) {
-        <div class="team-kaart">
-          <div class="team-foto">
-            @if (team.afbeeldingUrl) {
-              <img [src]="team.afbeeldingUrl" [alt]="team.naam" />
-            } @else {
-              <div class="foto-placeholder">
-                <i class="fa-solid fa-users fa-3x"></i>
-              </div>
-            }
-            <div class="team-categorie">{{ team.categorie }}</div>
+    @if (isLaden) {
+      <div class="teams-grid">
+        @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+          <div class="team-kaart skeleton-kaart">
+            <div class="skeleton-hero"></div>
+            <div class="team-info">
+              <div class="skeleton-titel-klein"></div>
+              <div class="skeleton-text-line"></div>
+              <div class="skeleton-text-line w-70"></div>
+              <div class="skeleton-btn"></div>
+            </div>
           </div>
-          <div class="team-info">
-            <h3>{{ team.naam }}</h3>
-            @if (team.coach) {
-              <p class="coach"><i class="fa-solid fa-user-tie"></i> Coach: {{ team.coach }}</p>
-            }
-            <a [routerLink]="['/team', team.id]" class="btn-bekijk">Bekijk Team &rarr;</a>
-          </div>
-        </div>
-      } @empty {
-        <div class="lege-status">
-          <div class="spinner">⚾</div>
-          <p>Teams worden geladen...</p>
+        }
+      </div>
+    } @else {
+      <!-- De dynamische filterbalk -->
+      @if (categorieen.length > 1) {
+        <div class="filter-balk" role="tablist" aria-label="Filter teams per categorie">
+          @for (cat of categorieen; track cat) {
+            <button 
+              class="filter-knop" 
+              role="tab"
+              [attr.aria-selected]="actiefFilter === cat"
+              [class.actief]="actiefFilter === cat"
+              (click)="zetFilter(cat)">
+              {{ cat }}
+            </button>
+          }
         </div>
       }
-    </div>
+
+      <div class="teams-grid">
+        @for (team of gefilterdeTeams; track team.id) {
+          <div class="team-kaart">
+            <div class="team-foto">
+              @if (team.afbeeldingUrl) {
+                <div class="kaart-afbeelding">
+                  <img [src]="team.afbeeldingUrl" [alt]="team.naam" />
+                </div>
+              } @else {
+                <div class="foto-placeholder">
+                  <i class="fa-solid fa-users fa-3x"></i>
+                </div>
+              }
+              <div class="foto-overlay"></div>
+            </div>
+            <div class="team-info">
+              <div class="team-categorie">{{ team.categorie }}</div>
+              <h3>{{ team.naam }}</h3>
+              <div class="team-extra-info">
+                @if (team.coach) {
+                  <p class="info-regel"><i class="fa-solid fa-user-tie"></i> <span><strong>Coach:</strong> {{ team.coach }}</span></p>
+                }
+                @if (team.trainingsdagen) {
+                  <p class="info-regel"><i class="fa-regular fa-calendar-check"></i> <span><strong>Trainingen:</strong> {{ team.trainingsdagen }}</span></p>
+                }
+              </div>
+              <a [routerLink]="['/team', team.id]" class="btn-bekijk">Bekijk Team <span class="arrow">&rarr;</span></a>
+            </div>
+          </div>
+        } @empty {
+          <div class="lege-status">
+            <i class="fa-solid fa-users-slash fa-4x"></i>
+            <p>Geen teams gevonden in deze categorie.</p>
+          </div>
+        }
+      </div>
+    }
   </div>
 </div>

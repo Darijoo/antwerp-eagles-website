@@ -15,16 +15,37 @@ export class Teams implements OnInit {
 
   // We maken een lijst (array) aan om alle teams in op te slaan
   alleTeams: Team[] = [];
+  isLaden = true; // Gebruikt voor de nieuwe skeleton loaders
+  actiefFilter = 'Alle'; // Standaard laten we alles zien
+
+  // Haalt dynamisch alle unieke categorieën (bijv. 'Honkbal', 'Softbal', 'Jeugd') uit je opgeslagen teams
+  get categorieen(): string[] {
+    const uniekeCategorieen = new Set(this.alleTeams.map(t => t.categorie).filter(Boolean));
+    return ['Alle', ...Array.from(uniekeCategorieen).sort()];
+  }
+
+  // De lijst die de HTML mag tekenen, gefilterd op de actieve knop
+  get gefilterdeTeams(): Team[] {
+    if (this.actiefFilter === 'Alle') return this.alleTeams;
+    return this.alleTeams.filter(t => t.categorie === this.actiefFilter);
+  }
+
+  zetFilter(cat: string) {
+    this.actiefFilter = cat;
+  }
 
   ngOnInit() {
     this.teamService.haalAlleTeamsOp().subscribe({
       next: (data) => {
         // Sorteer alfabetisch op teamnaam (A-Z)
         this.alleTeams = data.sort((a, b) => a.naam.localeCompare(b.naam));
+        this.isLaden = false;
         this.cdr.detectChanges();
       },
       error: (fout) => {
         console.error('Kon de teams niet laden:', fout);
+        this.isLaden = false;
+        this.cdr.detectChanges();
       },
     });
   }

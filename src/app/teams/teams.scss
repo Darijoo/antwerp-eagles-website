@@ -1,9 +1,3 @@
-.teams-sectie {
-  padding: 4rem 2rem;
-  background-color: var(--bg-light);
-  min-height: calc(100vh - 200px);
-}
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -27,10 +21,48 @@
   }
 }
 
+.filter-balk {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 3rem;
+
+  .filter-knop {
+    background-color: white;
+    color: var(--eagle-blue);
+    border: 2px solid #e2e8f0;
+    padding: 0.6rem 1.5rem;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+
+    &:hover {
+      border-color: var(--eagle-blue);
+      transform: translateY(-2px);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--eagle-red);
+      outline-offset: 2px;
+    }
+
+    &.actief {
+      background-color: var(--eagle-blue);
+      color: white;
+      border-color: var(--eagle-blue);
+      box-shadow: 0 4px 10px rgba(21, 34, 105, 0.2);
+    }
+  }
+}
+
 .teams-grid {
   display: grid;
-  /* Dit zorgt voor het 'raster' effect. Minimaal 300px breed, en anders zoveel mogelijk naast elkaar! */
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* Verbeterde responsiviteit voor ultrabrede schermen */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2rem;
 }
 
@@ -44,6 +76,16 @@
     box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
+  opacity: 0;
+  animation: cardFadeIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+
+  /* Staggered animatie voor een luxueus effect bij het laden/filteren */
+  &:nth-child(1) { animation-delay: 0.05s; }
+  &:nth-child(2) { animation-delay: 0.10s; }
+  &:nth-child(3) { animation-delay: 0.15s; }
+  &:nth-child(4) { animation-delay: 0.20s; }
+  &:nth-child(5) { animation-delay: 0.25s; }
+  &:nth-child(6) { animation-delay: 0.30s; }
 
   &:hover {
     transform: translateY(-5px);
@@ -52,16 +94,27 @@
 }
 
 .team-foto {
-  height: 200px;
+  height: 220px; /* Ietsje hoger voor meer wow-factor */
   position: relative;
   background-color: var(--eagle-blue);
+  overflow: hidden; /* Belangrijk voor het zoom effect */
 
-  img {
+  .kaart-afbeelding {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    display: block;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
   }
+  
+.team-kaart:hover .kaart-afbeelding img {
+  transform: scale(1.08); /* De premium image zoom! */
+}
 
   .foto-placeholder {
     width: 100%;
@@ -72,18 +125,14 @@
     color: rgba(255, 255, 255, 0.5);
   }
 
-  .team-categorie {
+  .foto-overlay {
     position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    background-color: var(--eagle-red);
-    color: white;
-    padding: 0.4rem 1rem;
-    border-radius: 30px;
-    font-weight: bold;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    pointer-events: none;
   }
 }
 
@@ -93,28 +142,58 @@
   flex-direction: column;
   flex-grow: 1;
 
+  .team-categorie {
+    background-color: var(--eagle-red);
+    color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+    font-weight: 900;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    align-self: flex-start;
+    margin-top: -2.8rem; /* Trekt de badge omhoog, over de foto heen! */
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 10;
+  }
+
   h3 {
     color: var(--eagle-blue);
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    font-weight: 900;
     margin: 0 0 1rem 0;
   }
 
-  .coach {
-    color: var(--text-dark);
-    margin-bottom: 1.5rem;
+  .team-extra-info {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
 
-    i {
-      color: var(--eagle-blue);
+    .info-regel {
+      margin: 0;
+      color: var(--text-dark);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.95rem;
+
+      i {
+        color: var(--eagle-blue);
+        margin-top: 0.2rem;
+        width: 16px;
+        text-align: center;
+      }
     }
   }
 
   .btn-bekijk {
-    margin-top: auto; /* Duwt de knop altijd mooi naar de onderkant van de kaart */
-    display: inline-block;
-    text-align: center;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
     background-color: var(--bg-light);
     color: var(--eagle-blue);
     text-decoration: none;
@@ -129,14 +208,96 @@
       background-color: var(--eagle-red);
       color: white;
     }
+
+    &:focus-visible {
+      outline: 3px solid var(--eagle-blue);
+      outline-offset: 2px;
+    }
+
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover .arrow {
+      transform: translateX(5px);
+    }
   }
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Lege status bij filtering */
+.lege-status {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 1rem;
+  background-color: white;
+  border-radius: 12px;
+  border: 2px dashed #e2e8f0;
+  color: #7f8c8d;
+  
+  i {
+    color: #bdc3c7;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+/* --- SKELETON LOADERS --- */
+.skeleton-kaart {
+  pointer-events: none;
+}
+.skeleton-hero {
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+.skeleton-titel-klein {
+  width: 60%;
+  height: 28px;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+.skeleton-text-line {
+  width: 100%;
+  height: 16px;
+  border-radius: 4px;
+  margin-bottom: 0.6rem;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  &.w-70 { width: 70%; margin-bottom: 1.5rem; }
+}
+.skeleton-btn {
+  width: 100%;
+  height: 45px;
+  border-radius: 6px;
+  margin-top: auto;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* --- MOBIELE OPTIMALISATIE --- */
 @media (max-width: 768px) {
-  .teams-sectie {
-    padding: 2rem 1rem;
-  }
   .header-tekst .sectie-titel {
     font-size: 2rem;
   }
