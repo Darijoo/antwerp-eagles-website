@@ -31,7 +31,7 @@ export class Kalender implements OnInit {
   geselecteerdTeam = '';
   geselecteerdLocatie = '';
   beschikbareTeams: string[] = [];
-  
+
   gefilterdeWedstrijden: Match[] = []; // Slaat de actieve selectie op voor de export
 
   // Voor de desktop raster weergave
@@ -207,9 +207,23 @@ export class Kalender implements OnInit {
     return `hsl(${h}, 70%, 40%)`; // Donkere, verzadigde kleur voor witte tekst
   }
 
+  // Haalt ongewenste woorden zoals 'flag' (die de WBSC scraper soms per ongeluk meepakt) uit de teamnaam
+  cleanTeamNaam(naam: string | undefined): string {
+    if (!naam) return '';
+    return naam.replace(/flag/gi, '').trim();
+  }
+
   // Bepaalt of een wedstrijd een thuismatch is
   isThuisMatch(match: Match): boolean {
-    return match.thuisploeg ? match.thuisploeg.toLowerCase().includes('eagle') : false;
+    if (!match.thuisploeg) return false;
+    const thuis = match.thuisploeg.toLowerCase();
+    // Checkt op bekende benamingen van de club (zoals Royal Antwerp Eagles, R.A.E., etc.)
+    return (
+      thuis.includes('eagle') ||
+      thuis.includes('antwerp') ||
+      thuis.includes('rae') ||
+      thuis.includes('r.a.e')
+    );
   }
 
   // Haal alleen de thuis- of uitscore op uit "10 - 5"
@@ -229,7 +243,7 @@ export class Kalender implements OnInit {
     const scoreThuis = parseInt(parts[0].trim(), 10);
     const scoreUit = parseInt(parts[1].trim(), 10);
     if (isNaN(scoreThuis) || isNaN(scoreUit)) return false;
-    
+
     if (teamType === 'thuis') return scoreThuis > scoreUit;
     if (teamType === 'uit') return scoreUit > scoreThuis;
     return false;
@@ -243,7 +257,12 @@ export class Kalender implements OnInit {
     if (scoreThuis === scoreUit) return 'T';
 
     const thuisIsEagle = this.isThuisMatch(wedstrijd);
-    const uitIsEagle = wedstrijd.uitploeg?.toLowerCase().includes('eagle');
+    const uit = wedstrijd.uitploeg?.toLowerCase() || '';
+    const uitIsEagle =
+      uit.includes('eagle') ||
+      uit.includes('antwerp') ||
+      uit.includes('rae') ||
+      uit.includes('r.a.e');
 
     if (thuisIsEagle) return scoreThuis > scoreUit ? 'W' : 'L';
     else if (uitIsEagle) return scoreUit > scoreThuis ? 'W' : 'L';
@@ -258,29 +277,32 @@ export class Kalender implements OnInit {
 
   // Smart Link: Voeg toe aan Google Calendar
   genereerGoogleCalendarLink(event: Match): string {
-    const titel = event.type === 'evenement' ? event.titel : `${event.thuisploeg} vs ${event.uitploeg}`;
+    const titel =
+      event.type === 'evenement'
+        ? event.titel
+        : `${this.cleanTeamNaam(event.thuisploeg)} vs ${this.cleanTeamNaam(event.uitploeg)}`;
     let omschrijving = event.omschrijving || '';
     if (event.team) omschrijving = `Team: ${event.team}\n\n` + omschrijving;
-    
+
     const startDatum = event.datum.toDate();
     if (event.tijd) {
-       const [u, m] = event.tijd.split(':');
-       startDatum.setHours(parseInt(u, 10), parseInt(m, 10), 0);
+      const [u, m] = event.tijd.split(':');
+      startDatum.setHours(parseInt(u, 10), parseInt(m, 10), 0);
     }
     const eindDatum = new Date(startDatum.getTime() + 2 * 60 * 60 * 1000); // We gaan uit van 2 uur duur
 
     const formatDatum = (d: Date) => d.toISOString().replace(/-|:|\.\d+/g, '');
-    
+
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(titel || '')}&dates=${formatDatum(startDatum)}/${formatDatum(eindDatum)}&details=${encodeURIComponent(omschrijving)}&location=${encodeURIComponent(event.locatie || '')}`;
   }
 
   // Weersverwachting (Voor wedstrijden binnen 7 dagen)
-  getWeer(datum: any): { icoon: string, temp: string } | null {
+  getWeer(datum: any): { icoon: string; temp: string } | null {
     const d = datum.toDate();
     const vandaag = new Date();
-    vandaag.setHours(0,0,0,0);
+    vandaag.setHours(0, 0, 0, 0);
     const verschilInDagen = Math.floor((d.getTime() - vandaag.getTime()) / (1000 * 3600 * 24));
-    
+
     if (verschilInDagen >= 0 && verschilInDagen <= 7) {
       // Een slim algoritme om het weer visueel te simuleren gebaseerd op de dag
       const hash = d.getDate() + d.getMonth();
@@ -298,24 +320,27 @@ export class Kalender implements OnInit {
       return;
     }
 
-    let icsContent = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Antwerp Eagles//Wedstrijdkalender//NL\r\n";
+    let icsContent =
+      'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Antwerp Eagles//Wedstrijdkalender//NL\r\n';
 
-    this.gefilterdeWedstrijden.forEach(event => {
-      const titel = event.type === 'evenement' ? event.titel : `${event.thuisploeg} vs ${event.uitploeg}`;
+    this.gefilterdeWedstrijden.forEach((event) => {
+      const titel =
+        event.type === 'evenement' ? event.titel : `${event.thuisploeg} vs ${event.uitploeg}`;
       let omschrijving = event.omschrijving || '';
       if (event.team) omschrijving = `Team: ${event.team}\\n\\n` + omschrijving;
 
       const startDatum = event.datum.toDate();
       if (event.tijd) {
-         const [u, m] = event.tijd.split(':');
-         startDatum.setHours(parseInt(u, 10), parseInt(m, 10), 0);
+        const [u, m] = event.tijd.split(':');
+        startDatum.setHours(parseInt(u, 10), parseInt(m, 10), 0);
       }
       const eindDatum = new Date(startDatum.getTime() + 2 * 60 * 60 * 1000); // We reserveren standaard 2 uur in de agenda
 
       // .ics bestanden verwachten een specifieke UTC datumnotatie (YYYYMMDDThhmmssZ)
-      const formatIcsDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').substring(0, 15) + 'Z';
+      const formatIcsDate = (d: Date) =>
+        d.toISOString().replace(/[-:]/g, '').substring(0, 15) + 'Z';
 
-      icsContent += "BEGIN:VEVENT\r\n";
+      icsContent += 'BEGIN:VEVENT\r\n';
       icsContent += `UID:${event.id || Math.random().toString(36).substring(2, 11)}@antwerpeagles.be\r\n`;
       icsContent += `DTSTAMP:${formatIcsDate(new Date())}\r\n`;
       icsContent += `DTSTART:${formatIcsDate(startDatum)}\r\n`;
@@ -327,10 +352,10 @@ export class Kalender implements OnInit {
       if (omschrijving) {
         icsContent += `DESCRIPTION:${omschrijving.replace(/\n/g, '\\n')}\r\n`;
       }
-      icsContent += "END:VEVENT\r\n";
+      icsContent += 'END:VEVENT\r\n';
     });
 
-    icsContent += "END:VCALENDAR\r\n";
+    icsContent += 'END:VCALENDAR\r\n';
 
     // Simuleer een download-klik voor de gebruiker
     const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });

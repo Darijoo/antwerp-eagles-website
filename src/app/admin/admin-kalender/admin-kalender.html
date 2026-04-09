@@ -75,9 +75,24 @@
             <label for="uitslag">Uitslag (optioneel)</label>
             <input type="text" id="uitslag" formControlName="uitslag" placeholder="bv. 10 - 5" />
           </div>
-          <div class="form-group" style="margin-top: -0.5rem; margin-bottom: 1.5rem;">
-            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-weight: normal; font-size: 0.9rem; color: var(--eagle-blue);">
-              <input type="checkbox" id="isHandmatigBewerkt" formControlName="isHandmatigBewerkt" style="width: auto; transform: scale(1.2); margin: 0; cursor: pointer;" />
+          <div class="form-group" style="margin-top: -0.5rem; margin-bottom: 1.5rem">
+            <label
+              style="
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                cursor: pointer;
+                font-weight: normal;
+                font-size: 0.9rem;
+                color: var(--eagle-blue);
+              "
+            >
+              <input
+                type="checkbox"
+                id="isHandmatigBewerkt"
+                formControlName="isHandmatigBewerkt"
+                style="width: auto; transform: scale(1.2); margin: 0; cursor: pointer"
+              />
               Score vastzetten (niet meer overschrijven bij Kalender Sync)
             </label>
           </div>
@@ -158,8 +173,24 @@
           }
         </select>
 
-        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; white-space: nowrap; font-weight: bold; color: var(--eagle-blue); padding: 0.5rem;">
-          <input type="checkbox" [checked]="toonVerledenEvents$ | async" (change)="toggleVerledenEvents()" style="width: auto; transform: scale(1.2); padding: 0; margin: 0;" />
+        <label
+          style="
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: bold;
+            color: var(--eagle-blue);
+            padding: 0.5rem;
+          "
+        >
+          <input
+            type="checkbox"
+            [checked]="toonVerledenEvents$ | async"
+            (change)="toggleVerledenEvents()"
+            style="width: auto; transform: scale(1.2); padding: 0; margin: 0"
+          />
           Toon verleden events
         </label>
       </div>
@@ -177,8 +208,8 @@
                 @if ($any(wedstrijd).geannuleerd) {
                   <span class="badge" style="background-color: var(--eagle-red)">Geannuleerd</span>
                 }
-                {{ wedstrijd.thuisploeg }} vs
-                {{ wedstrijd.uitploeg }}
+                {{ cleanTeamNaam(wedstrijd.thuisploeg) }} vs
+                {{ cleanTeamNaam(wedstrijd.uitploeg) }}
               } @else {
                 <span class="badge evenement">Evenement</span> {{ wedstrijd.titel }}
                 @if ($any(wedstrijd).geannuleerd) {

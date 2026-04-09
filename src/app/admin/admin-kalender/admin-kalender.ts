@@ -66,7 +66,12 @@ export class AdminKalender {
         ),
       );
 
-    this.wedstrijden$ = combineLatest([alleWedstrijden$, this.filterType$, this.filterTeam$, this.toonVerledenEvents$]).pipe(
+    this.wedstrijden$ = combineLatest([
+      alleWedstrijden$,
+      this.filterType$,
+      this.filterTeam$,
+      this.toonVerledenEvents$,
+    ]).pipe(
       map(([wedstrijden, type, team, toonVerleden]) => {
         return wedstrijden.filter((w) => {
           const matchType = type === '' || (w.type || 'wedstrijd') === type;
@@ -135,8 +140,8 @@ export class AdminKalender {
       datum: datumString,
       tijd: wedstrijd.tijd,
       team: wedstrijd.team || '',
-      thuisploeg: wedstrijd.thuisploeg || '',
-      uitploeg: wedstrijd.uitploeg || '',
+      thuisploeg: this.cleanTeamNaam(wedstrijd.thuisploeg),
+      uitploeg: this.cleanTeamNaam(wedstrijd.uitploeg),
       titel: wedstrijd.titel || '',
       omschrijving: wedstrijd.omschrijving || '',
       locatie: wedstrijd.locatie,
@@ -219,5 +224,11 @@ export class AdminKalender {
     const vandaag = new Date();
     vandaag.setHours(0, 0, 0, 0);
     return wedstrijdDatum < vandaag;
+  }
+
+  // Verwijder het woord 'flag' uit gescrapete teamnamen
+  cleanTeamNaam(naam: string | undefined): string {
+    if (!naam) return '';
+    return naam.replace(/flag/gi, '').trim();
   }
 }
