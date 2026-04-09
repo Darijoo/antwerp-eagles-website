@@ -82,6 +82,14 @@
           </select>
         </div>
       </div>
+
+      <button
+        class="btn-export"
+        (click)="exporteerNaarAgenda()"
+        title="Download deze selectie voor je agenda"
+      >
+        <i class="fa-solid fa-download"></i> Export (.ics)
+      </button>
     </div>
 
     <div class="kalender-navigatie">
@@ -221,13 +229,6 @@
               </div>
             }
           </div>
-          <button
-            class="btn-export"
-            (click)="exporteerNaarAgenda()"
-            title="Download deze selectie voor je agenda"
-          >
-            <i class="fa-solid fa-download"></i> Export (.ics)
-          </button>
         </div>
       }
 
