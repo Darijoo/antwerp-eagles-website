@@ -1,11 +1,14 @@
-<div class="standaard-pagina" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
-  <div class="container">
-    <div class="header-tekst">
-      <h2 class="sectie-titel">Wedstrijdkalender</h2>
-      <p class="sectie-ondertitel">
-        Bekijk het aankomende programma en de uitslagen van onze teams.
-      </p>
+<div class="kalender-sectie" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
+  <div class="pagina-hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <span class="hero-badge">Game On</span>
+      <h1 class="hero-titel">Wedstrijdkalender</h1>
+      <p class="hero-ondertitel">Bekijk het aankomende programma en de uitslagen van onze teams.</p>
     </div>
+  </div>
+
+  <div class="container overlap-container">
 
     <!-- FILTERS -->
     <div class="kalender-filters">

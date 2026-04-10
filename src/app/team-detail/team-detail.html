@@ -1,18 +1,20 @@
 @if (team) {
-  <div class="standaard-pagina">
-    <div class="container">
-      <a routerLink="/teams" class="terug-knop" aria-label="Terug naar overzicht teams">
-        <i class="fa-solid fa-arrow-left"></i> Terug naar overzicht
-      </a>
-
-      <article class="team-detail-kaart reveal-animatie">
-        <!-- IMMERSIVE HERO -->
-        <div class="team-hero" [style.backgroundImage]="team.afbeeldingUrl ? 'url(' + team.afbeeldingUrl + ')' : 'none'">
-          <div class="hero-content">
-            <span class="team-badge">{{ team.categorie }}</span>
-            <h1 class="team-titel">{{ team.naam }}</h1>
-          </div>
+  <div class="team-detail-sectie">
+    <div class="pagina-hero" [style.backgroundImage]="team.afbeeldingUrl ? 'url(' + team.afbeeldingUrl + ')' : 'none'" style="background-size: cover; background-position: center;">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content">
+        <div style="margin-bottom: 2rem;">
+          <a routerLink="/teams" class="terug-knop-hero" aria-label="Terug naar overzicht teams">
+            <i class="fa-solid fa-arrow-left"></i> Terug naar overzicht
+          </a>
         </div>
+        <span class="hero-badge">{{ team.categorie }}</span>
+        <h1 class="hero-titel">{{ team.naam }}</h1>
+      </div>
+    </div>
+
+    <div class="container overlap-container">
+      <article class="team-detail-kaart reveal-animatie">
 
         <div class="team-inhoud">
           <div class="team-extra-info">
@@ -122,14 +124,15 @@
     </div>
   </div>
 } @else {
-  <div class="standaard-pagina">
-    <div class="container">
-      <div class="skeleton-terug"></div>
+  <div class="team-detail-sectie">
+    <div class="pagina-hero">
+      <div class="container hero-content">
+         <div class="skeleton-badge-new" style="margin: 0 auto 1rem auto;"></div>
+         <div class="skeleton-titel-new" style="margin: 0 auto;"></div>
+      </div>
+    </div>
+    <div class="container overlap-container">
       <article class="team-detail-kaart skeleton-kaart">
-        <div class="skeleton-hero-new">
-           <div class="skeleton-badge-new"></div>
-           <div class="skeleton-titel-new"></div>
-        </div>
         <div class="team-inhoud">
           
           <div class="skeleton-tags-container">

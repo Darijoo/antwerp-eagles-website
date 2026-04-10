@@ -1,73 +1,76 @@
+.team-detail-sectie {
+  background-color: var(--bg-light);
+  min-height: 100vh;
+  padding-bottom: 4rem;
+}
+
 .container {
   max-width: 1000px; /* Iets smaller voor een betere leesbaarheid van de tekst */
   margin: 0 auto;
 }
 
-.terug-knop {
+/* --- IMMERSIVE HERO --- */
+.pagina-hero {
+  width: 100%;
+  min-height: 45vh;
+  margin-top: -133px;
+  padding-top: 133px;
+  background-color: var(--eagle-blue);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 6rem;
+
+  .hero-overlay {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(21, 34, 105, 0.95), rgba(153, 25, 25, 0.8));
+  }
+
+  .hero-content { position: relative; z-index: 1; color: white; max-width: 800px; }
+
+  .hero-badge {
+    display: inline-block; background-color: var(--eagle-red); color: white;
+    padding: 0.4rem 1.2rem; border-radius: 30px; font-size: 1rem; font-weight: 900;
+    text-transform: uppercase; margin-bottom: 1rem; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .hero-titel {
+    font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 900; text-transform: uppercase;
+    margin: 0 0 1rem 0; line-height: 1.1; text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.terug-knop-hero {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--eagle-blue);
+  color: rgba(255,255,255,0.8);
   text-decoration: none;
   font-weight: 700;
   font-size: 1.1rem;
-  margin-bottom: 2rem;
   transition: color 0.3s ease;
 
   &:hover {
-    color: var(--eagle-red);
+    color: white;
   }
+}
+
+.overlap-container {
+  margin-top: -4rem;
+  position: relative;
+  z-index: 10;
 }
 
 .team-detail-kaart {
   background-color: white;
   border-radius: 12px;
-  overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-.team-hero {
-  width: 100%;
-  height: 400px;
-  background-color: var(--eagle-blue);
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  padding: 3rem;
-
-  .hero-content {
-    position: relative;
-    z-index: 1;
-    color: white;
-  }
 }
 
 .team-inhoud {
   padding: 3rem;
-}
-
-.team-titel {
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  margin: 0;
-  line-height: 1.1;
-  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.5); /* Versterkt om de tekst goed leesbaar te houden zonder de gradient overlay */
-}
-
-.team-badge {
-  display: inline-block;
-  background-color: var(--eagle-red);
-  color: white;
-  padding: 0.4rem 1.5rem;
-  border-radius: 30px;
-  font-size: 1rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .team-extra-info {
@@ -330,35 +333,13 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
-.skeleton-hero-new {
-  width: 100%;
-  height: 400px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: skeleton-loading 1.5s infinite;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 3rem;
-}
-
-.skeleton-terug {
-  width: 180px;
-  height: 20px;
-  border-radius: 4px;
-  margin-bottom: 2rem;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: skeleton-loading 1.5s infinite;
-}
-
 .skeleton-badge-new {
   width: 100px; height: 30px; border-radius: 30px; margin-bottom: 1rem;
-  background: rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.2);
 }
 .skeleton-titel-new {
   width: 350px; height: 50px; border-radius: 8px;
-  background: rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.2);
 }
 .skeleton-tags-container {
   display: flex; gap: 1.5rem; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 2px solid #eee;
@@ -406,9 +387,12 @@
 
 /* Responsief maken voor mobiel */
 @media (max-width: 768px) {
-  .team-hero {
-    height: 300px;
-    padding: 2rem 1.5rem;
+  .pagina-hero {
+    margin-top: -87px; padding-top: 87px;
+    min-height: 40vh; padding-bottom: 4rem;
+  }
+  .overlap-container {
+    margin-top: -3rem;
   }
   .team-inhoud {
     padding: 2rem 1.5rem;

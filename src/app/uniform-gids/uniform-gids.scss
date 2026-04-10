@@ -26,7 +26,7 @@
 
   .hero-overlay {
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(135deg, rgba(21, 34, 105, 0.95), rgba(21, 34, 105, 0.7));
+    background: linear-gradient(135deg, rgba(21, 34, 105, 0.95), rgba(153, 25, 25, 0.8));
   }
 
   .hero-content { position: relative; z-index: 1; color: white; max-width: 800px; }
@@ -76,7 +76,9 @@
 }
 
 .overlap-container {
-  margin-top: -3rem; /* Trekt grid omhoog over de blauwe hero! */
+  margin-top: -4rem; /* Zelfde overlap marge als de aansluiten pagina */
+  position: relative;
+  z-index: 10;
 }
 
 .gids-grid {
