@@ -20,6 +20,7 @@ import { UnderConstruction } from './under-construction';
 import { Nieuws } from './nieuws';
 import { Privacybeleid } from '../privacybeleid';
 import { PaginaNietGevonden } from './footer/pagina-niet-gevonden';
+import { UniformGids } from './uniform-gids/uniform-gids';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -32,19 +33,17 @@ export const routes: Routes = [
   { path: 'contact', component: Contact },
   { path: 'kalender', component: Kalender },
   { path: 'nieuws/:id', component: NieuwsArtikel }, // <-- 2. Voeg de dynamische route toe
+  { path: 'nieuws', component: Nieuws },
+  { path: 'historiek', component: OverOns },
+  { path: 'uniform', component: UniformGids },
   
   // Tijdelijke 'In Aanbouw' pagina's voor de nieuwe navigatiebalk
   { path: 'klassementen', component: UnderConstruction },
   { path: 'toernooien', component: UnderConstruction },
   { path: 'evenementen', component: UnderConstruction },
-  { path: 'nieuws', component: Nieuws },
-  { path: 'historiek', component: OverOns },
 
   { path: 'login', component: Login },
-  {
-    path: 'uniform',
-    loadComponent: () => import('./admin/uniform-gids').then((m) => m.UniformGids),
-  },
+
   {
     path: 'admin',
     component: Admin,

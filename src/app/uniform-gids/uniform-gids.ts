@@ -46,22 +46,51 @@ export class UniformGids implements OnInit {
     return this.onderdelen.filter(o => (o.categorie || 'Baseball') === this.actieveCategorie);
   }
 
-  get gesorteerdeOnderdelen() {
-    // Maak een kopie met slice() en sorteer: verplicht eerst, daarna alfabetisch
-    return this.gefilterdeOnderdelen.slice().sort((a, b) => {
-      if (a.verplicht && !b.verplicht) return -1;
-      if (!a.verplicht && b.verplicht) return 1;
-      return a.naam.localeCompare(b.naam);
-    });
+  get verplichteOnderdelen() {
+    return this.gefilterdeOnderdelen.filter(o => o.verplicht).sort((a, b) => a.naam.localeCompare(b.naam));
+  }
+
+  get optioneleOnderdelen() {
+    return this.gefilterdeOnderdelen.filter(o => !o.verplicht).sort((a, b) => a.naam.localeCompare(b.naam));
+  }
+
+  get alleOnderdelenGesorteerd() {
+    return [...this.verplichteOnderdelen, ...this.optioneleOnderdelen];
+  }
+
+  get actieveWinkels() {
+    if (!this.geselecteerdOnderdeel) return [];
+    
+    if (this.geselecteerdOnderdeel.winkels && this.geselecteerdOnderdeel.winkels.length > 0) {
+      const geldigeWinkels = this.geselecteerdOnderdeel.winkels.filter(w => w.naam && w.naam.trim() !== '');
+      if (geldigeWinkels.length > 0) return geldigeWinkels;
+    }
+    
+    if (this.geselecteerdOnderdeel.winkelNaam && this.geselecteerdOnderdeel.winkelNaam.trim() !== '') {
+      return [{ 
+        naam: this.geselecteerdOnderdeel.winkelNaam, 
+        link: this.geselecteerdOnderdeel.winkelLink || '' 
+      }];
+    }
+    
+    return [];
   }
 
   wisselCategorie(cat: string) {
     this.actieveCategorie = cat;
-    const items = this.gesorteerdeOnderdelen;
+    // Kies standaard het eerste verplichte item, of anders het eerste optionele
+    const items = this.alleOnderdelenGesorteerd;
     this.geselecteerdOnderdeel = items.length > 0 ? items[0] : null;
   }
 
   selecteerOnderdeel(onderdeel: UniformOnderdeel) {
     this.geselecteerdOnderdeel = onderdeel;
+    
+    // Smart Auto-Scroll voor mobiele apparaten (viewport < 768px)
+    if (window.innerWidth <= 768) {
+      setTimeout(() => {
+        document.getElementById('detailsKaart')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 150); // Kleine vertraging om de animatie de tijd te geven
+    }
   }
 }

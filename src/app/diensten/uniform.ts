@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, EnvironmentInjector, runInInjectionContext } from '@angular/core';
 import {
   Firestore,
   collection,
@@ -18,8 +18,9 @@ export interface UniformOnderdeel {
   beschrijving: string;
   verplicht: boolean;
   prijsIndicatie: number | null;
-  winkelNaam: string;
-  winkelLink: string;
+  winkelNaam?: string; // Oude veld (behoud voor data migratie)
+  winkelLink?: string; // Oude veld (behoud voor data migratie)
+  winkels?: { naam: string; link: string }[]; // Nieuw: meerdere winkels
   top: number;
   left: number;
   categorie?: string;
@@ -30,6 +31,7 @@ export interface UniformOnderdeel {
 })
 export class UniformService {
   private firestore = inject(Firestore);
+  private injector = inject(EnvironmentInjector);
   private uniformCollection = collection(this.firestore, 'uniform');
   private instellingenDoc = doc(this.firestore, 'uniform-instellingen/afbeeldingen');
 
@@ -44,20 +46,28 @@ export class UniformService {
   }
 
   updateAfbeelding(categorie: string, url: string): Observable<void> {
-    return from(setDoc(this.instellingenDoc, { [categorie]: url }, { merge: true }));
+    return runInInjectionContext(this.injector, () => {
+      return from(setDoc(this.instellingenDoc, { [categorie]: url }, { merge: true }));
+    });
   }
 
   voegOnderdeelToe(onderdeel: UniformOnderdeel): Observable<any> {
-    return from(addDoc(this.uniformCollection, onderdeel));
+    return runInInjectionContext(this.injector, () => {
+      return from(addDoc(this.uniformCollection, onderdeel));
+    });
   }
 
   updateOnderdeel(id: string, onderdeel: Partial<UniformOnderdeel>): Observable<void> {
-    const docRef = doc(this.firestore, `uniform/${id}`);
-    return from(updateDoc(docRef, onderdeel as any));
+    return runInInjectionContext(this.injector, () => {
+      const docRef = doc(this.firestore, `uniform/${id}`);
+      return from(updateDoc(docRef, onderdeel as any));
+    });
   }
 
   verwijderOnderdeel(id: string): Observable<void> {
-    const docRef = doc(this.firestore, `uniform/${id}`);
-    return from(deleteDoc(docRef));
+    return runInInjectionContext(this.injector, () => {
+      const docRef = doc(this.firestore, `uniform/${id}`);
+      return from(deleteDoc(docRef));
+    });
   }
 }

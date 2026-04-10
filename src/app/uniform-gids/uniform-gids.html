@@ -1,0 +1,148 @@
+<div class="uniform-sectie">
+  
+  <!-- IMMERSIVE LOCKER ROOM HERO -->
+  <div class="uniform-hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <span class="hero-badge">Player Gear</span>
+      <h1 class="hero-titel">Uniform & Uitrusting</h1>
+      <p class="hero-ondertitel">Klik op de stippen om te ontdekken wat je nodig hebt op het veld, wat verplicht is en waar je het kunt halen.</p>
+      
+      <!-- Categorie Tabs nu mooi in de Hero verwerkt -->
+      <div class="categorie-tabs">
+        @for (cat of categorieen; track cat) {
+          <button class="tab-btn" [class.actief]="actieveCategorie === cat" (click)="wisselCategorie(cat)">
+            {{ cat }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="container overlap-container reveal-animatie">
+    <div class="gids-grid">
+      
+      <!-- LINKER KANT: De Interactieve Afbeelding -->
+      <div class="visual-container">
+        <!-- Vervang deze src="..." later door je eigen Anime/3D render -->
+        <img
+          [src]="afbeeldingen[actieveCategorie]"
+          [alt]="actieveCategorie + ' Uniform'"
+          class="speler-afbeelding"
+        />
+
+        <!-- Render alle hotspots (verplicht + optioneel) -->
+        @for (onderdeel of alleOnderdelenGesorteerd; track onderdeel.id) {
+          <button
+            class="hotspot"
+            [class.actief]="geselecteerdOnderdeel?.id === onderdeel.id"
+            [class.is-optioneel]="!onderdeel.verplicht"
+            [style.top.%]="onderdeel.top"
+            [style.left.%]="onderdeel.left"
+            (click)="selecteerOnderdeel(onderdeel)"
+            [attr.aria-label]="onderdeel.naam"
+          >
+            <span class="pulse"></span>
+            <span class="dot"></span>
+            <span class="tooltip">{{ onderdeel.naam }}</span>
+          </button>
+        }
+      </div>
+
+      <!-- RECHTER KANT: Het Informatie Paneel (Lijst + Kaart onder elkaar) -->
+      <div class="info-paneel">
+        
+        <!-- De Lijst (Compact & Scrollbaar) -->
+        <div class="item-lijst-publiek">
+          <h3><i class="fa-solid fa-list-check"></i> Overzicht Uitrusting</h3>
+          
+          <div class="scrollbare-lijst">
+          @if (verplichteOnderdelen.length > 0) {
+            <h4 class="lijst-subkop">Verplicht voor wedstrijden</h4>
+            <div class="lijst-knoppen">
+              @for (onderdeel of verplichteOnderdelen; track onderdeel.id) {
+                <button 
+                  class="lijst-item-btn" 
+                  [class.actief]="geselecteerdOnderdeel?.id === onderdeel.id"
+                  (click)="selecteerOnderdeel(onderdeel)"
+                  [attr.aria-label]="onderdeel.naam"
+                >
+                  <span class="status-indicator verplicht" title="Verplicht"></span>
+                  {{ onderdeel.naam }}
+                </button>
+              }
+            </div>
+          }
+
+          @if (optioneleOnderdelen.length > 0) {
+            <h4 class="lijst-subkop" style="margin-top: 1.5rem;">Aangeraden / Optioneel</h4>
+            <div class="lijst-knoppen">
+              @for (onderdeel of optioneleOnderdelen; track onderdeel.id) {
+                <button 
+                  class="lijst-item-btn" 
+                  [class.actief]="geselecteerdOnderdeel?.id === onderdeel.id"
+                  (click)="selecteerOnderdeel(onderdeel)"
+                  [attr.aria-label]="onderdeel.naam"
+                >
+                  <span class="status-indicator optioneel" title="Optioneel"></span>
+                  {{ onderdeel.naam }}
+                </button>
+              }
+            </div>
+          }
+          </div>
+        </div>
+
+        @if (geselecteerdOnderdeel) {
+          <div class="info-kaart" id="detailsKaart" [class.is-verplicht-kaart]="geselecteerdOnderdeel.verplicht">
+            <div class="kaart-header">
+              <h3>{{ geselecteerdOnderdeel.naam }}</h3>
+              <span
+                class="badge"
+                [class.verplicht]="geselecteerdOnderdeel.verplicht"
+                [class.optioneel]="!geselecteerdOnderdeel.verplicht"
+              >
+                {{ geselecteerdOnderdeel.verplicht ? 'Verplicht' : 'Optioneel' }}
+              </span>
+            </div>
+
+            <p class="beschrijving">{{ geselecteerdOnderdeel.beschrijving }}</p>
+
+            <div class="details-grid">
+              <div class="detail-item">
+                <i class="fa-solid fa-tag"></i>
+                <div>
+                  <span class="label">Prijsindicatie</span
+                  ><span class="waarde">&euro; {{ geselecteerdOnderdeel.prijsIndicatie }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="winkels-lijst">
+              <h4><i class="fa-solid fa-shop" style="color: var(--eagle-blue); margin-right: 0.5rem;"></i> Verkrijgbaar bij</h4>
+              
+              <div class="winkel-knoppen">
+            @if (actieveWinkels.length > 0) {
+              @for (winkel of actieveWinkels; track $index) {
+                @if (winkel.link) {
+                  <a [href]="winkel.link" target="_blank" rel="noopener noreferrer" class="btn-winkel">
+                    <span>{{ winkel.naam }}</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </a>
+                } @else {
+                  <div class="btn-winkel geen-link">
+                    <span>{{ winkel.naam }}</span>
+                  </div>
+                }
+              }
+            } @else {
+                  <p class="geen-winkel-tekst">Momenteel geen winkel beschikbaar.</p>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

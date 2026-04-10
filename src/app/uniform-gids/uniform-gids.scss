@@ -81,9 +81,9 @@
 
 .gids-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
+   grid-template-columns: 1fr 400px;
+  gap: 3rem;
+  align-items: start;
 }
 
 /* --- VISUAL (FOTO KANT) --- */
@@ -98,12 +98,13 @@
 
   .speler-afbeelding {
     max-width: 100%;
-    max-height: 75vh;
+    max-height: 82vh; /* Afbeelding mag iets groter zijn! */
     height: auto;
     display: block;
     border-radius: 12px;
   }
 }
+
 
 /* De kloppende interactieve stippen */
 .hotspot {
@@ -248,6 +249,7 @@
 .info-paneel {
   display: flex;
   flex-direction: column;
+  max-height: 82vh; /* Groeit netjes mee met de nieuwe afbeelding hoogte */
 }
 
 /* --- LIJST WEERGAVE KANT --- */
@@ -256,16 +258,35 @@
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem; /* Iets compacter */
   animation: slideIn 0.3s ease-out;
+
+  /* Container is flex zodat de titel bovenaan blijft plakken */
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Neemt automatisch de resterende ruimte in */
+  min-height: 0; /* CRUCIAAL: Zorgt dat de lijst écht kleiner kan krimpen dan de inhoud! */
+  
+  /* De scroll-logica zit nu in deze binnenste wrapper */
+  .scrollbare-lijst {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 0.5rem; /* Beetje ademruimte voor de scrollbar */
+    
+    &::-webkit-scrollbar { width: 6px; }
+    &::-webkit-scrollbar-track { background: #f8f9fa; border-radius: 10px; }
+    &::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+  }
 
   h3 {
     margin-top: 0;
     color: var(--eagle-blue);
     font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
     border-bottom: 2px solid #f0f0f0;
+    flex-shrink: 0; /* Zorgt dat de titel niet platgedrukt wordt */
     i { color: var(--eagle-red); margin-right: 0.5rem; }
   }
 
@@ -337,8 +358,9 @@
 }
 
 .info-kaart {
+  flex-shrink: 0; /* Voorkomt dat het informatiekaartje platgedrukt wordt door de lijst */
   background: white;
-  padding: 2.5rem;
+  padding: 1.8rem; /* Iets strakker zodat het altijd netjes past */
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   border-left: 5px solid var(--eagle-blue);
@@ -355,11 +377,11 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 
     h3 {
       color: var(--eagle-blue);
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       margin: 0;
     }
 
@@ -383,19 +405,19 @@
   }
 
   .beschrijving {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     color: var(--text-dark);
     line-height: 1.6;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   .details-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5rem;
     background-color: var(--bg-light);
-    padding: 1.5rem;
+    padding: 1.2rem;
     border-radius: 8px;
 
     .detail-item {
@@ -424,27 +446,66 @@
     }
   }
 
-  .btn-kopen {
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    background-color: var(--eagle-red);
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    padding: 1rem;
-    border-radius: 6px;
-    text-transform: uppercase;
-    transition: background-color 0.3s;
-    i {
-      margin-right: 0.5rem;
+  .winkels-lijst {
+    border-top: 2px solid #f0f0f0;
+    padding-top: 1.2rem;
+
+    h4 {
+      color: var(--text-dark);
+      font-size: 1.1rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
     }
-    &:hover {
-      background-color: #b71c1c;
+
+    .winkel-knoppen {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
     }
-  }
-  .item-lijst-publiek .lijst-knoppen {
-    grid-template-columns: 1fr; /* Zet ze op kleine smartphones netjes onder elkaar */
+
+    .btn-winkel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: var(--bg-light);
+      border: 1px solid #e2e8f0;
+      color: var(--eagle-blue);
+      text-decoration: none;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.2s ease;
+
+      i {
+        color: var(--eagle-red);
+        font-size: 1rem;
+      }
+
+      &:hover {
+        background-color: white;
+        border-color: var(--eagle-blue);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(21, 34, 105, 0.08);
+      }
+
+      &.geen-link {
+        cursor: default;
+        color: var(--text-dark);
+        &:hover {
+          background-color: var(--bg-light);
+          border-color: #e2e8f0;
+          transform: none;
+          box-shadow: none;
+        }
+      }
+    }
+    
+    .geen-winkel-tekst {
+      color: #7f8c8d;
+      font-style: italic;
+      margin: 0;
+      font-size: 0.95rem;
+    }
   }
 }
 
@@ -456,6 +517,12 @@
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@media (max-width: 1200px) {
+  .gids-grid {
+    grid-template-columns: 1fr 350px;
   }
 }
 
@@ -479,10 +546,12 @@
     flex: 1;
   }
   .gids-grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
   }
   .visual-container {
+    order: 1;
     max-width: 100%;
     .speler-afbeelding {
       max-height: 65vh; /* Voorkomt dat de foto te hoog wordt op kleine schermen */
@@ -492,6 +561,18 @@
     white-space: normal;
     width: 130px;
     text-align: center;
+  }
+  .info-paneel {
+    order: 2;
+    width: 100%;
+    max-height: none; /* Geen beperking op mobiel */
+  }
+  .item-lijst-publiek {
+    flex: none; /* Reset flex-gedrag voor mobiel */
+  }
+  .item-lijst-publiek .scrollbare-lijst {
+    overflow-y: visible; /* Geen aparte scroll in het blokje op mobiel */
+    padding-right: 0;
   }
   .info-kaart {
     padding: 1.5rem;

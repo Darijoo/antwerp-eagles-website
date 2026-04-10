@@ -62,36 +62,37 @@
             </div>
           </div>
           <div class="form-groep">
-            <label for="winkelNaam">Verkrijgbaar bij (Winkelnaam)</label>
-            <input
-              type="text"
-              id="winkelNaam"
-              name="winkelNaam"
-              [(ngModel)]="nieuwOnderdeel.winkelNaam"
-              placeholder="bv. Forelle"
-              required
-            />
+            <label for="categorie">Voor welk team/categorie is dit item?</label>
+            <select id="categorie" name="categorie" [(ngModel)]="nieuwOnderdeel.categorie">
+              <option value="Baseball">Baseball (Heren)</option>
+              <option value="Softball">Softball (Dames)</option>
+            </select>
           </div>
         </div>
 
-        <div class="form-groep">
-          <label for="winkelLink">Link naar de winkel of contactpagina</label>
-          <input
-            type="text"
-            id="winkelLink"
-            name="winkelLink"
-            [(ngModel)]="nieuwOnderdeel.winkelLink"
-            placeholder="https://www.forelle.com/..."
-            required
-          />
-        </div>
+        <div class="form-groep" style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 2rem;">
+          <label style="color: var(--eagle-blue); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-shop"></i> Verkrijgbaar bij (Winkels)</label>
+          <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: #555;">Voeg hier de webshops of winkels toe op volgorde van beschikbaarheid.</p>
 
-        <div class="form-groep">
-          <label for="categorie">Voor welk team/categorie is dit item?</label>
-          <select id="categorie" name="categorie" [(ngModel)]="nieuwOnderdeel.categorie">
-            <option value="Baseball">Baseball (Heren)</option>
-            <option value="Softball">Softball (Dames)</option>
-          </select>
+          @for (winkel of nieuwOnderdeel.winkels; track $index) {
+            <div style="display: flex; gap: 1rem; align-items: flex-end; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #ccc;">
+              <div style="flex: 1;">
+                <label style="font-size: 0.9rem; color: #555;">Naam Winkel</label>
+                <input type="text" [(ngModel)]="winkel.naam" [name]="'winkelNaam_' + $index" placeholder="bv. Forelle" style="margin-bottom: 0;" required />
+              </div>
+              <div style="flex: 2;">
+                <label style="font-size: 0.9rem; color: #555;">Directe Link (URL)</label>
+                <input type="text" [(ngModel)]="winkel.link" [name]="'winkelLink_' + $index" placeholder="Optioneel (https://...)" style="margin-bottom: 0;" />
+              </div>
+              <button type="button" class="btn-verwijderen" (click)="verwijderWinkel($index)" style="margin-bottom: 0; padding: 0.75rem 1rem;" title="Verwijder winkel">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          }
+          
+          <button type="button" (click)="voegWinkelToe()" style="display: inline-block; background: var(--eagle-blue); color: white; border: none; padding: 0.6rem 1rem; border-radius: 6px; font-weight: bold; cursor: pointer;">
+            <i class="fa-solid fa-plus" style="margin-right: 6px;"></i> Extra winkel toevoegen
+          </button>
         </div>
 
         <div
@@ -123,7 +124,7 @@
                   orient="vertical" 
                   [(ngModel)]="nieuwOnderdeel.top" 
                   name="top" 
-                  style="flex: 1; min-height: 250px; width: 20px; cursor: pointer; appearance: slider-vertical; -webkit-appearance: slider-vertical; transform: rotate(180deg);" 
+                  style="flex: 1; min-height: 250px; width: 20px; cursor: pointer; writing-mode: vertical-lr; direction: rtl; transform: rotate(180deg);" 
                 />
                 <span style="font-weight: bold; color: var(--text-dark); font-size: 0.9rem; writing-mode: vertical-lr; transform: rotate(180deg); margin-top: 0.5rem;">Boven / Onder</span>
               </div>
@@ -240,7 +241,15 @@
                 {{ item.verplicht ? 'JA' : 'NEE' }}
               </span>
             </td>
-            <td>{{ item.winkelNaam }}</td>
+            <td>
+              @if (item.winkels && item.winkels.length > 0) {
+                <span style="font-size: 0.9rem;">{{ item.winkels.length }} winkel(s)</span>
+              } @else if (item.winkelNaam) {
+                <span style="font-size: 0.9rem;">{{ item.winkelNaam }}</span>
+              } @else {
+                -
+              }
+            </td>
             <td class="tabel-acties">
               <button class="btn-bewerken" (click)="bewerkOnderdeel(item)">
                 <i class="fa-solid fa-pen-to-square"></i> Bewerken
