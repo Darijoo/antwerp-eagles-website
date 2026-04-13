@@ -50,6 +50,60 @@
   z-index: 10;
 }
 
+/* --- JEUGDBELEID BANNER --- */
+.jeugdbeleid-banner {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+  margin-bottom: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  border-left: 5px solid var(--eagle-blue);
+
+  .banner-icoon {
+    background: var(--bg-light);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--eagle-blue);
+    font-size: 2.2rem;
+    flex-shrink: 0;
+  }
+
+  .banner-tekst {
+    flex-grow: 1;
+    h3 { margin: 0 0 0.5rem 0; color: var(--eagle-blue); font-size: 1.4rem; }
+    p { margin: 0; color: var(--text-dark); line-height: 1.5; font-size: 1rem; }
+  }
+
+  .banner-knoppen {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    flex-shrink: 0;
+
+    .btn-doc {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: var(--bg-light); color: var(--eagle-blue); text-decoration: none;
+      padding: 0.8rem 1.2rem; border-radius: 8px; font-weight: bold; font-size: 0.95rem;
+      border: 1px solid #e2e8f0; transition: all 0.3s ease;
+
+      i { color: var(--eagle-red); font-size: 1.1rem; }
+
+      &:hover {
+        background: var(--eagle-blue); color: white; border-color: var(--eagle-blue);
+        transform: translateY(-2px); box-shadow: 0 4px 10px rgba(21, 34, 105, 0.15);
+        i { color: white; }
+      }
+    }
+  }
+}
+
 .filter-balk {
   display: flex;
   justify-content: center;
@@ -333,5 +387,16 @@
   }
   .overlap-container {
     margin-top: -3rem;
+  }
+  
+  .jeugdbeleid-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.2rem;
+    padding: 1.5rem;
+    .banner-knoppen {
+      width: 100%;
+      .btn-doc { justify-content: center; width: 100%; box-sizing: border-box; }
+    }
   }
 }
