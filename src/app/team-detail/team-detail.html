@@ -1,6 +1,6 @@
 @if (team) {
   <div class="team-detail-sectie">
-    <div class="pagina-hero" [style.backgroundImage]="team.afbeeldingUrl ? 'url(' + team.afbeeldingUrl + ')' : 'none'" style="background-size: cover; background-position: center;">
+    <div class="pagina-hero">
       <div class="hero-overlay"></div>
       <div class="container hero-content">
         <div style="margin-bottom: 2rem;">
@@ -15,6 +15,10 @@
 
     <div class="container overlap-container">
       <article class="team-detail-kaart reveal-animatie">
+
+        @if (team.afbeeldingUrl) {
+          <img [src]="team.afbeeldingUrl" [alt]="'Teamfoto ' + team.naam" class="volledige-teamfoto" />
+        }
 
         <div class="team-inhoud">
           <div class="team-extra-info">
@@ -133,6 +137,7 @@
     </div>
     <div class="container overlap-container">
       <article class="team-detail-kaart skeleton-kaart">
+        <div class="skeleton-teamfoto"></div>
         <div class="team-inhoud">
           
           <div class="skeleton-tags-container">

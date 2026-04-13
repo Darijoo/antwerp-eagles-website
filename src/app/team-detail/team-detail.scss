@@ -66,7 +66,15 @@
 .team-detail-kaart {
   background-color: white;
   border-radius: 12px;
+  overflow: hidden; /* Zorgt dat de hoeken van de foto mooi afronden */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.volledige-teamfoto {
+  width: 100%;
+  height: auto; /* Zorgt dat de foto nooit afgesneden wordt en zijn eigen verhouding behoudt */
+  display: block;
+  border-bottom: 1px solid #eee;
 }
 
 .team-inhoud {
@@ -331,6 +339,14 @@
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.skeleton-teamfoto {
+  width: 100%;
+  height: 400px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
 }
 
 .skeleton-badge-new {
