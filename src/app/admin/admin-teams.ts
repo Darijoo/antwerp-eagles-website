@@ -248,7 +248,7 @@ export class AdminTeams implements OnInit {
   }
 
   voegTrainingToe() {
-    this.trainingen.push({ dag: 'Maandag', start: '19:30', eind: '21:00' });
+    this.trainingen.push({ dag: 'Maandag', start: '18:00', eind: '20:00' });
   }
 
   verwijderTraining(index: number) {

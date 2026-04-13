@@ -330,6 +330,17 @@
   &.is-evenement {
     background-color: var(--eagle-red);
   }
+  
+  &.is-training {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.15) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  }
+
   &.gespeeld {
     opacity: 0.6;
     background-color: #95a5a6;
@@ -359,6 +370,10 @@
   .uitslag {
     font-weight: bold;
     margin-left: 0.3rem;
+  }
+  &.is-training {
+    grid-template-columns: 80px 1fr; /* Geen uitslag-kolom nodig voor trainingen */
+    .kaart-ticket-rand { display: none; }
   }
 }
 

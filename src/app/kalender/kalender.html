@@ -57,6 +57,15 @@
         >
           <i class="fa-solid fa-list"></i>
         </button>
+        <button
+          class="pill-btn"
+          role="tab"
+          [attr.aria-selected]="geselecteerdType === 'training'"
+          [class.actief]="geselecteerdType === 'training'"
+          (click)="setFilterType('training')"
+        >
+          Trainingen
+        </button>
       </div>
 
       <div class="filter-selects">
@@ -78,7 +87,7 @@
             id="filterLocatie"
             [(ngModel)]="geselecteerdLocatie"
             (change)="onFilterWijziging()"
-            [disabled]="geselecteerdType === 'evenement'"
+            [disabled]="geselecteerdType === 'evenement' || geselecteerdType === 'training'"
           >
             <option value="">Uit & Thuis</option>
             <option value="thuis">Alleen Thuiswedstrijden</option>
@@ -178,6 +187,7 @@
                     <div
                       class="event-blokje"
                       [class.is-evenement]="event.type === 'evenement'"
+                      [class.is-training]="event.type === 'training'"
                       [class.gespeeld]="isGespeeld(event.datum)"
                       [class.geannuleerd]="$any(event).geannuleerd"
                       [style.background-color]="
@@ -197,6 +207,11 @@
                       </div>
                       @if (event.type === 'evenement') {
                         <span class="titel">{{ event.titel }}</span>
+                      } @else if (event.type === 'training') {
+                        <span class="titel">
+                          <i class="fa-solid fa-dumbbell" style="margin-right: 3px"></i>
+                          {{ event.titel }}
+                        </span>
                       } @else {
                         <span class="titel">
                           <i
@@ -275,6 +290,7 @@
             class="wedstrijd-kaart"
             [class.gespeeld]="isGespeeld(wedstrijd.datum)"
             [class.is-evenement]="wedstrijd.type === 'evenement'"
+            [class.is-training]="wedstrijd.type === 'training'"
             [class.geannuleerd]="$any(wedstrijd).geannuleerd"
             [style.border-left-color]="
               wedstrijd.team && !isGespeeld(wedstrijd.datum) ? getTeamKleur(wedstrijd.team) : null
@@ -297,7 +313,7 @@
               }
             </div>
             <div class="wedstrijd-info">
-              @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
+              @if (wedstrijd.type === 'wedstrijd' || !wedstrijd.type) {
                 <div
                   style="
                     display: flex;
@@ -340,6 +356,26 @@
                   <span class="thuis" [class.is-winnaar]="wedstrijd.uitslag && isWinnaar(wedstrijd, 'thuis')" [class.is-verliezer]="wedstrijd.uitslag && isWinnaar(wedstrijd, 'uit')">{{ cleanTeamNaam(wedstrijd.thuisploeg) }}</span>
                   <span class="vs">vs</span>
                   <span class="uit" [class.is-winnaar]="wedstrijd.uitslag && isWinnaar(wedstrijd, 'uit')" [class.is-verliezer]="wedstrijd.uitslag && isWinnaar(wedstrijd, 'thuis')">{{ cleanTeamNaam(wedstrijd.uitploeg) }}</span>
+                </div>
+                <div class="locatie-tijd">
+                  <a
+                    [href]="getGoogleMapsLink(wedstrijd.locatie)"
+                    target="_blank"
+                    class="smart-link locatie-link"
+                    title="Open in Google Maps"
+                    ><i class="fa-solid fa-location-dot"></i> {{ wedstrijd.locatie }}</a
+                  >
+                  <span><i class="fa-regular fa-clock"></i> {{ wedstrijd.tijd }}</span>
+                  <a
+                    [href]="genereerGoogleCalendarLink(wedstrijd)"
+                    target="_blank"
+                    class="smart-link calendar-link"
+                    ><i class="fa-regular fa-calendar-plus"></i> In agenda</a
+                  >
+                </div>
+              } @else if (wedstrijd.type === 'training') {
+                <div class="evenement-titel" [style.color]="getTeamKleur(wedstrijd.team || '')">
+                  <i class="fa-solid fa-dumbbell"></i> {{ wedstrijd.titel }}
                 </div>
                 <div class="locatie-tijd">
                   <a

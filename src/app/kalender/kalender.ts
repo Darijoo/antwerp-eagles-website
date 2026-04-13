@@ -2,7 +2,7 @@ import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { KalenderService, Match } from '../diensten/kalender.service';
-import { TeamService } from '../diensten/team';
+import { TeamService, Team } from '../diensten/team';
 
 @Component({
   selector: 'app-kalender',
@@ -17,6 +17,11 @@ export class Kalender implements OnInit {
   private teamService = inject(TeamService);
   teamsKleurMap: Record<string, string> = {};
   alleWedstrijden: Match[] = [];
+  
+  isTeamsGeladen = false;
+  isWedstrijdenGeladen = false;
+  alleWedstrijdenUitDb: Match[] = [];
+  dynamischeTrainingen: Match[] = [];
 
   huidigeDatum = new Date();
   isLaden = true; // Voor de skeleton loaders
@@ -53,27 +58,94 @@ export class Kalender implements OnInit {
           this.teamsKleurMap[t.naam] = t.kleur;
         }
       });
-      this.cdr.detectChanges(); // <-- Ververs de kalender zodra de kleuren binnen zijn!
+      this.genereerTrainingen(teams);
+      this.isTeamsGeladen = true;
+      this.combineerEnGenereer();
     });
 
     this.kalenderService.haalAlleWedstrijdenOp().subscribe((data) => {
-      this.alleWedstrijden = data;
-
-      // Haal automatisch alle unieke teamnamen uit de wedstrijden
-      this.beschikbareTeams = [
-        ...new Set(data.map((w) => w.team).filter((t): t is string => !!t)),
-      ].sort();
-
-      this.genereerKalender();
-      this.isLaden = false;
-      this.cdr.detectChanges(); // Vertel Angular dwingend om het scherm NU te updaten
+      this.alleWedstrijdenUitDb = data;
+      this.isWedstrijdenGeladen = true;
+      this.combineerEnGenereer();
     });
+  }
+
+  // Genereert virtuele 'Match' objecten op basis van de vaste teamtrainingen
+  genereerTrainingen(teams: Team[]) {
+    this.dynamischeTrainingen = [];
+    const DAG_MAPPING: Record<string, number> = {
+      'zondag': 0, 'maandag': 1, 'dinsdag': 2, 'woensdag': 3, 'donderdag': 4, 'vrijdag': 5, 'zaterdag': 6
+    };
+
+    // Genereer trainingen van vorig jaar tot eind volgend jaar
+    const huidigJaar = new Date().getFullYear();
+    const startDatum = new Date(huidigJaar - 1, 0, 1);
+    const eindDatum = new Date(huidigJaar + 1, 11, 31);
+
+    for (const team of teams) {
+      if (!team.trainingsdagen || !team.naam) continue;
+
+      const momenten = team.trainingsdagen.split(' & ');
+      for (const m of momenten) {
+        // Parse teksten zoals "Maandag 19:30 - 21:00"
+        const match = m.match(/^([A-Za-z]+)\s+(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})$/);
+        if (match) {
+          const dagNaam = match[1].toLowerCase();
+          const startTijd = match[2];
+          const eindTijd = match[3];
+          const targetDag = DAG_MAPPING[dagNaam];
+
+          if (targetDag !== undefined) {
+             let loopDatum = new Date(startDatum);
+             // Schuif door naar de eerste correcte weekdag
+             while (loopDatum.getDay() !== targetDag) {
+               loopDatum.setDate(loopDatum.getDate() + 1);
+             }
+
+             while (loopDatum <= eindDatum) {
+               const trainingDatum = new Date(loopDatum);
+               const [uur, min] = startTijd.split(':');
+               trainingDatum.setHours(parseInt(uur, 10), parseInt(min, 10), 0, 0);
+
+               this.dynamischeTrainingen.push({
+                 id: `training_${team.id}_${trainingDatum.getTime()}`,
+                 type: 'training',
+                 team: team.naam,
+                 titel: `Training ${team.naam}`,
+                 locatie: 'Eglantierlaan, Wilrijk',
+                 tijd: `${startTijd} - ${eindTijd}`,
+                 datum: { toDate: () => new Date(trainingDatum) } // Simuleer Firestore Timestamp
+               });
+
+               loopDatum.setDate(loopDatum.getDate() + 7); // Ga naar de volgende week
+             }
+          }
+        }
+      }
+    }
+  }
+
+  combineerEnGenereer() {
+    // Wacht tot zowel de teams (voor trainingen) als de matchen uit Firebase geladen zijn
+    if (!this.isTeamsGeladen || !this.isWedstrijdenGeladen) return;
+
+    this.alleWedstrijden = [...this.alleWedstrijdenUitDb, ...this.dynamischeTrainingen];
+
+    this.beschikbareTeams = [
+      ...new Set(this.alleWedstrijden.map((w) => w.team).filter((t): t is string => !!t)),
+    ].sort();
+
+    this.genereerKalender();
+    this.isLaden = false;
+    this.cdr.detectChanges();
   }
 
   onFilterWijziging() {
     // Als we "Evenementen" kiezen, heeft filteren op team geen zin
     if (this.geselecteerdType === 'evenement') {
       this.geselecteerdTeam = '';
+      this.geselecteerdLocatie = '';
+    } else if (this.geselecteerdType === 'training') {
       this.geselecteerdLocatie = '';
     }
     this.genereerKalender();
@@ -150,7 +222,7 @@ export class Kalender implements OnInit {
 
     // Laatste uitslagen voor de zijbalk (alle wedstrijden, niet alleen deze maand, die al gespeeld zijn én een uitslag hebben)
     this.recenteUitslagen = this.gefilterdeWedstrijden
-      .filter(w => this.isGespeeld(w.datum) && w.uitslag && w.type !== 'evenement')
+      .filter(w => this.isGespeeld(w.datum) && w.uitslag && w.type !== 'evenement' && w.type !== 'training')
       .sort((a, b) => b.datum.toDate().getTime() - a.datum.toDate().getTime())
       .slice(0, 6);
   }
@@ -343,8 +415,8 @@ export class Kalender implements OnInit {
       'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Antwerp Eagles//Wedstrijdkalender//NL\r\n';
 
     this.gefilterdeWedstrijden.forEach((event) => {
-      const titel =
-        event.type === 'evenement' ? event.titel : `${event.thuisploeg} vs ${event.uitploeg}`;
+      const titel = (event.type === 'evenement' || event.type === 'training')
+          ? event.titel : `${event.thuisploeg} vs ${event.uitploeg}`;
       let omschrijving = event.omschrijving || '';
       if (event.team) omschrijving = `Team: ${event.team}\\n\\n` + omschrijving;
 

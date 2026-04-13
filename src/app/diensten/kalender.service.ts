@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 
 export interface Match {
   id?: string;
-  type?: 'wedstrijd' | 'evenement';
+  type?: 'wedstrijd' | 'evenement' | 'training';
   team?: string;
   titel?: string;
   omschrijving?: string;
