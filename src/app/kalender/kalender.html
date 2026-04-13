@@ -153,7 +153,8 @@
     } @else {
       <!-- RASTER WEERGAVE (ALLEEN DESKTOP INDIEN GESELECTEERD) -->
       @if (desktopWeergave === 'raster') {
-        <div class="kalender-raster reveal-animatie desktop-only">
+        <div class="kalender-met-zijbalk reveal-animatie desktop-only">
+          <div class="kalender-raster">
           <div class="weekdagen">
             <div>Ma</div>
             <div>Di</div>
@@ -233,14 +234,42 @@
             }
           </div>
         </div>
+
+          <!-- ZIJBALK MET RECENTE UITSLAGEN -->
+          <div class="uitslagen-zijbalk">
+            <div class="zijbalk-header">
+              <h3><i class="fa-solid fa-bolt" style="color: var(--eagle-red); margin-right: 8px;"></i> Laatste Uitslagen</h3>
+            </div>
+            <div class="zijbalk-content">
+              @for (uitslag of recenteUitslagen; track uitslag.id) {
+                <div class="uitslag-kaartje" [style.border-left-color]="uitslag.team ? getTeamKleur(uitslag.team) : null">
+                  <div class="uitslag-header">
+                    <span class="datum">{{ uitslag.datum.toDate() | date: 'd MMM' }}</span>
+                    @if (uitslag.team) { 
+                      <span class="team-badge" [style.background-color]="getTeamKleur(uitslag.team)" style="color: white !important;">{{ uitslag.team }}</span> 
+                    }
+                  </div>
+                  <div class="uitslag-body">
+                    <div class="ploeg-rij" [class.winnaar]="isWinnaar(uitslag, 'thuis')">
+                      <span class="ploegnaam">{{ cleanTeamNaam(uitslag.thuisploeg) }}</span>
+                      <span class="score">{{ getScore(uitslag.uitslag, 0) }}</span>
+                    </div>
+                    <div class="ploeg-rij" [class.winnaar]="isWinnaar(uitslag, 'uit')">
+                      <span class="ploegnaam">{{ cleanTeamNaam(uitslag.uitploeg) }}</span>
+                      <span class="score">{{ getScore(uitslag.uitslag, 1) }}</span>
+                    </div>
+                  </div>
+                </div>
+              } @empty {
+                <p class="geen-uitslagen">Geen recente uitslagen gevonden voor deze selectie.</p>
+              }
+            </div>
+          </div>
+        </div>
       }
 
-      <!-- LIJST WEERGAVE (ALTIJD OP MOBIEL, OPTIONEEL OP DESKTOP) -->
-      <div
-        class="wedstrijden-lijst reveal-animatie"
-        [class.desktop-verborgen]="desktopWeergave === 'raster'"
-      >
-        @for (wedstrijd of maandEvents; track wedstrijd.id) {
+      <!-- TEMPLATE VOOR HET WEDSTRIJDKAARTJE -->
+      <ng-template #wedstrijdKaart let-wedstrijd>
           <!-- Voeg de klasse toe als de wedstrijd al is gespeeld -->
           <div
             class="wedstrijd-kaart"
@@ -307,24 +336,11 @@
                     >
                   }
                 </div>
-                @if (wedstrijd.uitslag) {
-                  <div class="scorebord">
-                    <div class="score-rij" [class.is-winnaar]="isWinnaar(wedstrijd, 'thuis')">
-                      <span class="ploeg">{{ cleanTeamNaam(wedstrijd.thuisploeg) }}</span>
-                      <span class="score">{{ getScore(wedstrijd.uitslag, 0) }}</span>
-                    </div>
-                    <div class="score-rij" [class.is-winnaar]="isWinnaar(wedstrijd, 'uit')">
-                      <span class="ploeg">{{ cleanTeamNaam(wedstrijd.uitploeg) }}</span>
-                      <span class="score">{{ getScore(wedstrijd.uitslag, 1) }}</span>
-                    </div>
-                  </div>
-                } @else {
-                  <div class="teams">
-                    <span class="thuis">{{ cleanTeamNaam(wedstrijd.thuisploeg) }}</span>
-                    <span class="vs">vs</span>
-                    <span class="uit">{{ cleanTeamNaam(wedstrijd.uitploeg) }}</span>
-                  </div>
-                }
+                <div class="teams">
+                  <span class="thuis" [class.is-winnaar]="wedstrijd.uitslag && isWinnaar(wedstrijd, 'thuis')" [class.is-verliezer]="wedstrijd.uitslag && isWinnaar(wedstrijd, 'uit')">{{ cleanTeamNaam(wedstrijd.thuisploeg) }}</span>
+                  <span class="vs">vs</span>
+                  <span class="uit" [class.is-winnaar]="wedstrijd.uitslag && isWinnaar(wedstrijd, 'uit')" [class.is-verliezer]="wedstrijd.uitslag && isWinnaar(wedstrijd, 'thuis')">{{ cleanTeamNaam(wedstrijd.uitploeg) }}</span>
+                </div>
                 <div class="locatie-tijd">
                   <a
                     [href]="getGoogleMapsLink(wedstrijd.locatie)"
@@ -374,6 +390,7 @@
             @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
               <div class="wedstrijd-status-kolom">
                 @if (wedstrijd.uitslag) {
+                  <div class="score-weergave">{{ wedstrijd.uitslag }}</div>
                   @if (getWedstrijdResultaat(wedstrijd) === 'W') {
                     <span class="resultaat-badge win">WIN</span>
                   } @else if (getWedstrijdResultaat(wedstrijd) === 'L') {
@@ -387,11 +404,41 @@
               </div>
             }
           </div>
+      </ng-template>
+
+      <!-- LIJST WEERGAVE (ALTIJD OP MOBIEL, OPTIONEEL OP DESKTOP) -->
+      <div
+        class="wedstrijden-lijst reveal-animatie"
+        [class.desktop-verborgen]="desktopWeergave === 'raster'"
+      >
+        <!-- VERLEDEN EVENEMENTEN (UITKLAPBAAR) -->
+        @if (verledenMaandEvents.length > 0) {
+          <div class="verleden-toggle-wrapper">
+            <button class="btn-verleden-toggle" (click)="toonVerledenLijst = !toonVerledenLijst">
+              <span><i class="fa-solid fa-clock-rotate-left"></i> Eerdere activiteiten deze maand ({{verledenMaandEvents.length}})</span>
+              <i class="fa-solid" [class.fa-chevron-down]="!toonVerledenLijst" [class.fa-chevron-up]="toonVerledenLijst"></i>
+            </button>
+          </div>
+          
+          @if (toonVerledenLijst) {
+            <div class="verleden-items">
+              @for (wedstrijd of verledenMaandEvents; track wedstrijd.id) {
+                <ng-container *ngTemplateOutlet="wedstrijdKaart; context: { $implicit: wedstrijd }"></ng-container>
+              }
+            </div>
+          }
+        }
+
+        <!-- TOEKOMSTIGE EVENEMENTEN (STANDAARD ZICHTBAAR) -->
+        @for (wedstrijd of toekomstigeMaandEvents; track wedstrijd.id) {
+          <ng-container *ngTemplateOutlet="wedstrijdKaart; context: { $implicit: wedstrijd }"></ng-container>
         } @empty {
-          <p class="lege-status">
-            <i class="fa-regular fa-calendar-xmark fa-3x"></i><br />
-            Er staan geen activiteiten gepland voor deze maand.
-          </p>
+          @if (verledenMaandEvents.length === 0) {
+            <p class="lege-status">
+              <i class="fa-regular fa-calendar-xmark fa-3x"></i><br />
+              Er staan geen activiteiten gepland voor deze maand.
+            </p>
+          }
         }
       </div>
     }

@@ -38,6 +38,12 @@ export class Kalender implements OnInit {
   kalenderDagen: { datum: Date; isHuidigeMaand: boolean; events: Match[] }[] = [];
   // Voor de mobiele lijst weergave
   maandEvents: Match[] = [];
+  verledenMaandEvents: Match[] = [];
+  toekomstigeMaandEvents: Match[] = [];
+  toonVerledenLijst = false; // Toggle status
+  
+  // Voor de uitslagen zijbalk naast de grid
+  recenteUitslagen: Match[] = [];
 
   ngOnInit() {
     // Haal de teams op om hun specifiek gekozen kalenderkleur te onthouden
@@ -134,6 +140,19 @@ export class Kalender implements OnInit {
           w.datum.toDate().getMonth() === maand && w.datum.toDate().getFullYear() === this.jaar,
       )
       .sort((a, b) => a.datum.toDate().getTime() - b.datum.toDate().getTime());
+
+    // Verdeel in verleden en toekomst voor een overzichtelijkere lijst
+    this.verledenMaandEvents = this.maandEvents.filter(w => this.isGespeeld(w.datum));
+    this.toekomstigeMaandEvents = this.maandEvents.filter(w => !this.isGespeeld(w.datum));
+
+    // Als we van maand wisselen, verberg dan standaard de verleden items weer
+    this.toonVerledenLijst = false;
+
+    // Laatste uitslagen voor de zijbalk (alle wedstrijden, niet alleen deze maand, die al gespeeld zijn én een uitslag hebben)
+    this.recenteUitslagen = this.gefilterdeWedstrijden
+      .filter(w => this.isGespeeld(w.datum) && w.uitslag && w.type !== 'evenement')
+      .sort((a, b) => b.datum.toDate().getTime() - a.datum.toDate().getTime())
+      .slice(0, 6);
   }
 
   vorigeMaand() {
