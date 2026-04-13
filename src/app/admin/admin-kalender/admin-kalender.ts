@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Observable, BehaviorSubject, combineLatest, firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, Timestamp } from '@angular/fire/firestore';
 import { KalenderService, Match } from '../../diensten/kalender.service';
 
 @Component({
@@ -62,7 +62,7 @@ export class AdminKalender {
         map((wedstrijden) =>
           wedstrijden
             .slice()
-            .sort((a, b) => a.datum.toDate().getTime() - b.datum.toDate().getTime()),
+            .sort((a, b) => this.getDatum(a.datum).getTime() - this.getDatum(b.datum).getTime()),
         ),
       );
 
@@ -100,7 +100,7 @@ export class AdminKalender {
     const formValue = this.wedstrijdForm.value;
     const nieuweWedstrijd = {
       type: (formValue.type as 'wedstrijd' | 'evenement') || 'wedstrijd',
-      datum: new Date(formValue.datum || ''),
+      datum: Timestamp.fromDate(new Date(formValue.datum || '')),
       tijd: formValue.tijd || '',
       team: formValue.team || '',
       thuisploeg: formValue.thuisploeg || '',
@@ -132,7 +132,7 @@ export class AdminKalender {
     this.bewerkId = wedstrijd.id || null;
 
     // Zet de Firestore datum netjes om naar YYYY-MM-DD voor het kalender-inputveld
-    const d = wedstrijd.datum.toDate();
+    const d = this.getDatum(wedstrijd.datum);
     const datumString = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
     this.wedstrijdForm.patchValue({
@@ -220,7 +220,7 @@ export class AdminKalender {
 
   // Controleert of een wedstrijd in het verleden ligt
   isGespeeld(datum: any): boolean {
-    const wedstrijdDatum = datum.toDate();
+    const wedstrijdDatum = this.getDatum(datum);
     const vandaag = new Date();
     vandaag.setHours(0, 0, 0, 0);
     return wedstrijdDatum < vandaag;
@@ -230,5 +230,10 @@ export class AdminKalender {
   cleanTeamNaam(naam: string | undefined): string {
     if (!naam) return '';
     return naam.replace(/flag/gi, '').trim();
+  }
+
+  // Helper om altijd veilig een datum op te halen, ongeacht of het lokaal een Timestamp of JS Date is
+  getDatum(datum: any): Date {
+    return datum && typeof datum.toDate === 'function' ? datum.toDate() : new Date(datum);
   }
 }

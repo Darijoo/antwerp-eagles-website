@@ -199,7 +199,7 @@
         @for (wedstrijd of wedstrijden$ | async; track wedstrijd.id) {
           <div class="item" [class.gespeeld]="isGespeeld(wedstrijd.datum)">
             <div class="item-info">
-              <strong>{{ wedstrijd.datum.toDate() | date: 'dd-MM-yyyy' }}</strong> -
+              <strong>{{ getDatum(wedstrijd.datum) | date: 'dd-MM-yyyy' }}</strong> -
               @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
                 <span class="badge">Wedstrijd</span>
                 @if (wedstrijd.team) {
