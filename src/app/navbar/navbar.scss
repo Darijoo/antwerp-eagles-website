@@ -1,3 +1,9 @@
+/* De placeholder houdt de ruimte vrij zodat de content eronder niet omhoog springt of glitcht */
+.navbar-placeholder {
+  height: 133px; /* Standaard hoogte van de navbar op desktop */
+  width: 100%;
+}
+
 .navbar {
   background-color: rgba(21, 34, 105, 0.9); /* 90% dekkend donkerblauw (jouw clubkleur) */
   backdrop-filter: blur(8px); /* Voegt een mooi matglas-effect toe aan wat eronder door scrolt */
@@ -6,17 +12,22 @@
   align-items: center;
   padding: 1.5rem 3rem;
   border-bottom: 5px solid var(--eagle-red);
-  position: sticky;
+  position: fixed; /* Fixed zorgt dat hij NOOIT verdwijnt achter de Angular wrapper */
   top: 0;
   left: 0;
   width: 100%;
   box-sizing: border-box;
   z-index: 1000; /* Zorgt ervoor dat de navbar altijd over andere elementen (zoals foto's) heen valt */
-  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: padding 0.3s ease,
+              background-color 0.3s ease,
+              border-width 0.3s ease;
 
-  /* De "Smart Hide" class schuift de balk omhoog buiten beeld */
-  &.navbar-hidden {
-    transform: translateY(-100%);
+  /* Nieuwe Shrink-on-Scroll class! */
+  &.scrolled {
+    padding: 0.6rem 3rem;
+    background-color: rgba(21, 34, 105, 0.98); /* Iets donkerder als hij kleiner is voor leesbaarheid */
+    border-bottom-width: 3px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   }
 }
 
@@ -30,11 +41,21 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1px;
+  transition: font-size 0.3s ease;
+
+  .navbar.scrolled & {
+    font-size: 1.2rem;
+  }
 }
 
 .logo-img {
   height: 80px; /* Pas deze waarde aan om je logo kleiner of groter te maken (bijv. 40px of 60px) */
   width: auto; /* Zorgt ervoor dat de afbeelding mooi in verhouding blijft */
+  transition: height 0.3s ease;
+
+  .navbar.scrolled & {
+    height: 50px;
+  }
 }
 
 .nav-links {
@@ -51,6 +72,8 @@
     text-decoration: none;
     font-weight: 700;
     text-transform: uppercase;
+    font-size: 0.9rem; /* Iets verfijnder en moderner */
+    letter-spacing: 0.5px;
     transition: color 0.3s ease;
     display: flex;
     align-items: center;
@@ -161,8 +184,15 @@
 
 /* --- MOBIELE OPTIMALISATIE --- */
 @media (max-width: 768px) {
+  .navbar-placeholder {
+    height: 87px; /* Mobiele hoogte */
+  }
+
   .navbar {
     padding: 1rem; /* Minder overbodige ruimte aan de randen */
+    &.scrolled {
+      padding: 0.5rem 1rem;
+    }
   }
 
   .hamburger {
@@ -182,10 +212,16 @@
 
   .logo {
     font-size: 1.2rem; /* Iets kleinere tekst */
+    .navbar.scrolled & {
+      font-size: 1.05rem;
+    }
   }
 
   .logo-img {
     height: 50px; /* Maakt het logo compacter op kleine schermen */
+    .navbar.scrolled & {
+      height: 36px;
+    }
   }
 
   .nav-links {
@@ -202,6 +238,9 @@
     border-bottom: 5px solid var(--eagle-red);
     height: auto; /* Overschrijft de stiekeme 'height: 100%' van de desktop-versie */
     max-height: calc(100dvh - 87px); /* 100dvh houdt wél rekening met de mobiele adresbalk! (87px is exacte navbar hoogte) */
+    .navbar.scrolled & {
+      max-height: calc(100dvh - 58px); /* De navbar is nu compacter, dus menu mag hoger */
+    }
     overflow-y: auto;
     -webkit-overflow-scrolling: touch; /* Voor soepel 'native' scrollen op iOS */
     scrollbar-width: none; /* Verberg scrollbalk Firefox */

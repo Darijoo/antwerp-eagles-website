@@ -10,7 +10,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class Navbar {
   menuOpen = false;
-  isHidden = false;
+  isScrolled = false;
   lastScrollY = 0;
   activeDropdown: string | null = null;
 
@@ -35,15 +35,13 @@ export class Navbar {
   onWindowScroll() {
     const currentScrollY = window.scrollY;
     
-    if (currentScrollY <= 0) {
-      this.isHidden = false; // Altijd tonen als we helemaal bovenaan zijn (voorkomt mobiele scroll-bugs)
-    } else if (currentScrollY > this.lastScrollY && currentScrollY > 100) {
-      // Verberg de navbar bij naar beneden scrollen
-      this.isHidden = true;
-      if (this.menuOpen) this.sluitMenu(); // Zorg dat we opengeklapte mobiele menu's meteen netjes meesluiten!
-    } else if (currentScrollY < this.lastScrollY) {
-      this.isHidden = false; // Toon de navbar weer zodra je naar boven scrolt
+    this.isScrolled = currentScrollY > 50; // Activeer shrink-modus na 50px
+
+    // Sluit het mobiele menu automatisch als de gebruiker begint te scrollen
+    if (this.menuOpen && Math.abs(currentScrollY - this.lastScrollY) > 20) {
+      this.sluitMenu();
     }
+    
     this.lastScrollY = currentScrollY;
   }
 }
