@@ -13,39 +13,96 @@
   </button>
 
   <ul class="nav-links" [class.actief]="menuOpen">
-    <li><a routerLink="/" routerLinkActive="actief-link" [routerLinkActiveOptions]="{exact: true}" (click)="sluitMenu()">Homeplate</a></li>
-    
+    <li>
+      <a
+        routerLink="/"
+        routerLinkActive="actief-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="sluitMenu()"
+        >Homeplate</a
+      >
+    </li>
+
     <li class="dropdown" [class.open]="activeDropdown === 'seizoen'">
-      <a href="#" (click)="toggleDropdown('seizoen', $event)">Seizoen <i class="fa-solid fa-chevron-down"></i></a>
+      <a href="#" (click)="toggleDropdown('seizoen', $event)"
+        >Seizoen <i class="fa-solid fa-chevron-down"></i
+      ></a>
       <ul class="dropdown-menu">
-        <li><a routerLink="/teams" routerLinkActive="actief-link" (click)="sluitMenu()">Teams</a></li>
-        <li><a routerLink="/kalender" routerLinkActive="actief-link" (click)="sluitMenu()">Kalender & Uitslagen</a></li>
-        <li><a routerLink="/klassementen" routerLinkActive="actief-link" (click)="sluitMenu()">Klassementen</a></li>
         <li>
-          <a href="https://www.baseballsoftball.be/" target="_blank" rel="noopener noreferrer" (click)="sluitMenu()">
-            Statistieken <i class="fa-solid fa-arrow-up-right-from-square" style="opacity: 0.7; margin-left: auto;"></i>
+          <a routerLink="/teams" routerLinkActive="actief-link" (click)="sluitMenu()">Teams</a>
+        </li>
+        <li>
+          <a routerLink="/kalender" routerLinkActive="actief-link" (click)="sluitMenu()"
+            >Kalender & Uitslagen</a
+          >
+        </li>
+        <li>
+          <a routerLink="/klassementen" routerLinkActive="actief-link" (click)="sluitMenu()"
+            >Klassementen</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://www.baseballsoftball.be/"
+            target="_blank"
+            rel="noopener noreferrer"
+            (click)="sluitMenu()"
+          >
+            Statistieken
+            <i
+              class="fa-solid fa-arrow-up-right-from-square"
+              style="opacity: 0.7; margin-left: auto"
+            ></i>
           </a>
         </li>
       </ul>
     </li>
 
     <li class="dropdown" [class.open]="activeDropdown === 'club'">
-      <a href="#" (click)="toggleDropdown('club', $event)">De Club <i class="fa-solid fa-chevron-down"></i></a>
+      <a href="#" (click)="toggleDropdown('club', $event)"
+        >Club info <i class="fa-solid fa-chevron-down"></i
+      ></a>
       <ul class="dropdown-menu">
-        <li><a routerLink="/nieuws" routerLinkActive="actief-link" (click)="sluitMenu()">Nieuws</a></li>
-        <li><a routerLink="/evenementen" routerLinkActive="actief-link" (click)="sluitMenu()">Evenementen</a></li>
-        <li><a routerLink="/toernooien" routerLinkActive="actief-link" (click)="sluitMenu()">Eagles toernooien</a></li>
-        <li><a routerLink="/historiek" routerLinkActive="actief-link" (click)="sluitMenu()">Historiek</a></li>
+        <li>
+          <a routerLink="/nieuws" routerLinkActive="actief-link" (click)="sluitMenu()">Nieuws</a>
+        </li>
+        <li>
+          <a routerLink="/evenementen" routerLinkActive="actief-link" (click)="sluitMenu()"
+            >Evenementen</a
+          >
+        </li>
+        <li>
+          <a routerLink="/toernooien" routerLinkActive="actief-link" (click)="sluitMenu()"
+            >Eagles toernooien</a
+          >
+        </li>
+        <li>
+          <a routerLink="/historiek" routerLinkActive="actief-link" (click)="sluitMenu()"
+            >Historiek</a
+          >
+        </li>
       </ul>
     </li>
 
     <li class="dropdown" [class.open]="activeDropdown === 'playBall'">
-      <a href="#" (click)="toggleDropdown('playBall', $event)">Play Ball! <i class="fa-solid fa-chevron-down"></i></a>
+      <a href="#" (click)="toggleDropdown('playBall', $event)"
+        >Play Ball! <i class="fa-solid fa-chevron-down"></i
+      ></a>
       <ul class="dropdown-menu">
-        <li><a routerLink="/aansluiten" routerLinkActive="actief-link" (click)="sluitMenu()">Lid Worden</a></li>
-        <li><a routerLink="/uniform" routerLinkActive="actief-link" (click)="sluitMenu()">Uniform & Uitrusting</a></li>
+        <li>
+          <a routerLink="/aansluiten" routerLinkActive="actief-link" (click)="sluitMenu()"
+            >Lid Worden</a
+          >
+        </li>
+        <li>
+          <a routerLink="/uniform" routerLinkActive="actief-link" (click)="sluitMenu()"
+            >Uniform & Uitrusting</a
+          >
+        </li>
       </ul>
     </li>
-    <li><a routerLink="/contact" routerLinkActive="actief-link" (click)="sluitMenu()">Contact</a></li>
+    <li>
+      <a routerLink="/contact" routerLinkActive="actief-link" (click)="sluitMenu()">Contact</a>
+    </li>
   </ul>
 </nav>

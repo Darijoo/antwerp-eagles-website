@@ -7,7 +7,7 @@
       rgba(21, 34, 105, 0.4) 50%,
       rgba(21, 34, 105, 0.75)
     ),
-    url('../../assets/bb_field.jpg');
+    url('/eagles_field.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed; /* Zorgt voor een subtiel parallax effect */
@@ -15,7 +15,7 @@
 
   /* We maken deze sectie lekker hoog, afhankelijk van de schermhoogte */
   min-height: 85vh;
-  
+
   margin-top: -133px; /* Trekt de hero-foto ónder de sticky navbar voor het glazen effect! */
 
   /* Flexbox om alles perfect in het midden te zetten */
@@ -95,7 +95,11 @@
 }
 
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
   40% {
@@ -253,8 +257,11 @@
     color: var(--text-dark);
     transition: all 0.2s;
 
-    .ploeg { font-weight: 700; font-size: 1rem; }
-    
+    .ploeg {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
     .score {
       font-weight: 900;
       font-size: 1.1rem;
@@ -262,14 +269,18 @@
       background-color: white;
       padding: 0.1rem 0.6rem;
       border-radius: 4px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     &.is-winnaar {
       background-color: var(--eagle-blue);
       color: white;
-      .ploeg { font-weight: 900; }
-      .score { color: var(--eagle-blue); }
+      .ploeg {
+        font-weight: 900;
+      }
+      .score {
+        color: var(--eagle-blue);
+      }
     }
   }
 }
@@ -287,11 +298,20 @@
     padding: 0.6rem 1rem;
     border-radius: 8px;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    
-    &.win { background-color: #27ae60; color: white; }
-    &.loss { background-color: var(--eagle-red); color: white; }
-    &.tie { background-color: #f39c12; color: white; }
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    &.win {
+      background-color: #27ae60;
+      color: white;
+    }
+    &.loss {
+      background-color: var(--eagle-red);
+      color: white;
+    }
+    &.tie {
+      background-color: #f39c12;
+      color: white;
+    }
   }
 }
 
@@ -359,12 +379,12 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  
+
   i {
     color: #bdc3c7;
     opacity: 0.5;
   }
-  
+
   p {
     margin: 0;
     font-size: 1.1rem;
@@ -436,7 +456,7 @@
 
   &:hover {
     color: var(--eagle-blue);
-    
+
     .arrow {
       transform: translateX(4px); /* Pijltje schuift opzij */
     }
@@ -471,7 +491,9 @@
 .reveal-on-scroll {
   opacity: 0;
   transform: translateY(40px); /* Kaartjes starten iets lager dan hun eindpositie */
-  transition: opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition:
+    opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   &.is-visible {
     opacity: 1;

@@ -1,6 +1,6 @@
 <div class="hero-sectie">
   <h2>Play Ball! ⚾</h2>
-  <p>Welkom op de officiële website van de Antwerp Eagles.</p>
+  <p>Welkom op de officiële website van de Royal Antwerp Eagles.</p>
   <a routerLink="/aansluiten" class="cta-knop">Word Lid</a>
   <div class="scroll-indicator">
     <i class="fa-solid fa-chevron-down"></i>
@@ -95,7 +95,10 @@
           class="aankomend-kaart reveal-on-scroll"
           [style.border-left-color]="match.team ? getTeamKleur(match.team) : null"
         >
-          <div class="datum-blok" [style.background-color]="match.team ? getTeamKleur(match.team) : null">
+          <div
+            class="datum-blok"
+            [style.background-color]="match.team ? getTeamKleur(match.team) : null"
+          >
             <span class="dag">{{ match.datum.toDate() | date: 'd' }}</span>
             <span class="maand">{{ match.datum.toDate() | date: 'MMM' }}</span>
           </div>
@@ -178,13 +181,15 @@
           <div class="nieuws-inhoud">
             <h3>{{ bericht.titel }}</h3>
             <p>{{ bericht.samenvatting }}</p>
-            <a [routerLink]="['/nieuws', bericht.id]" class="lees-meer">Lees verder <span class="arrow">&rarr;</span></a>
+            <a [routerLink]="['/nieuws', bericht.id]" class="lees-meer"
+              >Lees verder <span class="arrow">&rarr;</span></a
+            >
           </div>
         </article>
       }
     </div>
 
-    <div class="actie-link" style="margin-top: 2rem;">
+    <div class="actie-link" style="margin-top: 2rem">
       <a routerLink="/nieuws">Bekijk alle artikelen &rarr;</a>
     </div>
   </div>
