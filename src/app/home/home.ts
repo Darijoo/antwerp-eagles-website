@@ -1,4 +1,5 @@
-import { Component, OnInit, AfterViewChecked, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, inject, ChangeDetectorRef, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { NieuwsService, NieuwsBericht } from '../diensten/nieuws';
 import { DatePipe, AsyncPipe } from '@angular/common';
@@ -19,6 +20,7 @@ export class Home implements OnInit, AfterViewChecked {
   private cdr = inject(ChangeDetectorRef); // <-- 2. Haal de 'schilder' naar binnen
   private kalenderService = inject(KalenderService);
   private teamService = inject(TeamService);
+  private destroyRef = inject(DestroyRef);
 
   teamsKleurMap: Record<string, string> = {};
 
@@ -64,7 +66,7 @@ export class Home implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     // Haal de teams op om hun specifiek gekozen kalenderkleur te onthouden
-    this.teamService.haalAlleTeamsOp().subscribe((teams) => {
+    this.teamService.haalAlleTeamsOp().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((teams) => {
       teams.forEach((t) => {
         if (t.naam && t.kleur) {
           this.teamsKleurMap[t.naam] = t.kleur;
@@ -73,7 +75,7 @@ export class Home implements OnInit, AfterViewChecked {
       this.cdr.detectChanges(); // <-- Zorgt dat de nieuwe kleuren direct zichtbaar worden!
     });
 
-    this.nieuwsService.haalLaatsteNieuwsOp().subscribe({
+    this.nieuwsService.haalLaatsteNieuwsOp().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         // Sorteer nieuws: nieuwste datum bovenaan
         this.laatsteNieuws = data.sort(

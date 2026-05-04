@@ -24,6 +24,7 @@ export interface Team {
   instagramUrl?: string;
   wbscTeamUrl?: string;
   kleur?: string;
+  volgorde?: number;
   roster?: any[];
 }
 

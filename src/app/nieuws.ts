@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { NieuwsService, NieuwsBericht } from './diensten/nieuws';
 import { DatePipe } from '@angular/common';
@@ -14,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 export class Nieuws implements OnInit {
   private nieuwsService = inject(NieuwsService);
   private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
 
   hoofdBericht: NieuwsBericht | null = null;
   overigeBerichten: NieuwsBericht[] = [];
@@ -24,7 +26,7 @@ export class Nieuws implements OnInit {
   isLaden = true;
 
   ngOnInit() {
-    this.nieuwsService.haalLaatsteNieuwsOp().subscribe({
+    this.nieuwsService.haalLaatsteNieuwsOp().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         this.alleBerichten = data.sort(
           (a, b) => new Date(b.datum).getTime() - new Date(a.datum).getTime(),

@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { KalenderService, Match } from '../diensten/kalender.service';
@@ -15,6 +16,7 @@ export class Kalender implements OnInit {
   private kalenderService = inject(KalenderService);
   private cdr = inject(ChangeDetectorRef);
   private teamService = inject(TeamService);
+  private destroyRef = inject(DestroyRef);
   teamsKleurMap: Record<string, string> = {};
   alleWedstrijden: Match[] = [];
   
@@ -52,7 +54,7 @@ export class Kalender implements OnInit {
 
   ngOnInit() {
     // Haal de teams op om hun specifiek gekozen kalenderkleur te onthouden
-    this.teamService.haalAlleTeamsOp().subscribe((teams) => {
+    this.teamService.haalAlleTeamsOp().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((teams) => {
       teams.forEach((t) => {
         if (t.naam && t.kleur) {
           this.teamsKleurMap[t.naam] = t.kleur;
@@ -63,7 +65,7 @@ export class Kalender implements OnInit {
       this.combineerEnGenereer();
     });
 
-    this.kalenderService.haalAlleWedstrijdenOp().subscribe((data) => {
+    this.kalenderService.haalAlleWedstrijdenOp().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((data) => {
       this.alleWedstrijdenUitDb = data;
       this.isWedstrijdenGeladen = true;
       this.combineerEnGenereer();

@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, OnInit, DestroyRef } from '@angular/core';
 import { TeamService, Team } from '../diensten/team';
 import { Observable, firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -6,6 +6,8 @@ import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage
 import { map } from 'rxjs/operators';
 import { WbscService } from '../diensten/wbsc.service';
 import { KalenderService } from '../diensten/kalender.service';
+import { ImageOptimizerService } from '../diensten/image-optimizer.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-admin-teams',
@@ -20,6 +22,8 @@ export class AdminTeams implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private wbscService = inject(WbscService);
   private kalenderService = inject(KalenderService);
+  private imageOptimizer = inject(ImageOptimizerService);
+  private destroyRef = inject(DestroyRef);
 
   teamsLijst: Team[] = [];
   draggedIndex: number | null = null;
@@ -63,10 +67,10 @@ export class AdminTeams implements OnInit {
   };
 
   ngOnInit() {
-    this.teamService.haalAlleTeamsOp().subscribe((teams) => {
+    this.teamService.haalAlleTeamsOp().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((teams) => {
       // Sorteer op jouw eigen volgorde, en als terugval-optie alfabetisch!
       this.teamsLijst = teams.sort(
-        (a: any, b: any) =>
+        (a: Team, b: Team) =>
           (a.volgorde ?? 999) - (b.volgorde ?? 999) || a.naam.localeCompare(b.naam),
       );
       this.cdr.detectChanges();
@@ -141,46 +145,7 @@ export class AdminTeams implements OnInit {
     }
   }
 
-  // Een slimme functie die grote (smartphone) foto's direct verkleint vóór het uploaden
-  private async comprimeerAfbeelding(file: File): Promise<Blob | File> {
-    // Als het bestand al kleiner is dan 1MB, hoeven we niets te doen
-    if (file.size < 1024 * 1024) return file;
-
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event: any) => {
-        const img = new Image();
-        img.src = event.target.result;
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 1200;
-          const MAX_HEIGHT = 1200;
-          let width = img.width;
-          let height = img.height;
-
-          // Verhoudingen behouden bij het verkleinen
-          if (width > height && width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          } else if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
-            height = MAX_HEIGHT;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-
-          // Comprimeer naar JPEG met 80% kwaliteit (drastisch kleinere bestandsgrootte)
-          canvas.toBlob((blob) => resolve(blob || file), 'image/jpeg', 0.8);
-        };
-        img.onerror = () => resolve(file);
-      };
-      reader.onerror = () => resolve(file);
-    });
-  }
+  // Verwijderd: comprimeerAfbeelding is verplaatst naar ImageOptimizerService
 
   async opslaan() {
     // Zet de gekozen lijst met trainingen om naar 1 overzichtelijke tekst voor in de database
@@ -200,7 +165,7 @@ export class AdminTeams implements OnInit {
       // Upload de afbeelding naar de /teams map in Firebase Storage
       if (this.geselecteerdBestand) {
         // Verklein de foto supersnel in de browser voordat we hem naar Firebase sturen
-        const gecomprimeerdBestand = await this.comprimeerAfbeelding(this.geselecteerdBestand);
+        const gecomprimeerdBestand = await this.imageOptimizer.comprimeerAfbeelding(this.geselecteerdBestand);
 
         const bestandsNaam = `teams/${Date.now()}_${this.geselecteerdBestand.name}`;
         const opslagRef = ref(this.storage, bestandsNaam);
@@ -281,7 +246,7 @@ export class AdminTeams implements OnInit {
   async updateVolgorde() {
     try {
       const promises = this.teamsLijst.map((team, i) => {
-        (team as any).volgorde = i; // Bewaar tijdelijk lokaal
+        team.volgorde = i; // Bewaar tijdelijk lokaal
         return firstValueFrom(
           this.teamService.updateTeam(team.id!, { volgorde: i } as Partial<Team>),
         );

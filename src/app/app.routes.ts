@@ -6,12 +6,8 @@ import { NieuwsArtikel } from './nieuws-artikel/nieuws-artikel'; // <-- 1. Impor
 import { Admin } from './admin/admin';
 import { authGuard } from './diensten/auth.guard';
 import { Login } from './login';
-import { AdminNieuws } from './admin/admin-nieuws';
-import { AdminTeams } from './admin/admin-teams';
-import { AdminSponsors } from './admin/admin-sponsors';
 import { TeamDetail } from './team-detail/team-detail';
 import { OverOns } from './over-ons/over-ons';
-import { AdminKalender } from './admin/admin-kalender/admin-kalender';
 import { Kalender } from './kalender/kalender';
 import { Aansluiten } from './aansluiten/aansluiten';
 import { HuishoudelijkReglement } from './huishoudelijk-reglement';
@@ -46,17 +42,29 @@ export const routes: Routes = [
 
   {
     path: 'admin',
-    component: Admin,
+    loadComponent: () => import('./admin/admin').then(m => m.Admin),
     canActivate: [authGuard],
     children: [
-      { path: 'nieuws', component: AdminNieuws }, // De nieuwe route voor nieuwsbeheer
-      { path: 'teams', component: AdminTeams }, // De nieuwe route voor teambeheer
+      { 
+        path: 'nieuws', 
+        loadComponent: () => import('./admin/admin-nieuws').then(m => m.AdminNieuws) 
+      },
+      { 
+        path: 'teams', 
+        loadComponent: () => import('./admin/admin-teams').then(m => m.AdminTeams) 
+      },
       {
         path: 'uniform',
         loadComponent: () => import('./admin/admin-uniform').then((m) => m.AdminUniform),
       },
-      { path: 'sponsors', component: AdminSponsors }, // De nieuwe route voor sponsorbeheer
-      { path: 'kalender', component: AdminKalender },
+      { 
+        path: 'sponsors', 
+        loadComponent: () => import('./admin/admin-sponsors').then(m => m.AdminSponsors) 
+      },
+      { 
+        path: 'kalender', 
+        loadComponent: () => import('./admin/admin-kalender/admin-kalender').then(m => m.AdminKalender) 
+      },
     ],
   },
   

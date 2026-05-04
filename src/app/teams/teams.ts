@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { TeamService, Team } from '../diensten/team'; // Onze nieuwe postbode
 
@@ -12,6 +13,7 @@ import { TeamService, Team } from '../diensten/team'; // Onze nieuwe postbode
 export class Teams implements OnInit {
   private teamService = inject(TeamService);
   private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
 
   // We maken een lijst (array) aan om alle teams in op te slaan
   alleTeams: Team[] = [];
@@ -35,10 +37,10 @@ export class Teams implements OnInit {
   }
 
   ngOnInit() {
-    this.teamService.haalAlleTeamsOp().subscribe({
+    this.teamService.haalAlleTeamsOp().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         // Sorteer op jouw nieuwe drag & drop volgorde
-        this.alleTeams = data.sort((a: any, b: any) => (a.volgorde ?? 999) - (b.volgorde ?? 999) || a.naam.localeCompare(b.naam));
+        this.alleTeams = data.sort((a: Team, b: Team) => (a.volgorde ?? 999) - (b.volgorde ?? 999) || a.naam.localeCompare(b.naam));
         this.isLaden = false;
         this.cdr.detectChanges();
       },
