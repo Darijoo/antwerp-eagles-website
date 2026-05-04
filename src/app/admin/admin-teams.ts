@@ -290,7 +290,8 @@ export class AdminTeams implements OnInit {
               mDatum.getMonth() === match.datum.getMonth() &&
               mDatum.getFullYear() === match.datum.getFullYear() &&
               m.thuisploeg === match.thuisploeg &&
-              m.uitploeg === match.uitploeg
+              m.uitploeg === match.uitploeg &&
+              m.tijd === match.tijd // Tijdstip meenemen zodat doubleheaders (13:30 EN 15:30) apart worden opgeslagen!
             );
           });
 
@@ -398,7 +399,8 @@ export class AdminTeams implements OnInit {
                     mDatum.getMonth() === match.datum.getMonth() &&
                     mDatum.getFullYear() === match.datum.getFullYear() &&
                     m.thuisploeg === match.thuisploeg &&
-                    m.uitploeg === match.uitploeg
+                    m.uitploeg === match.uitploeg &&
+                    m.tijd === match.tijd // Tijdstip meenemen zodat doubleheaders (13:30 EN 15:30) apart worden opgeslagen!
                   );
                 });
 

@@ -148,21 +148,33 @@ export class WbscService {
             else if (type.includes('visitor') || type.includes('away')) uitploeg = naam || '';
           });
 
-          // Datum, Tijd en Locatie ophalen
-          const boxScoreLinkDivs = rij.querySelectorAll('.box-score-link > div');
-          if (boxScoreLinkDivs.length >= 2) {
-            const leftDivP = boxScoreLinkDivs[0].querySelectorAll('p');
-            const rightDivP = boxScoreLinkDivs[1].querySelectorAll('p');
-            
-            // Haal de volledige locatie uit de linker div (bv "Brasschaat Braves Baseball, Brasschaat")
-            if (leftDivP.length >= 2) {
-              locatie = leftDivP[1].textContent?.trim() || '';
-            }
-            
-            if (rightDivP.length >= 2) {
-              datumStr = rightDivP[1].textContent?.trim() || '';
-              // Fallback locatie als de linker div leeg was
-              if (!locatie) locatie = rightDivP[0].textContent?.replace(':', '')?.trim() || '';
+          // Datum, Tijd en Locatie ophalen.
+          // Structuur per schedule-item:
+          //   1. <a class="box-score-link">  ← datum + locatie (dit willen we!)
+          //   2. <div class="baseball-score-bug"> ← teams + score
+          //   3. <div class="calendar-buttons">
+          //        <a class="box-score-link">  ← game-label (F/4, Stand by, ...) GEEN datum
+          //        <a class="box-score-link chevron-right-icon"> ← pijl GEEN datum
+          // We pakken ALLEEN de eerste link die NIET in .calendar-buttons zit.
+          const eersteEchteLink = Array.from(
+            rij.querySelectorAll('a.box-score-link')
+          ).find(a => !a.closest('.calendar-buttons') && !a.classList.contains('chevron-right-icon'));
+
+          if (eersteEchteLink) {
+            const linkDivs = eersteEchteLink.querySelectorAll(':scope > div');
+            if (linkDivs.length >= 2) {
+              const leftDivP = linkDivs[0].querySelectorAll('p');
+              const rightDivP = linkDivs[1].querySelectorAll('p');
+
+              // Haal de volledige locatie uit de linker div
+              if (leftDivP.length >= 2) {
+                locatie = leftDivP[1].textContent?.trim() || '';
+              }
+
+              if (rightDivP.length >= 2) {
+                datumStr = rightDivP[1].textContent?.trim() || '';
+                if (!locatie) locatie = rightDivP[0].textContent?.replace(':', '')?.trim() || '';
+              }
             }
           }
 
