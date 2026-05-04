@@ -810,6 +810,10 @@
     flex-direction: column;
     gap: 1rem;
     padding: 1.5rem 1rem;
+    
+    &.mobiel-verborgen {
+      display: none;
+    }
   }
   .filter-selects {
     flex-direction: column;

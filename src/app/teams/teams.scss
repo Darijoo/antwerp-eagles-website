@@ -137,7 +137,7 @@
       background-color: var(--eagle-blue);
       color: white;
       border-color: var(--eagle-blue);
-      box-shadow: 0 4px 10px rgba(21, 34, 105, 0.2);
+      box-shadow: 0 8px 16px -4px rgba(21, 34, 105, 0.3);
     }
   }
 }
@@ -151,12 +151,12 @@
 
 .team-kaart {
   background-color: white;
-  border-radius: 12px;
+  border-radius: 16px; /* Softer radius */
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
   transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+    transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   display: flex;
   flex-direction: column;
   opacity: 0;
@@ -171,8 +171,8 @@
   &:nth-child(6) { animation-delay: 0.30s; }
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -10px rgba(21, 34, 105, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.08);
   }
 }
 

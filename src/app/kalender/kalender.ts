@@ -48,6 +48,7 @@ export class Kalender implements OnInit {
   verledenMaandEvents: Match[] = [];
   toekomstigeMaandEvents: Match[] = [];
   toonVerledenLijst = false; // Toggle status
+  toonMobieleFilters = false; // Toggle voor de filters op mobiel
   
   // Voor de uitslagen zijbalk naast de grid
   recenteUitslagen: Match[] = [];
