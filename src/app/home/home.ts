@@ -26,7 +26,7 @@ export class Home implements OnInit, AfterViewChecked {
 
   laatsteNieuws: NieuwsBericht[] = [];
   aankomendeActiviteiten$: Observable<Match[]>;
-  laatsteUitslagen$: Observable<Match[]>;
+  weekendUitslagen$: Observable<Match[]>;
 
   private observer: IntersectionObserver | null = null;
   private viewCheckedTimer: any;
@@ -44,22 +44,71 @@ export class Home implements OnInit, AfterViewChecked {
       }),
     );
 
-    this.laatsteUitslagen$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
+    this.weekendUitslagen$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
       map((matches) => {
-        const vandaag = new Date();
-        vandaag.setHours(0, 0, 0, 0); // Negeer de tijd
+        const nu = new Date();
 
-        return matches
+        // Bereken het meest recente weekend:
+        // - Vrijdagavond 18:00 t/m zondagnacht 23:59
+        // Op maandag t/m donderdag kijken we naar het VORIGE weekend.
+        // Op vrijdag t/m zondag kijken we naar DIT weekend.
+        const dagVanWeek = nu.getDay(); // 0=zo, 1=ma, ..., 5=vr, 6=za
+
+        const weekendStart = new Date(nu);
+        const weekendEinde = new Date(nu);
+
+        if (dagVanWeek >= 1 && dagVanWeek <= 4) {
+          // Ma t/m do → vorig weekend
+          const dagenTerugNaarVrijdag = dagVanWeek + 2; // vr is dag 5, dus ma=3, di=4, wo=5, do=6
+          weekendStart.setDate(nu.getDate() - dagenTerugNaarVrijdag);
+          weekendEinde.setDate(weekendStart.getDate() + 2); // zondag
+        } else if (dagVanWeek === 5) {
+          // Vrijdag → dit weekend
+          weekendStart.setDate(nu.getDate());
+          weekendEinde.setDate(nu.getDate() + 2);
+        } else if (dagVanWeek === 6) {
+          // Zaterdag → dit weekend
+          weekendStart.setDate(nu.getDate() - 1);
+          weekendEinde.setDate(nu.getDate() + 1);
+        } else {
+          // Zondag → dit weekend
+          weekendStart.setDate(nu.getDate() - 2);
+          weekendEinde.setDate(nu.getDate());
+        }
+
+        weekendStart.setHours(0, 0, 0, 0);
+        weekendEinde.setHours(23, 59, 59, 999);
+
+        const weekendMatches = matches
           .filter(
             (m) =>
               (!m.type || m.type === 'wedstrijd') &&
-              m.datum.toDate() < vandaag &&
               m.uitslag &&
               m.uitslag.trim() !== '' &&
               !(m as any).geannuleerd,
           )
-          .sort((a, b) => b.datum.toDate().getTime() - a.datum.toDate().getTime()) // Sorteer op datum: nieuwste uitslag eerst
-          .slice(0, 3); // Maximaal 3 uitslagen tonen
+          .filter((m) => {
+            const d = m.datum.toDate();
+            return d >= weekendStart && d <= weekendEinde;
+          })
+          .sort((a, b) => a.datum.toDate().getTime() - b.datum.toDate().getTime());
+
+        // Als er geen uitslagen zijn van het weekend, toon dan de 3 meest recente als fallback
+        if (weekendMatches.length === 0) {
+          return matches
+            .filter(
+              (m) =>
+                (!m.type || m.type === 'wedstrijd') &&
+                m.datum.toDate() < nu &&
+                m.uitslag &&
+                m.uitslag.trim() !== '' &&
+                !(m as any).geannuleerd,
+            )
+            .sort((a, b) => b.datum.toDate().getTime() - a.datum.toDate().getTime())
+            .slice(0, 3);
+        }
+
+        return weekendMatches;
       }),
     );
   }

@@ -87,10 +87,10 @@
 
 <section class="uitslagen-sectie">
   <div class="container">
-    <h2 class="sectie-titel reveal-on-scroll">Laatste Uitslagen</h2>
+    <h2 class="sectie-titel reveal-on-scroll">Uitslagen van het voorbije weekend</h2>
 
     <div class="aankomend-grid">
-      @for (match of laatsteUitslagen$ | async; track match.id) {
+      @for (match of weekendUitslagen$ | async; track match.id) {
         <div
           class="aankomend-kaart reveal-on-scroll"
           [style.border-left-color]="match.team ? getTeamKleur(match.team) : null"

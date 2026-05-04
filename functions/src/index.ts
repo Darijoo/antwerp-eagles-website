@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import { onSchedule } from "firebase-functions/v2/scheduler";
+import {onSchedule} from "firebase-functions/v2/scheduler";
 import * as cheerio from "cheerio";
 import cors = require("cors");
 
@@ -25,8 +25,8 @@ export const wbscProxy = functions.https.onRequest((req, res) => {
         headers: {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
           "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-          "Accept-Language": "nl-BE,nl;q=0.9,en-US;q=0.8,en;q=0.7"
-        }
+          "Accept-Language": "nl-BE,nl;q=0.9,en-US;q=0.8,en;q=0.7",
+        },
       });
 
       // Als de bond toch een foutcode geeft, laat het ons dan weten
@@ -44,19 +44,59 @@ export const wbscProxy = functions.https.onRequest((req, res) => {
   });
 });
 
-// --- DE AUTOMATISCHE WBSC SYNC (ELKE ZONDAG OM 19:00) ---
-export const wekelijkseWbscSync = onSchedule("0 19 * * 0", async (event) => {
+
+// ============================================================================
+// AUTOMATISCHE WBSC SYNC
+// Schedule:
+//   - Vrijdagochtend 07:00 (vóór het weekend, pakt eventuele planning-wijzigingen op)
+//   - Zaterdagavond 21:00 (pakt uitslagen van zaterdag op)
+//   - Zondagavond 21:00 (pakt uitslagen van zondag op)
+// Tijdzone: Europe/Brussels (automatisch rekening met zomer-/wintertijd)
+// ============================================================================
+export const wbscSyncVrijdag = onSchedule({
+  schedule: "0 7 * * 5",
+  timeZone: "Europe/Brussels",
+}, async () => {
+  console.log("🗓️ Start vrijdagochtend WBSC Sync...");
+  await voerWbscSyncUit();
+});
+
+export const wbscSyncZaterdag = onSchedule({
+  schedule: "0 21 * * 6",
+  timeZone: "Europe/Brussels",
+}, async () => {
+  console.log("🗓️ Start zaterdagavond WBSC Sync...");
+  await voerWbscSyncUit();
+});
+
+export const wbscSyncZondag = onSchedule({
+  schedule: "0 21 * * 0",
+  timeZone: "Europe/Brussels",
+}, async () => {
+  console.log("🗓️ Start zondagavond WBSC Sync...");
+  await voerWbscSyncUit();
+});
+
+
+// ============================================================================
+// GEDEELDE SYNC LOGICA
+// Bevat dezelfde bugfixes als de frontend:
+//   - Correcte link-selectie (geen calendar-buttons links pakken)
+//   - Doubleheader support (tijd meenemen in duplicate check)
+//   - Flexibele datum-regex
+//   - home/visitor/away variant matching
+// ============================================================================
+async function voerWbscSyncUit() {
   const db = admin.firestore();
-  console.log("Start wekelijkse automatische WBSC Sync...");
 
   try {
-    const teamsSnapshot = await db.collection('teams').get();
-    const bestaandeMatchenSnapshot = await db.collection('kalender').get();
+    const teamsSnapshot = await db.collection("teams").get();
+    const bestaandeMatchenSnapshot = await db.collection("kalender").get();
 
     // Zet bestaande databank matchen om in een makkelijk doorzoekbare array
-    const bestaandeMatchen = bestaandeMatchenSnapshot.docs.map(doc => ({
+    const bestaandeMatchen = bestaandeMatchenSnapshot.docs.map((doc) => ({
       id: doc.id,
-      ...doc.data()
+      ...doc.data(),
     })) as any[];
 
     for (const teamDoc of teamsSnapshot.docs) {
@@ -68,31 +108,31 @@ export const wekelijkseWbscSync = onSchedule("0 19 * * 0", async (event) => {
         // --- 1. ROSTER SYNC ---
         try {
           const response = await fetch(team.wbscTeamUrl, {
-            headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)" }
+            headers: {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)"},
           });
           const html = await response.text();
           const $ = cheerio.load(html);
 
           const spelers: any[] = [];
-          $('table tbody tr').each((_, rij) => {
+          $("table tbody tr").each((_, rij) => {
             const kolommen: string[] = [];
-            $(rij).find('td').each((_, td) => {
-              kolommen.push($(td).text().trim().replace(/\s+/g, ' '));
+            $(rij).find("td").each((_, td) => {
+              kolommen.push($(td).text().trim().replace(/\s+/g, " "));
             });
-            
+
             if (kolommen.length >= 3 && kolommen[1]) {
               spelers.push({
                 rugnummer: kolommen[0],
                 naam: kolommen[1],
                 positie: kolommen[2],
-                slagWorp: kolommen[3] || '',
-                geboortejaar: kolommen[4] || '',
+                slagWorp: kolommen[3] || "",
+                geboortejaar: kolommen[4] || "",
               });
             }
           });
 
           if (spelers.length > 0) {
-            await teamDoc.ref.update({ roster: spelers });
+            await teamDoc.ref.update({roster: spelers});
             console.log(`✅ Roster geüpdatet voor ${team.naam} (${spelers.length} spelers)`);
           }
         } catch (err) {
@@ -102,76 +142,104 @@ export const wekelijkseWbscSync = onSchedule("0 19 * * 0", async (event) => {
         // --- 2. KALENDER SYNC ---
         try {
           let fetchUrl = team.wbscTeamUrl;
-          const matchUrl = fetchUrl.match(/events\/([^\/]+)\/teams\/([^\/?#]+)/);
+          const matchUrl = fetchUrl.match(/events\/([^/]+)\/teams\/([^/?#]+)/);
           if (matchUrl) {
             fetchUrl = `https://www.baseballsoftball.be/en/events/${matchUrl[1]}/calendars?team=${matchUrl[2]}`;
           }
 
           const response = await fetch(fetchUrl, {
-            headers: { "User-Agent": "Mozilla/5.0" }
+            headers: {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)"},
           });
           const html = await response.text();
           const $ = cheerio.load(html);
 
           const matchen: any[] = [];
-          let rijen = $('.schedule-item, .game-row');
-          if (rijen.length === 0) rijen = $('table tbody tr');
+          let rijen = $(".schedule-item, .game-row");
+          if (rijen.length === 0) rijen = $("table tbody tr");
 
           rijen.each((_, rij) => {
             const $rij = $(rij);
-            const rijTekst = $rij.text().replace(/\s+/g, ' ').trim();
-            const isScheduleItem = $rij.hasClass('schedule-item');
+            const rijTekst = $rij.text().replace(/\s+/g, " ").trim();
+            const isScheduleItem = $rij.hasClass("schedule-item");
 
             if (isScheduleItem) {
-              let thuisploeg = '', uitploeg = '', locatie = '', datumStr = '';
+              let thuisploeg = "";
+              let uitploeg = "";
+              let locatie = "";
+              let datumStr = "";
 
-              $rij.find('.team-info').each((_, info) => {
+              $rij.find(".team-info").each((_, info) => {
                 const $info = $(info);
-                const type = $info.find('.dugout').text().trim().toLowerCase();
-                const naam = $info.find('p:not([class])').text().trim();
-                if (type === 'home') thuisploeg = naam;
-                else if (type === 'visitor') uitploeg = naam;
+                const type = $info.find(".dugout").text().trim().toLowerCase();
+                const naam = $info.find("p:not([class])").text().trim();
+                // Ondersteun zowel 'home'/'visitor' als 'away' varianten
+                if (type.includes("home")) thuisploeg = naam;
+                else if (type.includes("visitor") || type.includes("away")) uitploeg = naam;
               });
 
-              const boxScoreLinkDivs = $rij.find('.box-score-link > div');
-              if (boxScoreLinkDivs.length >= 2) {
-                const infoP = $(boxScoreLinkDivs[1]).find('p');
-                if (infoP.length >= 2) {
-                  locatie = $(infoP[0]).text().replace(':', '').trim();
-                  datumStr = $(infoP[1]).text().trim();
+              // BELANGRIJK: Pak de EERSTE box-score-link die NIET in .calendar-buttons zit.
+              // Dit voorkomt dat we een game-label link (F/4, Stand by) pakken die geen datum heeft.
+              const alleLinks = $rij.find("a.box-score-link").toArray();
+              const eersteEchteLink = alleLinks.find(
+                (a) => !$(a).closest(".calendar-buttons").length && !$(a).hasClass("chevron-right-icon")
+              );
+
+              if (eersteEchteLink) {
+                const linkDivs = $(eersteEchteLink).children("div");
+                if (linkDivs.length >= 2) {
+                  const leftDivP = $(linkDivs[0]).find("p");
+                  const rightDivP = $(linkDivs[1]).find("p");
+
+                  // Locatie uit de linker div
+                  if (leftDivP.length >= 2) {
+                    locatie = $(leftDivP[1]).text().trim();
+                  }
+                  // Datum uit de rechter div
+                  if (rightDivP.length >= 2) {
+                    datumStr = $(rightDivP[1]).text().trim();
+                    if (!locatie) locatie = $(rightDivP[0]).text().replace(":", "").trim();
+                  }
                 }
               }
 
-              let wedstrijdTijd = '14:00';
+              let wedstrijdTijd = "14:00";
               let geparsteDatum = new Date();
-              const dMatch = datumStr.match(/(\d{2})\/(\d{2})\/(\d{4}),\s*(\d{2}:\d{2})/);
+              // Flexibele datum-regex: 01/02/2026 of 01-02-2026 of 01.02.2026 en uren met/zonder voorloopnul
+              const dMatch = datumStr.match(/(\d{2})[/\-.](\d{2})[/\-.](\d{4})(?:,|\s)*(\d{1,2}:\d{2})/);
               if (dMatch) {
-                const [_, dag, maand, jaar, t] = dMatch;
+                const [, dag, maand, jaar, t] = dMatch;
                 geparsteDatum = new Date(parseInt(jaar, 10), parseInt(maand, 10) - 1, parseInt(dag, 10));
                 wedstrijdTijd = t;
-                geparsteDatum.setHours(parseInt(t.split(':')[0], 10), parseInt(t.split(':')[1], 10), 0);
+                geparsteDatum.setHours(parseInt(t.split(":")[0], 10), parseInt(t.split(":")[1], 10), 0);
               }
 
-              let uitslag = '';
-              const scoreText = $rij.find('.baseball-score-bug > div:nth-child(2) p').text().trim();
+              let uitslag = "";
+              const scoreText = $rij.find(".baseball-score-bug > div:nth-child(2) p").text().trim();
               if (scoreText) {
-                if (scoreText !== '0 : 0') {
-                  const parts = scoreText.split(':');
+                if (scoreText !== "0 : 0") {
+                  // WBSC toont score als "Uitploeg : Thuisploeg" — wij draaien om
+                  const parts = scoreText.split(":");
                   if (parts.length === 2) uitslag = `${parts[1].trim()} - ${parts[0].trim()}`;
-                  else uitslag = scoreText.replace(':', '-').replace(/\s+/g, ' ');
+                  else uitslag = scoreText.replace(":", "-").replace(/\s+/g, " ");
                 } else if (geparsteDatum.getTime() < new Date().getTime()) {
-                  uitslag = '0 - 0';
+                  uitslag = "0 - 0";
                 }
               }
 
-              const isGeannuleerd = rijTekst.toLowerCase().includes('postponed') || rijTekst.toLowerCase().includes('canceled');
+              const isGeannuleerd =
+                rijTekst.toLowerCase().includes("postponed") ||
+                rijTekst.toLowerCase().includes("canceled") ||
+                rijTekst.toLowerCase().includes("cancelled");
 
               if (thuisploeg && uitploeg) {
                 matchen.push({
-                  thuisploeg: thuisploeg.replace(/flag/gi, '').trim(), 
-                  uitploeg: uitploeg.replace(/flag/gi, '').trim(), 
-                  datum: geparsteDatum, tijd: wedstrijdTijd,
-                  locatie: locatie || 'Uit', uitslag, geannuleerd: isGeannuleerd
+                  thuisploeg,
+                  uitploeg,
+                  datum: geparsteDatum,
+                  tijd: wedstrijdTijd,
+                  locatie: locatie || "Uit",
+                  uitslag,
+                  geannuleerd: isGeannuleerd,
                 });
               }
             }
@@ -179,10 +247,10 @@ export const wekelijkseWbscSync = onSchedule("0 19 * * 0", async (event) => {
 
           // Verwerk alle gevonden matchen naar Firestore
           for (const match of matchen) {
-            const bestaandeMatch = bestaandeMatchen.find(m => {
-              if (m.type !== 'wedstrijd' || m.team !== team.naam) return false;
+            const bestaandeMatch = bestaandeMatchen.find((m) => {
+              if (m.type !== "wedstrijd" || m.team !== team.naam) return false;
               let mDatum: Date;
-              if (m.datum && typeof m.datum.toDate === 'function') mDatum = m.datum.toDate();
+              if (m.datum && typeof m.datum.toDate === "function") mDatum = m.datum.toDate();
               else if (m.datum && m.datum._seconds) mDatum = new Date(m.datum._seconds * 1000);
               else mDatum = new Date(m.datum);
 
@@ -191,7 +259,8 @@ export const wekelijkseWbscSync = onSchedule("0 19 * * 0", async (event) => {
                 mDatum.getMonth() === match.datum.getMonth() &&
                 mDatum.getFullYear() === match.datum.getFullYear() &&
                 m.thuisploeg === match.thuisploeg &&
-                m.uitploeg === match.uitploeg
+                m.uitploeg === match.uitploeg &&
+                m.tijd === match.tijd // Doubleheader fix: tijd meenemen!
               );
             });
 
@@ -199,23 +268,40 @@ export const wekelijkseWbscSync = onSchedule("0 19 * * 0", async (event) => {
               const behoudUitslag = bestaandeMatch.isHandmatigBewerkt;
               const nieuweUitslag = behoudUitslag ? bestaandeMatch.uitslag : match.uitslag;
               if (bestaandeMatch.uitslag !== nieuweUitslag || bestaandeMatch.tijd !== match.tijd || bestaandeMatch.locatie !== match.locatie) {
-                await db.collection('kalender').doc(bestaandeMatch.id).update({ uitslag: nieuweUitslag, tijd: match.tijd, locatie: match.locatie });
+                await db.collection("kalender").doc(bestaandeMatch.id).update({
+                  uitslag: nieuweUitslag,
+                  tijd: match.tijd,
+                  locatie: match.locatie,
+                });
                 bestaandeMatch.uitslag = nieuweUitslag;
                 bestaandeMatch.tijd = match.tijd;
                 bestaandeMatch.locatie = match.locatie;
               }
             } else {
-              const docRef = await db.collection('kalender').add({
-                type: 'wedstrijd', team: team.naam,
-                thuisploeg: match.thuisploeg, uitploeg: match.uitploeg,
+              const docRef = await db.collection("kalender").add({
+                type: "wedstrijd",
+                team: team.naam,
+                thuisploeg: match.thuisploeg,
+                uitploeg: match.uitploeg,
                 datum: admin.firestore.Timestamp.fromDate(match.datum),
-                tijd: match.tijd, locatie: match.locatie, uitslag: match.uitslag,
+                tijd: match.tijd,
+                locatie: match.locatie,
+                uitslag: match.uitslag,
               });
-              bestaandeMatchen.push({ id: docRef.id, type: 'wedstrijd', team: team.naam, thuisploeg: match.thuisploeg, uitploeg: match.uitploeg, datum: admin.firestore.Timestamp.fromDate(match.datum), tijd: match.tijd, locatie: match.locatie, uitslag: match.uitslag });
+              bestaandeMatchen.push({
+                id: docRef.id,
+                type: "wedstrijd",
+                team: team.naam,
+                thuisploeg: match.thuisploeg,
+                uitploeg: match.uitploeg,
+                datum: admin.firestore.Timestamp.fromDate(match.datum),
+                tijd: match.tijd,
+                locatie: match.locatie,
+                uitslag: match.uitslag,
+              });
             }
           }
           console.log(`✅ Kalender geüpdatet voor ${team.naam} (${matchen.length} matchen verwerkt)`);
-
         } catch (err) {
           console.error(`❌ Fout bij kalender sync voor ${team.naam}:`, err);
         }
@@ -223,6 +309,6 @@ export const wekelijkseWbscSync = onSchedule("0 19 * * 0", async (event) => {
     }
     console.log("🏆 WBSC Sync volledig afgerond!");
   } catch (error) {
-    console.error("Fatale fout in wekelijkse sync:", error);
+    console.error("Fatale fout in WBSC sync:", error);
   }
-});
+}

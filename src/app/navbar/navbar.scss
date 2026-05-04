@@ -1,6 +1,6 @@
 /* De placeholder houdt de ruimte vrij zodat de content eronder niet omhoog springt of glitcht */
 .navbar-placeholder {
-  height: 133px; /* Standaard hoogte van de navbar op desktop */
+  height: 153px; /* Aangepast voor groter logo */
   width: 100%;
 }
 
@@ -49,12 +49,12 @@
 }
 
 .logo-img {
-  height: 80px; /* Pas deze waarde aan om je logo kleiner of groter te maken (bijv. 40px of 60px) */
-  width: auto; /* Zorgt ervoor dat de afbeelding mooi in verhouding blijft */
+  height: 100px; /* Groter logo (was 80px) */
+  width: auto;
   transition: height 0.3s ease;
 
   .navbar.scrolled & {
-    height: 50px;
+    height: 60px; /* Iets groter bij scrollen (was 50px) */
   }
 }
 
@@ -218,9 +218,9 @@
   }
 
   .logo-img {
-    height: 50px; /* Maakt het logo compacter op kleine schermen */
+    height: 65px; /* Groter logo op mobiel (was 50px) */
     .navbar.scrolled & {
-      height: 36px;
+      height: 45px; /* Was 36px */
     }
   }
 

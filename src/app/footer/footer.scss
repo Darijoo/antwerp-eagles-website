@@ -135,11 +135,11 @@
 }
 
 .footer-content {
-  max-width: 1200px;
+  max-width: 1400px; /* Iets breder voor alle sitemap kolommen */
   margin: 0 auto;
   padding: 0 2rem 2rem 2rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 2rem;
 }
 /* Zorgt dat het logo en de tekst naast elkaar komen staan */
