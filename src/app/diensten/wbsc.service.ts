@@ -10,7 +10,9 @@ export interface WbscSpeler {
   geboortejaar?: string;
 }
 
-// Een 'woordenboek' om de afkortingen van de bond om te zetten naar echte namen en velden!
+// Let op: We gebruiken deze mapping enkel nog als fallback voor héél oude tabellen.
+// De vernieuwde WBSC site (.schedule-item) levert nu zelf de volledige teamnamen inclusief cijfer (bv. "Antwerp Eagles 2").
+// Het is cruciaal dat we die cijfers behouden, anders heten alle 4 de senioren teams "Antwerp Eagles" op onze website.
 const CLUB_MAPPING: Record<string, { naam: string; locatie: string }> = {
   ANT: { naam: 'Antwerp Eagles', locatie: 'Eagles Field (Wilrijk)' },
   MSG: { naam: 'Mont-Saint-Guibert Phoenix', locatie: 'Mont-Saint-Guibert' },
@@ -101,6 +103,18 @@ export class WbscService {
 
     const matchen: any[] = [];
 
+    // Hulpfunctie om de ploeg op te zoeken via de afkorting (Bv 'ANT') óf direct via de volledige naam
+    const vindPloeg = (zoekTerm: string) => {
+      // 1. Exacte afkorting match
+      if (CLUB_MAPPING[zoekTerm]) return CLUB_MAPPING[zoekTerm];
+      
+      // 2. Zoek op (gedeeltelijke) naam match
+      const lowerZoek = zoekTerm.toLowerCase();
+      const ploeg = Object.values(CLUB_MAPPING).find((c) => c.naam.toLowerCase().includes(lowerZoek) || lowerZoek.includes(c.naam.toLowerCase()));
+      
+      return ploeg || { naam: zoekTerm, locatie: 'Uit' };
+    };
+
     // Zoek alle wedstrijdblokken (kalender layout gebruikt .schedule-item, team pagina heeft .game-row)
     let rijen = doc.querySelectorAll('.schedule-item, .game-row');
     if (rijen.length === 0) {
@@ -126,27 +140,35 @@ export class WbscService {
           if (teamInfos.length < 2) return;
 
           teamInfos.forEach((info) => {
-            const type = info.querySelector('.dugout')?.textContent?.trim().toLowerCase();
+            const type = info.querySelector('.dugout')?.textContent?.trim().toLowerCase() || '';
             const naamElement = info.querySelector('p:not([class])');
             const naam = naamElement ? naamElement.textContent?.trim() : '';
 
-            if (type === 'home') thuisploeg = naam || '';
-            else if (type === 'visitor') uitploeg = naam || '';
+            if (type.includes('home')) thuisploeg = naam || '';
+            else if (type.includes('visitor') || type.includes('away')) uitploeg = naam || '';
           });
 
           // Datum, Tijd en Locatie ophalen
           const boxScoreLinkDivs = rij.querySelectorAll('.box-score-link > div');
           if (boxScoreLinkDivs.length >= 2) {
-            const infoP = boxScoreLinkDivs[1].querySelectorAll('p');
-            if (infoP.length >= 2) {
-              locatie = infoP[0].textContent?.replace(':', '')?.trim() || '';
-              datumStr = infoP[1].textContent?.trim() || '';
+            const leftDivP = boxScoreLinkDivs[0].querySelectorAll('p');
+            const rightDivP = boxScoreLinkDivs[1].querySelectorAll('p');
+            
+            // Haal de volledige locatie uit de linker div (bv "Brasschaat Braves Baseball, Brasschaat")
+            if (leftDivP.length >= 2) {
+              locatie = leftDivP[1].textContent?.trim() || '';
+            }
+            
+            if (rightDivP.length >= 2) {
+              datumStr = rightDivP[1].textContent?.trim() || '';
+              // Fallback locatie als de linker div leeg was
+              if (!locatie) locatie = rightDivP[0].textContent?.replace(':', '')?.trim() || '';
             }
           }
 
           let wedstrijdTijd = '14:00';
           let geparsteDatum = new Date();
-          const dMatch = datumStr.match(/(\d{2})\/(\d{2})\/(\d{4}),\s*(\d{2}:\d{2})/);
+          const dMatch = datumStr.match(/(\d{2})[\/\-\.](\d{2})[\/\-\.](\d{4})(?:,|\s)*(\d{1,2}:\d{2})/);
           if (dMatch) {
             const [_, dag, maand, jaar, t] = dMatch;
             geparsteDatum = new Date(
@@ -183,12 +205,18 @@ export class WbscService {
           // Status (Geannuleerd)
           const isGeannuleerd =
             rijTekst.toLowerCase().includes('postponed') ||
-            rijTekst.toLowerCase().includes('canceled');
+            rijTekst.toLowerCase().includes('canceled') ||
+            rijTekst.toLowerCase().includes('cancelled');
 
           if (thuisploeg && uitploeg) {
+            // WE LATEN DE CLUB_MAPPING WEG!
+            // De WBSC site geeft ons nu prachtig "Antwerp Eagles 2" in plaats van enkel "ANT".
+            // Als we CLUB_MAPPING zouden gebruiken, verliest de club de "2" of "3" uitvang de naam, 
+            // waardoor alle teams op de site gewoon "Antwerp Eagles" zouden heten.
+            
             matchen.push({
-              thuisploeg,
-              uitploeg,
+              thuisploeg: thuisploeg,
+              uitploeg: uitploeg,
               datum: geparsteDatum,
               tijd: wedstrijdTijd,
               locatie: locatie || 'Uit',
@@ -202,7 +230,7 @@ export class WbscService {
         // --- 2. OUDE FALLBACK METHODE VOOR TABELLEN / ANDERE PAGINA'S ---
 
         // 1. Datum filteren
-        const datumMatch = rijTekst.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+        const datumMatch = rijTekst.match(/(\d{2})[\/\-\.](\d{2})[\/\-\.](\d{4})/);
         if (datumMatch) {
           const dag = parseInt(datumMatch[1], 10);
           const maand = parseInt(datumMatch[2], 10) - 1; // JavaScript maanden zijn 0-11
@@ -265,19 +293,12 @@ export class WbscService {
         const afkortingUit = teams[0] || 'Onbekend';
         const afkortingThuis = teams[1] || 'Onbekend';
 
-        // Hulpfunctie om de ploeg op te zoeken via de afkorting (Bv 'ANT') óf direct via de volledige naam
-        const vindPloeg = (zoekTerm: string) => {
-          if (CLUB_MAPPING[zoekTerm]) return CLUB_MAPPING[zoekTerm];
-          const ploeg = Object.values(CLUB_MAPPING).find((c) => c.naam === zoekTerm);
-          return ploeg || { naam: zoekTerm, locatie: 'Uit' };
-        };
-
         const uitPloeg = vindPloeg(afkortingUit);
         const thuisPloeg = vindPloeg(afkortingThuis);
 
         // 2. Tijd filteren (Zoek naar uren/minuten formaat, bv 14:00 of 15:30)
         let wedstrijdTijd = '14:00';
-        const tijdMatch = rijTekst.match(/\b(\d{2}:\d{2})\b/);
+        const tijdMatch = rijTekst.match(/\b(\d{1,2}:\d{2})\b/);
         if (tijdMatch) {
           wedstrijdTijd = tijdMatch[1];
           const [uur, min] = wedstrijdTijd.split(':');

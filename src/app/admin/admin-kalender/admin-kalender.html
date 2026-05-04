@@ -150,8 +150,13 @@
         "
       >
         <h3 style="margin: 0; border-bottom: none; padding-bottom: 0">Bestaande Agenda Items</h3>
-        <button class="btn-verwijderen" (click)="verwijderAlles()">
-          <i class="fa-solid fa-trash"></i> Alles Verwijderen
+        <button class="btn-verwijderen" (click)="verwijderGefilterd()">
+          <i class="fa-solid fa-trash"></i>
+          @if ((filterType$ | async) || (filterTeam$ | async)) {
+            Gefilterde Items Verwijderen
+          } @else {
+            Alles Verwijderen
+          }
         </button>
       </div>
 

@@ -174,28 +174,36 @@ export class AdminKalender {
     this.toonNotificatie('Wedstrijd succesvol verwijderd!');
   }
 
-  async verwijderAlles() {
+  async verwijderGefilterd() {
+    const gefilterdItems = await firstValueFrom(this.wedstrijden$);
+
+    if (gefilterdItems.length === 0) {
+      this.toonNotificatie('Er zijn geen zichtbare items om te verwijderen.', 'fout');
+      return;
+    }
+
+    // Bouw een leesbaar overzicht van de actieve filters
+    const activeFilters: string[] = [];
+    if (this.filterType$.value) activeFilters.push(`type: ${this.filterType$.value}`);
+    if (this.filterTeam$.value) activeFilters.push(`team: ${this.filterTeam$.value}`);
+    if (!this.toonVerledenEvents$.value) activeFilters.push('alleen toekomstige');
+    const filterTekst = activeFilters.length > 0 ? ` (filter: ${activeFilters.join(', ')})` : ' (geen filter — DIT VERWIJDERT ALLES!)';
+
     if (
       confirm(
-        '⚠️ WAARSCHUWING! Weet je zeker dat je ALLE wedstrijden en evenementen definitief wilt verwijderen? Dit kan niet ongedaan worden gemaakt!',
+        `⚠️ Je staat op het punt ${gefilterdItems.length} item(s)${filterTekst} definitief te verwijderen. Dit kan NIET ongedaan worden gemaakt!`,
       )
     ) {
       try {
-        const alleItems = await firstValueFrom(this.kalenderService.haalAlleWedstrijdenOp());
-        if (alleItems.length === 0) {
-          this.toonNotificatie('Er zijn geen items om te verwijderen.', 'fout');
-          return;
-        }
-
-        this.toonNotificatie('Bezig met verwijderen van alle items...', 'succes');
-        for (const item of alleItems) {
+        this.toonNotificatie(`Bezig met verwijderen van ${gefilterdItems.length} items...`, 'succes');
+        for (const item of gefilterdItems) {
           if (item.id) {
             await this.kalenderService.verwijderWedstrijd(item.id);
           }
         }
-        this.toonNotificatie('Alle kalender items zijn succesvol verwijderd!');
+        this.toonNotificatie(`${gefilterdItems.length} items succesvol verwijderd!`);
       } catch (error) {
-        console.error('Fout bij het verwijderen van alles:', error);
+        console.error('Fout bij het verwijderen:', error);
         this.toonNotificatie('Er is een fout opgetreden bij het verwijderen.', 'fout');
       }
     }
