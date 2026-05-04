@@ -1,6 +1,6 @@
 /* De placeholder houdt de ruimte vrij zodat de content eronder niet omhoog springt of glitcht */
 .navbar-placeholder {
-  height: 153px; /* Aangepast voor groter logo */
+  height: 181px; /* Logo 160px + padding 16px + border 5px */
   width: 100%;
 }
 
@@ -10,7 +10,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 3rem;
+  padding: 0.5rem 3rem; /* Minder verticale padding voor het grote logo */
   border-bottom: 5px solid var(--eagle-red);
   position: fixed; /* Fixed zorgt dat hij NOOIT verdwijnt achter de Angular wrapper */
   top: 0;
@@ -24,7 +24,7 @@
 
   /* Nieuwe Shrink-on-Scroll class! */
   &.scrolled {
-    padding: 0.6rem 3rem;
+    padding: 0.3rem 3rem; /* Nóg compacter bij scrollen */
     background-color: rgba(21, 34, 105, 0.98); /* Iets donkerder als hij kleiner is voor leesbaarheid */
     border-bottom-width: 3px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
@@ -49,7 +49,7 @@
 }
 
 .logo-img {
-  height: 100px; /* Groter logo (was 80px) */
+  height: 10rem; /* Groter logo (was 80px) */
   width: auto;
   transition: height 0.3s ease;
 
@@ -189,9 +189,9 @@
   }
 
   .navbar {
-    padding: 1rem; /* Minder overbodige ruimte aan de randen */
+    padding: 0.5rem 1rem; /* Minder padding op mobiel */
     &.scrolled {
-      padding: 0.5rem 1rem;
+      padding: 0.2rem 1rem;
     }
   }
 
