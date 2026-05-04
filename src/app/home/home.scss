@@ -180,8 +180,9 @@
 }
 
 .info-blok {
-  padding: 1rem;
+  padding: 0.8rem; /* Iets minder padding om meer ruimte te geven aan de tekst */
   flex-grow: 1;
+  min-width: 0; /* Belangrijk voor flex-wrap en overflow in grid */
 
   .badge {
     display: inline-flex;
@@ -289,8 +290,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 0.8rem;
   padding-left: 0;
+  flex-shrink: 0; /* Voorkom dat de WIN/LOSS badge wordt platgedrukt */
 
   .resultaat-badge {
     font-size: 1rem;

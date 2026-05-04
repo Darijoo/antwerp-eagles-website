@@ -9,10 +9,10 @@
 
 <section class="aankomend-sectie">
   <div class="container">
-    <h2 class="sectie-titel reveal-on-scroll">Binnenkort bij de Eagles</h2>
+    <h2 class="sectie-titel reveal-on-scroll">Matchen aankomend weekend</h2>
 
     <div class="aankomend-grid">
-      @for (item of aankomendeActiviteiten$ | async; track item.id) {
+      @for (item of aankomendWeekend$ | async; track item.id) {
         <div
           class="aankomend-kaart reveal-on-scroll"
           [class.is-evenement]="item.type === 'evenement'"

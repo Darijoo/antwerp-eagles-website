@@ -25,22 +25,62 @@ export class Home implements OnInit, AfterViewChecked {
   teamsKleurMap: Record<string, string> = {};
 
   laatsteNieuws: NieuwsBericht[] = [];
-  aankomendeActiviteiten$: Observable<Match[]>;
+  aankomendWeekend$: Observable<Match[]>;
   weekendUitslagen$: Observable<Match[]>;
 
   private observer: IntersectionObserver | null = null;
   private viewCheckedTimer: any;
 
   constructor() {
-    this.aankomendeActiviteiten$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
+    this.aankomendWeekend$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
       map((matches) => {
-        const vandaag = new Date();
-        vandaag.setHours(0, 0, 0, 0); // Negeer de tijd, we kijken alleen naar de dag
+        const nu = new Date();
+        const dagVanWeek = nu.getDay(); // 0=zo, 1=ma, ..., 5=vr, 6=za
 
-        return matches
-          .filter((m) => m.datum.toDate() >= vandaag) // Bewaar alleen wedstrijden in de toekomst
-          .sort((a, b) => a.datum.toDate().getTime() - b.datum.toDate().getTime()) // Sorteer op datum: dichtstbijzijnde eerst
-          .slice(0, 3); // Laat maximaal 3 kaartjes tegelijk zien op de homepagina
+        const weekendStart = new Date(nu);
+        const weekendEinde = new Date(nu);
+
+        // Komend weekend berekenen
+        // Als het al weekend is (vr, za, zo), tonen we DIT weekend.
+        // Als het ma-do is, tonen we het EERSTVOLGENDE weekend.
+        if (dagVanWeek >= 1 && dagVanWeek <= 4) {
+          // Ma t/m do
+          const dagenTotVrijdag = 5 - dagVanWeek;
+          weekendStart.setDate(nu.getDate() + dagenTotVrijdag);
+          weekendEinde.setDate(weekendStart.getDate() + 2);
+        } else if (dagVanWeek === 0) {
+          // Zondag -> we tonen nog steeds vandaag
+          weekendStart.setDate(nu.getDate() - 2);
+          weekendEinde.setDate(nu.getDate());
+        } else if (dagVanWeek === 5) {
+          // Vrijdag
+          weekendStart.setDate(nu.getDate());
+          weekendEinde.setDate(nu.getDate() + 2);
+        } else if (dagVanWeek === 6) {
+          // Zaterdag
+          weekendStart.setDate(nu.getDate() - 1);
+          weekendEinde.setDate(nu.getDate() + 1);
+        }
+
+        weekendStart.setHours(0, 0, 0, 0);
+        weekendEinde.setHours(23, 59, 59, 999);
+
+        const weekendMatches = matches
+          .filter((m) => {
+            const d = m.datum.toDate();
+            return d >= weekendStart && d <= weekendEinde;
+          })
+          .sort((a, b) => a.datum.toDate().getTime() - b.datum.toDate().getTime());
+
+        // Fallback: als er geen matchen zijn dit weekend, toon de eerstvolgende 3
+        if (weekendMatches.length === 0) {
+          return matches
+            .filter((m) => m.datum.toDate() >= nu)
+            .sort((a, b) => a.datum.toDate().getTime() - b.datum.toDate().getTime())
+            .slice(0, 3);
+        }
+
+        return weekendMatches;
       }),
     );
 
