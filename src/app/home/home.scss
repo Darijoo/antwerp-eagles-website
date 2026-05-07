@@ -45,6 +45,17 @@
   animation: fadeIn 1.2s ease-in forwards;
 }
 
+.hero-sectie .accent-text {
+  font-family: var(--font-fun);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  color: var(--eagle-accent);
+  margin-top: -1rem;
+  margin-bottom: 1rem;
+  transform: rotate(-3deg);
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+  animation: slideDown 1s ease-out forwards;
+}
+
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -75,7 +86,7 @@
   font-weight: 700;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: 4px; /* Kleine afronding van de hoekjes */
+  border-radius: var(--radius-round); /* Ronde knoppen voor een vriendelijkere uitstraling */
   transition: all 0.3s ease; /* Zorgt voor een soepele animatie */
 
   /* Wat er gebeurt als je met de muis over de knop gaat */
@@ -126,7 +137,7 @@
 .aankomend-kaart {
   display: flex;
   background: white;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   border-left: 5px solid var(--eagle-blue);
@@ -254,7 +265,7 @@
     align-items: center;
     background-color: var(--bg-light);
     padding: 0.5rem 1rem;
-    border-radius: 6px;
+    border-radius: var(--radius-md);
     color: var(--text-dark);
     transition: all 0.2s;
 
@@ -298,7 +309,7 @@
     font-size: 1rem;
     font-weight: 900;
     padding: 0.6rem 1rem;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     text-align: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 

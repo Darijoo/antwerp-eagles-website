@@ -40,7 +40,7 @@
 .sponsor-tag {
   background-color: var(--bg-light);
   padding: 1rem 2.5rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-weight: 900;
   font-size: 1.2rem;
   color: var(--text-dark);
@@ -62,7 +62,7 @@
   max-width: 1000px;
   margin: 0 auto 3rem auto;
   background: linear-gradient(135deg, var(--eagle-red), #851212);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 3rem 4rem;
   display: flex;
   justify-content: space-between;
@@ -98,7 +98,7 @@
 
     a {
       padding: 0.8rem 2rem;
-      border-radius: 30px;
+      border-radius: var(--radius-round);
       font-weight: 700;
       text-decoration: none;
       text-transform: uppercase;
@@ -171,6 +171,14 @@
   text-align: left;
   h4 { margin-bottom: 0.2rem; font-size: 1.4rem; }
   p { margin-bottom: 0; }
+  .accent-footer {
+    font-family: var(--font-fun);
+    font-size: 1.4rem;
+    color: var(--eagle-accent);
+    opacity: 1;
+    transform: rotate(-2deg);
+    display: inline-block;
+  }
 }
 
 .social-links {
