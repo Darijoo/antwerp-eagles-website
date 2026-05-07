@@ -89,66 +89,40 @@
   <div class="container">
     <h2 class="sectie-titel reveal-on-scroll">Uitslagen van het voorbije weekend</h2>
 
-    <div class="aankomend-grid">
+    <div class="uitslagen-grid">
       @for (match of weekendUitslagen$ | async; track match.id) {
-        <div
-          class="aankomend-kaart reveal-on-scroll"
-          [style.border-left-color]="match.team ? getTeamKleur(match.team) : null"
-        >
-          <div
-            class="datum-blok"
-            [style.background-color]="match.team ? getTeamKleur(match.team) : null"
-          >
-            <span class="dag">{{ match.datum.toDate() | date: 'd' }}</span>
-            <span class="maand">{{ match.datum.toDate() | date: 'MMM' }}</span>
-          </div>
-          <div class="info-blok">
-            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap">
-              <span
-                class="badge"
-                [style.background-color]="match.team ? getTeamKleur(match.team) : null"
-              >
-                {{ match.team ? match.team : 'Wedstrijd' }}
-              </span>
-              <span
-                class="badge locatie-badge"
-                [class.is-thuis]="isThuisMatch(match)"
-                [class.is-uit]="!isThuisMatch(match)"
-              >
-                <i
-                  class="fa-solid"
-                  [class.fa-house]="isThuisMatch(match)"
-                  [class.fa-bus]="!isThuisMatch(match)"
-                ></i>
-                {{ isThuisMatch(match) ? 'THUIS' : 'UIT' }}
-              </span>
-            </div>
+        <div class="uitslag-kaart reveal-on-scroll">
+          <!-- Kaart Header: team badge + locatie + resultaat -->
+          <div class="uitslag-kaart-header" [style.background-color]="match.team ? getTeamKleur(match.team) : 'var(--eagle-blue)'">
+            <span class="uitslag-team-badge">{{ match.team ? match.team : 'Wedstrijd' }}</span>
+            <span class="uitslag-locatie">
+              <i class="fa-solid" [class.fa-house]="isThuisMatch(match)" [class.fa-bus]="!isThuisMatch(match)"></i>
+              {{ isThuisMatch(match) ? 'THUIS' : 'UIT' }}
+            </span>
             @if (match.uitslag) {
-              <div class="scorebord">
-                <div class="score-rij" [class.is-winnaar]="isWinnaar(match, 'thuis')">
-                  <span class="ploeg">{{ match.thuisploeg }}</span>
-                  <span class="score">{{ getScore(match.uitslag, 0) }}</span>
-                </div>
-                <div class="score-rij" [class.is-winnaar]="isWinnaar(match, 'uit')">
-                  <span class="ploeg">{{ match.uitploeg }}</span>
-                  <span class="score">{{ getScore(match.uitslag, 1) }}</span>
-                </div>
-              </div>
-            } @else {
-              <h4>{{ match.thuisploeg }} vs {{ match.uitploeg }}</h4>
+              <span class="uitslag-resultaat" [class]="getWedstrijdResultaat(match) | lowercase">
+                {{ getWedstrijdResultaat(match) === 'W' ? 'WIN' : getWedstrijdResultaat(match) === 'L' ? 'LOSS' : 'GELIJK' }}
+              </span>
             }
           </div>
-          @if (match.uitslag) {
-            <div class="wedstrijd-status-kolom">
-              @if (getWedstrijdResultaat(match) === 'W') {
-                <span class="resultaat-badge win">WIN</span>
-              } @else if (getWedstrijdResultaat(match) === 'L') {
-                <span class="resultaat-badge loss">LOSS</span>
-              } @else if (getWedstrijdResultaat(match) === 'T') {
-                <span class="resultaat-badge tie">TIE</span>
-              }
+
+          <!-- Scorebord -->
+          <div class="uitslag-scorebord">
+            <div class="uitslag-score-rij" [class.winnaar]="isWinnaar(match, 'thuis')">
+              <span class="uitslag-ploeg">{{ match.thuisploeg }}</span>
+              <span class="uitslag-score">{{ getScore(match.uitslag, 0) }}</span>
             </div>
-          }
+            <div class="uitslag-score-rij" [class.winnaar]="isWinnaar(match, 'uit')">
+              <span class="uitslag-ploeg">{{ match.uitploeg }}</span>
+              <span class="uitslag-score">{{ getScore(match.uitslag, 1) }}</span>
+            </div>
+          </div>
+
+          <!-- Datum onderaan -->
+          <div class="uitslag-datum">
+            <i class="fa-regular fa-calendar"></i>
+            {{ match.datum.toDate() | date: 'EEEE d MMMM' }}
+          </div>
         </div>
       } @empty {
         <div class="lege-status">
@@ -163,6 +137,7 @@
     </div>
   </div>
 </section>
+
 
 <section class="nieuws-sectie">
   <div class="container">

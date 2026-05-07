@@ -250,10 +250,135 @@
 /* --- UITSLAGEN SECTIE --- */
 .uitslagen-sectie {
   padding: 4rem 2rem;
-  background-color: white; /* Een witte achtergrond om te breken met de grijze secties erboven en eronder */
+  background-color: white;
 }
 
+
+/* --- UITSLAGEN GRID & KAARTEN --- */
+.uitslagen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.uitslag-kaart {
+  background: white;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.uitslag-kaart-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.uitslag-team-badge {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.uitslag-locatie {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-round);
+  white-space: nowrap;
+}
+
+.uitslag-resultaat {
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-round);
+  font-weight: 900;
+  font-size: 0.75rem;
+  white-space: nowrap;
+
+  &.w { background-color: #27ae60; }
+  &.l { background-color: #c0392b; }
+  &.t { background-color: #f39c12; }
+  &:not(.w):not(.l):not(.t) { background-color: rgba(255,255,255,0.25); }
+}
+
+.uitslag-scorebord {
+  padding: 0.8rem 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.uitslag-score-rij {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-light);
+  gap: 0.5rem;
+
+  &.winnaar {
+    background-color: var(--eagle-blue);
+    .uitslag-ploeg { color: white; font-weight: 900; }
+    .uitslag-score { color: white; background-color: rgba(255,255,255,0.2); }
+  }
+}
+
+.uitslag-ploeg {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.uitslag-score {
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: var(--eagle-blue);
+  background-color: white;
+  padding: 0.1rem 0.7rem;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+
+.uitslag-datum {
+  padding: 0.6rem 1rem;
+  border-top: 1px solid #f0f0f0;
+  font-size: 0.8rem;
+  color: #999;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-transform: capitalize;
+}
+
+
 .scorebord {
+  /* Oude scorebord stijl voor de zekerheid behouden of opschonen */
   display: flex;
   flex-direction: column;
   gap: 0.4rem;

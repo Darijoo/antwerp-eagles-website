@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewChecked, inject, ChangeDetectorRef, Destroy
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { NieuwsService, NieuwsBericht } from '../diensten/nieuws';
-import { DatePipe, AsyncPipe } from '@angular/common';
+import { DatePipe, AsyncPipe, LowerCasePipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KalenderService, Match } from '../diensten/kalender.service';
@@ -11,7 +11,7 @@ import { TeamService } from '../diensten/team';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, DatePipe, AsyncPipe],
+  imports: [RouterLink, DatePipe, AsyncPipe, LowerCasePipe],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

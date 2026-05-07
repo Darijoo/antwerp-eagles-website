@@ -22,16 +22,12 @@
               background-color 0.3s ease,
               border-width 0.3s ease;
 
-  /* Nieuwe Floating Island look! */
+  /* Compacte look bij scrollen */
   &.scrolled {
-    top: 1rem;
-    left: 2rem;
-    width: calc(100% - 4rem);
-    border-radius: var(--radius-round);
-    padding: 0.2rem 2rem;
-    background-color: rgba(21, 34, 105, 0.95);
-    border-bottom: none;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    padding: 0.3rem 3rem; /* Nóg compacter bij scrollen */
+    background-color: rgba(21, 34, 105, 0.98); /* Iets donkerder als hij kleiner is voor leesbaarheid */
+    border-bottom-width: 3px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   }
 }
 
