@@ -10,6 +10,9 @@
   padding: 0 1rem;
 }
 
+
+
+/* --- IMMERSIVE HERO SPECIFIEK --- */
 .terug-knop {
   display: inline-flex;
   align-items: center;
@@ -26,35 +29,7 @@
   }
 }
 
-/* --- IMMERSIVE HERO --- */
-.artikel-hero {
-  width: 100%;
-  min-height: 50vh;
-  margin-top: -133px; /* Trekt de foto onder de navbar! */
-  padding-top: 133px;
-  background-color: var(--eagle-blue);
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  padding-bottom: 6rem; /* Ruimte voor de overlapping! */
-
-  .hero-content {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-  }
-
-  .hero-meta { margin-bottom: 1rem; }
-  
-  .hero-titel {
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    font-weight: 900;
-    color: white;
-    text-transform: uppercase;
-    margin: 0;
-    line-height: 1.1;
-  }
-}
+.hero-meta { margin-bottom: 1rem; }
 
 .artikel-badge {
   display: inline-block;

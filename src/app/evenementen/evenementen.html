@@ -1,7 +1,13 @@
-<div class="hero-sectie">
-  <h2>Evenementen</h2>
-  <p>Mis geen enkele activiteit van de Antwerp Eagles!</p>
-</div>
+  <div class="pagina-hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <span class="hero-badge">Events</span>
+      <h1 class="hero-titel">Evenementen</h1>
+      <p class="hero-ondertitel">Mis geen enkele activiteit van de Antwerp Eagles!</p>
+    </div>
+  </div>
+
+  <div class="container overlap-container">
 
 <div class="evenementen-container">
   @if ((evenementen$ | async)?.length === 0) {

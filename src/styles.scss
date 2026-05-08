@@ -84,3 +84,58 @@ h1 {
   transform: translateY(-8px);
   box-shadow: 0 20px 40px -10px rgba(21, 34, 105, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.08);
 }
+
+/* --- GLOBALE PAGINA HERO (Club Nieuws Stijl) --- */
+.pagina-hero {
+  width: 100%;
+  min-height: 45vh;
+  margin-top: -133px;
+  padding-top: 133px;
+  background-color: var(--eagle-blue);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-bottom: 6rem;
+
+  .hero-overlay {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(21, 34, 105, 0.95), rgba(153, 25, 25, 0.8));
+  }
+
+  .hero-content { position: relative; z-index: 1; color: white; max-width: 800px; padding: 0 1rem; }
+
+  .hero-badge {
+    display: inline-block; background-color: var(--eagle-red); color: white;
+    padding: 0.4rem 1.2rem; border-radius: 30px; font-size: 1rem; font-weight: 900;
+    text-transform: uppercase; margin-bottom: 1rem; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .hero-titel {
+    font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 900; text-transform: uppercase;
+    margin: 0 0 1rem 0; line-height: 1.1; text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    color: white;
+  }
+
+  .hero-ondertitel { font-size: clamp(1.1rem, 2vw, 1.3rem); opacity: 0.9; margin-bottom: 0; }
+}
+
+.overlap-container {
+  max-width: 1200px;
+  margin: -4rem auto 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .pagina-hero {
+    margin-top: -87px; padding-top: 87px;
+    min-height: 40vh; padding-bottom: 4rem;
+  }
+  .overlap-container {
+    margin-top: -3rem;
+    padding: 0 1rem;
+  }
+}
