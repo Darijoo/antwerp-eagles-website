@@ -86,69 +86,54 @@ export class Home implements OnInit, AfterViewChecked {
 
     this.weekendUitslagen$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
       map((matches) => {
-        const nu = new Date();
+        const alleUitslagen = matches.filter(
+          (m) =>
+            (!m.type || m.type === 'wedstrijd') &&
+            m.uitslag &&
+            m.uitslag.trim() !== '' &&
+            !(m as any).geannuleerd,
+        );
 
-        // Bereken het meest recente weekend:
-        // - Vrijdagavond 18:00 t/m zondagnacht 23:59
-        // Op maandag t/m donderdag kijken we naar het VORIGE weekend.
-        // Op vrijdag t/m zondag kijken we naar DIT weekend.
-        const dagVanWeek = nu.getDay(); // 0=zo, 1=ma, ..., 5=vr, 6=za
+        if (alleUitslagen.length === 0) return [];
 
-        const weekendStart = new Date(nu);
-        const weekendEinde = new Date(nu);
+        // Zoek de meest recente datum van een wedstrijd met uitslag
+        const meestRecenteMatch = alleUitslagen.reduce((prev, curr) => {
+          return curr.datum.toDate() > prev.datum.toDate() ? curr : prev;
+        });
 
-        if (dagVanWeek >= 1 && dagVanWeek <= 4) {
-          // Ma t/m do → vorig weekend
-          const dagenTerugNaarVrijdag = dagVanWeek + 2; // vr is dag 5, dus ma=3, di=4, wo=5, do=6
-          weekendStart.setDate(nu.getDate() - dagenTerugNaarVrijdag);
-          weekendEinde.setDate(weekendStart.getDate() + 2); // zondag
-        } else if (dagVanWeek === 5) {
-          // Vrijdag → dit weekend
-          weekendStart.setDate(nu.getDate());
-          weekendEinde.setDate(nu.getDate() + 2);
-        } else if (dagVanWeek === 6) {
-          // Zaterdag → dit weekend
-          weekendStart.setDate(nu.getDate() - 1);
-          weekendEinde.setDate(nu.getDate() + 1);
+        const laatsteDatum = meestRecenteMatch.datum.toDate();
+
+        // Bepaal het weekend-venster van die laatste datum
+        // We gaan ervan uit dat een 'weekend' loopt van vrijdag t/m zondag
+        const d = laatsteDatum.getDay(); // 0=zo, 1=ma, ..., 5=vr, 6=za
+        const start = new Date(laatsteDatum);
+        const einde = new Date(laatsteDatum);
+
+        if (d === 0) { // Zondag
+          start.setDate(laatsteDatum.getDate() - 2);
+          einde.setDate(laatsteDatum.getDate());
+        } else if (d === 6) { // Zaterdag
+          start.setDate(laatsteDatum.getDate() - 1);
+          einde.setDate(laatsteDatum.getDate() + 1);
+        } else if (d === 5) { // Vrijdag
+          start.setDate(laatsteDatum.getDate());
+          einde.setDate(laatsteDatum.getDate() + 2);
         } else {
-          // Zondag → dit weekend
-          weekendStart.setDate(nu.getDate() - 2);
-          weekendEinde.setDate(nu.getDate());
+          // Als de match op een weekdag was, pakken we die dag als referentiepunt
+          start.setDate(laatsteDatum.getDate());
+          einde.setDate(laatsteDatum.getDate());
         }
 
-        weekendStart.setHours(0, 0, 0, 0);
-        weekendEinde.setHours(23, 59, 59, 999);
+        start.setHours(0, 0, 0, 0);
+        einde.setHours(23, 59, 59, 999);
 
-        const weekendMatches = matches
-          .filter(
-            (m) =>
-              (!m.type || m.type === 'wedstrijd') &&
-              m.uitslag &&
-              m.uitslag.trim() !== '' &&
-              !(m as any).geannuleerd,
-          )
+        // Geef ALLE matchen terug die in dat specifieke weekend (of die specifieke dag) vallen
+        return alleUitslagen
           .filter((m) => {
-            const d = m.datum.toDate();
-            return d >= weekendStart && d <= weekendEinde;
+            const datum = m.datum.toDate();
+            return datum >= start && datum <= einde;
           })
           .sort((a, b) => a.datum.toDate().getTime() - b.datum.toDate().getTime());
-
-        // Als er geen uitslagen zijn van het weekend, toon dan de 3 meest recente als fallback
-        if (weekendMatches.length === 0) {
-          return matches
-            .filter(
-              (m) =>
-                (!m.type || m.type === 'wedstrijd') &&
-                m.datum.toDate() < nu &&
-                m.uitslag &&
-                m.uitslag.trim() !== '' &&
-                !(m as any).geannuleerd,
-            )
-            .sort((a, b) => b.datum.toDate().getTime() - a.datum.toDate().getTime())
-            .slice(0, 6);
-        }
-
-        return weekendMatches;
       }),
     );
   }
