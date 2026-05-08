@@ -1,13 +1,18 @@
 import { TestBed } from '@angular/core/testing';
+import { NieuwsService } from './nieuws';
+import { Firestore } from '@angular/fire/firestore';
 
-import { Nieuws } from './nieuws';
-
-describe('Nieuws', () => {
-  let service: Nieuws;
+describe('NieuwsService', () => {
+  let service: NieuwsService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(Nieuws);
+    TestBed.configureTestingModule({
+      providers: [
+        NieuwsService,
+        { provide: Firestore, useValue: {} }
+      ]
+    });
+    service = TestBed.inject(NieuwsService);
   });
 
   it('should be created', () => {

@@ -11,33 +11,28 @@
     <div class="formulier-container">
       <h3>{{ bewerkId !== null ? 'Sponsor bewerken' : 'Nieuwe sponsor toevoegen' }}</h3>
       <form (ngSubmit)="opslaan()">
-        <div class="form-groep">
-          <label for="naam">Naam sponsor</label>
-          <input type="text" id="naam" name="naam" [(ngModel)]="nieuweSponsor.naam" required />
+        <div class="form-grid">
+          <div class="form-groep">
+            <label for="naam">Naam sponsor</label>
+            <input type="text" id="naam" name="naam" [(ngModel)]="nieuweSponsor.naam" required />
+          </div>
+          <div class="form-groep">
+            <label for="websiteUrl">Website URL (optioneel)</label>
+            <input
+              type="url"
+              id="websiteUrl"
+              name="websiteUrl"
+              placeholder="https://www.voorbeeld.be"
+              [(ngModel)]="nieuweSponsor.websiteUrl"
+            />
+          </div>
         </div>
-        <div class="form-groep">
-          <label for="websiteUrl">Website URL (optioneel)</label>
-          <input
-            type="url"
-            id="websiteUrl"
-            name="websiteUrl"
-            placeholder="https://www.voorbeeld.be"
-            [(ngModel)]="nieuweSponsor.websiteUrl"
-          />
-        </div>
+
         <div class="form-groep">
           <label for="afbeeldingUrl">Logo (optioneel)</label>
           @if (nieuweSponsor.afbeeldingUrl) {
-            <div class="afbeelding-preview" style="margin-bottom: 10px">
-              <img
-                [src]="nieuweSponsor.afbeeldingUrl"
-                alt="Preview"
-                style="
-                  max-height: 150px;
-                  border-radius: 4px;
-                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                "
-              />
+            <div class="afbeelding-preview">
+              <img [src]="nieuweSponsor.afbeeldingUrl" alt="Preview" />
             </div>
           }
           <input
@@ -48,10 +43,12 @@
             accept="image/*"
           />
         </div>
-        <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
-          <i class="fa-solid fa-floppy-disk"></i>
-          {{ isAanHetOpslaan ? 'Opslaan...' : 'Opslaan' }}
-        </button>
+        <div class="form-acties">
+          <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
+            <i class="fa-solid fa-floppy-disk"></i>
+            {{ isAanHetOpslaan ? 'Opslaan...' : 'Opslaan' }}
+          </button>
+        </div>
       </form>
     </div>
   } @else {

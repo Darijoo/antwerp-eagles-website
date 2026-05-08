@@ -5,18 +5,20 @@ import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { map } from 'rxjs/operators';
+import { ImageOptimizerService } from '../diensten/image-optimizer.service';
 
 @Component({
   selector: 'app-admin-sponsors',
   standalone: true,
   imports: [AsyncPipe, FormsModule],
   templateUrl: './admin-sponsors.html',
-  styleUrls: ['./admin-sponsors.css'],
+  styleUrl: './admin-sponsors.scss',
 })
 export class AdminSponsors {
   private sponsorService = inject(SponsorService);
   private storage = inject(Storage);
   private cdr = inject(ChangeDetectorRef);
+  private imageOptimizer = inject(ImageOptimizerService);
 
   // Pas de methodenaam aan indien nodig (bijv. haalAlleSponsorsOp)
   sponsors$: Observable<Sponsor[]> = this.sponsorService
@@ -76,9 +78,12 @@ export class AdminSponsors {
     try {
       // Upload de afbeelding naar de /sponsors map in Firebase Storage
       if (this.geselecteerdBestand) {
+        // Optimaliseer de afbeelding vóór de upload (max 400px voor sponsors)
+        const geoptimaliseerdBestand = await this.imageOptimizer.resizeForSponsor(this.geselecteerdBestand);
+        
         const bestandsNaam = `sponsors/${Date.now()}_${this.geselecteerdBestand.name}`;
         const opslagRef = ref(this.storage, bestandsNaam);
-        const uploadResultaat = await uploadBytes(opslagRef, this.geselecteerdBestand);
+        const uploadResultaat = await uploadBytes(opslagRef, geoptimaliseerdBestand);
         this.nieuweSponsor.afbeeldingUrl = await getDownloadURL(uploadResultaat.ref);
       }
 

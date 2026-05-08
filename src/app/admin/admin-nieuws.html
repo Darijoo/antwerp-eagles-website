@@ -42,16 +42,8 @@
         <div class="form-groep">
           <label for="afbeeldingUrl">Hoofdfoto (optioneel)</label>
           @if (nieuwBericht.afbeeldingUrl) {
-            <div class="afbeelding-preview" style="margin-bottom: 10px">
-              <img
-                [src]="nieuwBericht.afbeeldingUrl"
-                alt="Preview"
-                style="
-                  max-height: 150px;
-                  border-radius: 4px;
-                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                "
-              />
+            <div class="afbeelding-preview">
+              <img [src]="nieuwBericht.afbeeldingUrl" alt="Preview" />
             </div>
           }
           <input
@@ -119,9 +111,9 @@
       <tbody>
         @for (bericht of nieuwsberichten$ | async; track bericht.id) {
           <tr>
-            <td>{{ bericht.titel }}</td>
-            <td>{{ bericht.datum }}</td>
-            <td class="tabel-acties">
+            <td data-label="Titel">{{ bericht.titel }}</td>
+            <td data-label="Datum">{{ bericht.datum }}</td>
+            <td data-label="Acties" class="tabel-acties">
               <button class="btn-bewerken" (click)="bewerkBericht(bericht)">
                 <i class="fa-solid fa-pen-to-square"></i> Bewerken
               </button>

@@ -27,14 +27,17 @@
     <div class="formulier-container">
       <h3>{{ bewerkId !== null ? 'Team bewerken' : 'Nieuw team toevoegen' }}</h3>
       <form (ngSubmit)="opslaan()">
-        <div class="form-groep">
-          <label for="naam">Teamnaam</label>
-          <input type="text" id="naam" name="naam" [(ngModel)]="nieuwTeam.naam" required />
+        <div class="form-grid">
+          <div class="form-groep">
+            <label for="naam">Teamnaam</label>
+            <input type="text" id="naam" name="naam" [(ngModel)]="nieuwTeam.naam" required />
+          </div>
+          <div class="form-groep">
+            <label for="categorie">Categorie (bijv. U12, Senioren)</label>
+            <input type="text" id="categorie" name="categorie" [(ngModel)]="nieuwTeam.categorie" />
+          </div>
         </div>
-        <div class="form-groep">
-          <label for="categorie">Categorie (bijv. U12, Senioren)</label>
-          <input type="text" id="categorie" name="categorie" [(ngModel)]="nieuwTeam.categorie" />
-        </div>
+
         <div class="form-groep">
           <label for="omschrijving">Omschrijving</label>
           <textarea
@@ -44,105 +47,59 @@
             rows="3"
           ></textarea>
         </div>
-        <div class="form-groep">
-          <label for="coach">Naam Coach</label>
-          <input
-            type="text"
-            id="coach"
-            name="coach"
-            [(ngModel)]="nieuwTeam.coach"
-            placeholder="Bv. John Doe"
-          />
+
+        <div class="form-grid">
+          <div class="form-groep">
+            <label for="coach">Naam Coach</label>
+            <input
+              type="text"
+              id="coach"
+              name="coach"
+              [(ngModel)]="nieuwTeam.coach"
+              placeholder="Bv. John Doe"
+            />
+          </div>
+          <div class="form-groep">
+            <label for="kleur">Kleur in de kalender</label>
+            <input
+              type="color"
+              id="kleur"
+              name="kleur"
+              [(ngModel)]="nieuwTeam.kleur"
+              class="color-picker"
+            />
+          </div>
         </div>
+
         <div class="form-groep">
           <label for="trainingsdagen">Trainingsdagen & Uren</label>
           <div class="trainingen-lijst">
             @for (training of trainingen; track $index) {
-              <div
-                class="training-rij"
-                style="
-                  display: flex;
-                  gap: 0.5rem;
-                  margin-bottom: 0.5rem;
-                  align-items: center;
-                  flex-wrap: wrap;
-                "
-              >
-                <select
-                  [(ngModel)]="training.dag"
-                  name="dag_{{ $index }}"
-                  style="
-                    flex: 2;
-                    margin-bottom: 0;
-                  "
-                >
+              <div class="training-rij">
+                <select [(ngModel)]="training.dag" name="dag_{{ $index }}" class="select-dag">
                   @for (dag of beschikbareDagen; track dag) {
                     <option [value]="dag">{{ dag }}</option>
                   }
                 </select>
-                <input
-                  type="time"
-                  [(ngModel)]="training.start"
-                  name="start_{{ $index }}"
-                  style="
-                    flex: 1;
-                    margin-bottom: 0;
-                    padding: 0.75rem;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    font-size: 1rem;
-                    background-color: white;
-                  "
-                />
-                <span style="font-weight: bold; color: #555">tot</span>
-                <input
-                  type="time"
-                  [(ngModel)]="training.eind"
-                  name="eind_{{ $index }}"
-                  style="
-                    flex: 1;
-                    margin-bottom: 0;
-                    padding: 0.75rem;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    font-size: 1rem;
-                    background-color: white;
-                  "
-                />
-                <button
-                  type="button"
-                  class="btn-verwijderen"
-                  (click)="verwijderTraining($index)"
-                  style="padding: 0.75rem; min-width: 40px; margin-bottom: 0"
-                  aria-label="Verwijder"
-                >
+                <input type="time" [(ngModel)]="training.start" name="start_{{ $index }}" />
+                <span class="tot-separator">tot</span>
+                <input type="time" [(ngModel)]="training.eind" name="eind_{{ $index }}" />
+                <button type="button" class="btn-verwijderen-klein" (click)="verwijderTraining($index)" aria-label="Verwijder">
                   <i class="fa-solid fa-trash"></i>
                 </button>
               </div>
             }
           </div>
-          <button
-            type="button"
-            class="btn-toevoegen"
-            (click)="voegTrainingToe()"
-            style="margin-top: 0.5rem; font-size: 0.9rem; padding: 0.5rem 1rem"
-          >
+          <button type="button" class="btn-toevoegen-secundair" (click)="voegTrainingToe()">
             <i class="fa-solid fa-plus"></i> Trainingsmoment toevoegen
           </button>
         </div>
+
         <div class="form-groep">
           <label for="afbeeldingUrl">Teamfoto (optioneel)</label>
           @if (nieuwTeam.afbeeldingUrl) {
-            <div class="afbeelding-preview" style="margin-bottom: 10px">
-              <img
-                [src]="nieuwTeam.afbeeldingUrl"
-                alt="Preview"
-                style="
-                  max-height: 150px;
-                  border-radius: 4px;
-                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                "
-              />
+            <div class="afbeelding-preview">
+              <img [src]="nieuwTeam.afbeeldingUrl" alt="Preview" />
             </div>
           }
           <input
@@ -153,36 +110,30 @@
             accept="image/*"
           />
         </div>
-        <div class="form-groep">
-          <label for="facebookUrl">Facebook Link (optioneel)</label>
-          <input
-            type="url"
-            id="facebookUrl"
-            name="facebookUrl"
-            [(ngModel)]="nieuwTeam.facebookUrl"
-            placeholder="https://facebook.com/..."
-          />
+
+        <div class="form-grid">
+          <div class="form-groep">
+            <label for="facebookUrl">Facebook Link (optioneel)</label>
+            <input
+              type="url"
+              id="facebookUrl"
+              name="facebookUrl"
+              [(ngModel)]="nieuwTeam.facebookUrl"
+              placeholder="https://facebook.com/..."
+            />
+          </div>
+          <div class="form-groep">
+            <label for="instagramUrl">Instagram Link (optioneel)</label>
+            <input
+              type="url"
+              id="instagramUrl"
+              name="instagramUrl"
+              [(ngModel)]="nieuwTeam.instagramUrl"
+              placeholder="https://instagram.com/..."
+            />
+          </div>
         </div>
-        <div class="form-groep">
-          <label for="instagramUrl">Instagram Link (optioneel)</label>
-          <input
-            type="url"
-            id="instagramUrl"
-            name="instagramUrl"
-            [(ngModel)]="nieuwTeam.instagramUrl"
-            placeholder="https://instagram.com/..."
-          />
-        </div>
-        <div class="form-groep">
-          <label for="kleur">Kleur in de kalender</label>
-          <input
-            type="color"
-            id="kleur"
-            name="kleur"
-            [(ngModel)]="nieuwTeam.kleur"
-            style="height: 40px; padding: 0.2rem; cursor: pointer; width: 100px"
-          />
-        </div>
+
         <div class="form-groep">
           <label for="wbscTeamUrl">WBSC Team URL (voor kalender & roster sync)</label>
           <input
@@ -193,10 +144,13 @@
             placeholder="Bijv. https://www.baseballsoftball.be/en/events/..."
           />
         </div>
-        <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
-          <i class="fa-solid fa-floppy-disk"></i>
-          {{ isAanHetOpslaan ? 'Opslaan...' : 'Opslaan' }}
-        </button>
+        
+        <div class="form-acties">
+          <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
+            <i class="fa-solid fa-floppy-disk"></i>
+            {{ isAanHetOpslaan ? 'Opslaan...' : 'Opslaan' }}
+          </button>
+        </div>
       </form>
     </div>
   } @else {
@@ -221,11 +175,11 @@
             [class.dragging]="draggedIndex === i"
             [class.drag-over]="dragOverIndex === i"
           >
-            <td class="drag-handle" title="Sleep om volgorde aan te passen"><i class="fa-solid fa-grip-vertical"></i></td>
-            <td>{{ team.naam }}</td>
-            <td>{{ team.categorie }}</td>
-            <td>{{ team.omschrijving }}</td>
-            <td class="tabel-acties">
+            <td data-label="Prioriteit" class="drag-handle" title="Sleep om volgorde aan te passen"><i class="fa-solid fa-grip-vertical"></i></td>
+            <td data-label="Teamnaam">{{ team.naam }}</td>
+            <td data-label="Categorie">{{ team.categorie }}</td>
+            <td data-label="Omschrijving">{{ team.omschrijving }}</td>
+            <td data-label="Acties" class="tabel-acties">
               <button class="btn-bewerken" (click)="bewerkTeam(team)">
                 <i class="fa-solid fa-pen-to-square"></i> Bewerken
               </button>

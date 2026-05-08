@@ -1,0 +1,230 @@
+.admin-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: radial-gradient(circle at top right, #f0f4ff, #e6e9f0);
+  font-family: 'Outfit', sans-serif;
+}
+
+/* --- GLASSMORPHISM SIDEBAR --- */
+.admin-sidebar {
+  width: 300px;
+  /* Dark Glass Effect */
+  background: rgba(21, 34, 105, 0.95); 
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.2rem;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 0.8rem 2.5rem 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 2rem;
+
+  .sidebar-logo {
+    width: 50px;
+    height: auto;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+
+    .club-naam {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.2px;
+      line-height: 1.1;
+    }
+
+    .admin-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--eagle-accent);
+      font-weight: 800;
+      margin-top: 4px;
+      opacity: 0.9;
+    }
+  }
+}
+
+.sidebar-nav {
+  flex-grow: 1;
+  overflow-y: auto;
+
+  .nav-category {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.3);
+    margin: 2rem 0 1rem 1.2rem;
+    font-weight: 800;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: 0.4rem;
+
+      a, .logout-button-alt {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.9rem 1.2rem;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        border-radius: 16px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 100%;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        text-align: left;
+        font-family: inherit;
+
+        i {
+          font-size: 1.1rem;
+          width: 20px;
+          text-align: center;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          transform: translateX(5px);
+        }
+
+        &.active {
+          background: rgba(255, 255, 255, 0.2);
+          color: white;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          
+          i { color: var(--eagle-accent); }
+        }
+      }
+
+      .logout-button-alt:hover {
+        background: rgba(153, 25, 25, 0.3);
+        color: #ff9999;
+        i { color: #ff9999; }
+      }
+    }
+  }
+}
+
+/* --- MAIN CONTENT AREA --- */
+.admin-content {
+  flex-grow: 1;
+  padding: 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.admin-header {
+  margin-bottom: 3.5rem;
+  
+  h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 3.2rem;
+    font-weight: 800;
+    color: var(--eagle-blue);
+    margin-bottom: 0.5rem;
+    letter-spacing: -1.5px;
+  }
+
+  p {
+    font-family: 'Outfit', sans-serif;
+    color: #778;
+    font-size: 1.15rem;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+  }
+}
+
+/* --- GLASSMORPHISM CARD FOR CONTENT --- */
+.content-area {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 30px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+  min-height: 65vh;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1024px) {
+  .admin-dashboard {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    .sidebar-brand {
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-nav {
+      .nav-category { display: none; }
+      
+      ul {
+        display: flex;
+        overflow-x: auto;
+        gap: 0.8rem;
+        padding: 0.5rem 0.2rem;
+        scrollbar-width: none;
+        &::-webkit-scrollbar { display: none; }
+
+        li {
+          margin-bottom: 0;
+          white-space: nowrap;
+          
+          a, .logout-button-alt {
+            padding: 1rem 1.5rem; /* Min 44px hit area */
+            font-size: 0.95rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+          }
+        }
+      }
+    }
+  }
+
+  .admin-content {
+    padding: 2rem 1rem;
+  }
+}

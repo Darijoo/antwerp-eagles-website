@@ -1,0 +1,254 @@
+@import './admin-shared.css';
+
+/* --- UNIFORM SPECIFIEKE STYLES --- */
+
+.checkbox-groep {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(21, 34, 105, 0.05);
+  padding: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: 600;
+  }
+}
+
+.prijs-input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+
+  .munt-symbool {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-right: 1px solid #e0e0e0;
+    font-weight: 800;
+    color: var(--eagle-blue);
+  }
+
+  input {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+}
+
+.admin-sub-sectie {
+  background: #fcfcfc;
+  padding: 2rem;
+  border-radius: 20px;
+  border: 1px solid #f0f0f0;
+  margin-bottom: 2.5rem;
+
+  .sub-sectie-titel {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--eagle-blue);
+    margin-bottom: 0.5rem;
+    
+    i { margin-right: 0.5rem; }
+  }
+
+  .sub-sectie-uitleg {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 2rem;
+  }
+}
+
+/* --- WINKELS LIJST --- */
+.winkel-rij {
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px dashed #eee;
+  align-items: flex-end;
+
+  .winkel-veld {
+    flex: 1;
+    &.link-veld { flex: 2; }
+  }
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+/* --- STIP POSITIONEERDER --- */
+.stip-positioneerder {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.slider-vertical-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  height: 400px;
+
+  .slider-vertical {
+    appearance: none;
+    width: 8px;
+    height: 100%;
+    background: #eee;
+    border-radius: 4px;
+    outline: none;
+    writing-mode: vertical-lr;
+    direction: rtl;
+    transform: rotate(180deg);
+    cursor: pointer;
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--eagle-red);
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+  }
+}
+
+.preview-en-horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.live-preview-box {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  border: 5px solid white;
+
+  img {
+    max-height: 450px;
+    display: block;
+  }
+
+  .interactieve-stip {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border: 3px solid white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+    background: var(--eagle-blue);
+    transition: left 0.1s ease-out, top 0.1s ease-out;
+
+    &.verplicht { background: var(--eagle-red); }
+  }
+}
+
+.slider-horizontal-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 1.5rem;
+
+  .slider-horizontal {
+    flex: 1;
+    appearance: none;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--eagle-red);
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+  }
+}
+
+.as-label { font-weight: 800; font-size: 0.8rem; color: #bbb; text-transform: uppercase; letter-spacing: 1px; }
+.percentage-label { font-family: 'Outfit', sans-serif; font-weight: 900; color: var(--eagle-blue); font-size: 1.2rem; min-width: 50px; text-align: center; }
+
+/* --- UPLOAD KAARTEN --- */
+.upload-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.preview-foto-container {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  border: 4px solid white;
+  
+  img {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+  }
+}
+
+.geen-foto-placeholder {
+  height: 200px;
+  background: #f8f9fa;
+  border: 2px dashed #ddd;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* --- BADGES --- */
+.badge {
+  background: #f0f2f5;
+  color: #555;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.is-verplicht {
+    background: rgba(211, 47, 47, 0.1);
+    color: var(--eagle-red);
+  }
+}

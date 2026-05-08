@@ -11,7 +11,7 @@ import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage
   standalone: true,
   imports: [AsyncPipe, FormsModule],
   templateUrl: './admin-uniform.html',
-  styleUrls: ['./admin-uniform.css'],
+  styleUrl: './admin-uniform.scss',
 })
 export class AdminUniform {
   private uniformService = inject(UniformService);

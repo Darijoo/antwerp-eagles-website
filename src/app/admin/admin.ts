@@ -7,7 +7,7 @@ import { AuthService } from '../diensten/auth.service';
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './admin.html',
-  styleUrls: ['./admin.css'],
+  styleUrls: ['./admin.scss'],
 })
 export class Admin {
   private authService = inject(AuthService);

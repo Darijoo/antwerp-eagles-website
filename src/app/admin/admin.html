@@ -1,64 +1,71 @@
-<style>
-  @media (max-width: 768px) {
-    .admin-dashboard {
-      display: flex;
-      flex-direction: column;
-      max-width: 100%;
-      overflow-x: hidden;
-    }
-    .admin-sidebar {
-      width: 100%;
-      min-height: auto;
-      padding: 1rem;
-      border-right: none;
-      border-bottom: 2px solid #eee;
-      box-sizing: border-box;
-    }
-    .admin-sidebar nav ul {
-      display: flex;
-      overflow-x: auto;
-      gap: 1rem;
-      padding-bottom: 0.5rem;
-      margin-bottom: 0;
-      list-style: none;
-      padding-left: 0;
-    }
-    .admin-sidebar nav ul li {
-      margin-bottom: 0;
-      white-space: nowrap;
-    }
-    .admin-content {
-      padding: 1rem;
-      box-sizing: border-box;
-      max-width: 100%;
-    }
-    .admin-header h1 {
-      font-size: 1.5rem;
-    }
-  }
-</style>
 <div class="admin-dashboard">
   <aside class="admin-sidebar">
-    <h3>Beheer</h3>
-    <nav>
+    <div class="sidebar-brand">
+      <img src="/eagles_logo_transparant.png" alt="Logo" class="sidebar-logo">
+      <div class="brand-text">
+        <span class="club-naam">Antwerp Eagles</span>
+        <span class="admin-label">Admin Nest</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-category">Content Beheer</div>
       <ul>
-        <li><a routerLink="/admin/nieuws" routerLinkActive="active">Nieuwsberichten</a></li>
-        <li><a routerLink="/admin/teams" routerLinkActive="active">Teams</a></li>
-        <li><a routerLink="/admin/uniform" routerLinkActive="active">Uniform Gids</a></li>
-        <li><a routerLink="/admin/sponsors" routerLinkActive="active">Sponsors</a></li>
-        <li><a routerLink="/admin/kalender" routerLinkActive="active">Kalender</a></li>
+        <li>
+          <a routerLink="/admin/nieuws" routerLinkActive="active">
+            <i class="fa-solid fa-newspaper"></i>
+            <span>Nieuws Artikels</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/kalender" routerLinkActive="active">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>Kalender</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-category">Club Beheer</div>
+      <ul>
+        <li>
+          <a routerLink="/admin/teams" routerLinkActive="active">
+            <i class="fa-solid fa-users-gear"></i>
+            <span>Teams & Spelers</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/uniform" routerLinkActive="active">
+            <i class="fa-solid fa-shirt"></i>
+            <span>Uniform Gids</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/sponsors" routerLinkActive="active">
+            <i class="fa-solid fa-handshake-angle"></i>
+            <span>Sponsors</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="nav-category">Systeem</div>
+      <ul>
+        <li>
+          <button class="logout-button-alt" (click)="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Uitloggen</span>
+          </button>
+        </li>
       </ul>
     </nav>
-    <button class="logout-button" (click)="logout()">Uitloggen</button>
   </aside>
 
   <main class="admin-content">
     <header class="admin-header">
-      <h1>Welkom, Beheerder!</h1>
-      <p>Selecteer een optie in het menu om de website te beheren.</p>
+      <h1>Dashboard</h1>
+      <p>Welkom terug! Beheer hier alle content van de Antwerp Eagles website.</p>
     </header>
 
-    <div class="content-area">
+    <div class="content-area reveal-animatie">
       <router-outlet></router-outlet>
     </div>
   </main>

@@ -14,7 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './admin-teams.html',
-  styleUrls: ['./admin-teams.css'],
+  styleUrl: './admin-teams.scss',
 })
 export class AdminTeams implements OnInit {
   private teamService = inject(TeamService);

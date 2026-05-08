@@ -30,14 +30,10 @@ export class AutoSyncService {
       }
 
       if (nu - laatsteSync > this.SYNC_INTERVAL_MS) {
-        console.log('Automatische kalender sync gestart op de achtergrond...');
         // Update de timestamp direct zodat andere gebruikers niet tegelijk een sync starten
         await setDoc(syncDocRef, { laatsteSync: nu });
         
         await this.voerSyncUit();
-        console.log('Automatische kalender sync succesvol afgerond!');
-      } else {
-        console.log('Kalender is recent nog gesynct. Volgende automatische sync over:', Math.round((this.SYNC_INTERVAL_MS - (nu - laatsteSync)) / 1000 / 60), 'minuten.');
       }
     } catch (err: any) {
       // Negeren van permissie fouten: enkel ingelogde admins hebben rechten om de globale sync timestamp aan te passen

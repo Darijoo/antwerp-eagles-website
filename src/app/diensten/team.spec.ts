@@ -1,13 +1,18 @@
 import { TestBed } from '@angular/core/testing';
+import { TeamService } from './team';
+import { Firestore } from '@angular/fire/firestore';
 
-import { Team } from './team';
-
-describe('Team', () => {
-  let service: Team;
+describe('TeamService', () => {
+  let service: TeamService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(Team);
+    TestBed.configureTestingModule({
+      providers: [
+        TeamService,
+        { provide: Firestore, useValue: {} }
+      ]
+    });
+    service = TestBed.inject(TeamService);
   });
 
   it('should be created', () => {

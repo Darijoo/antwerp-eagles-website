@@ -196,7 +196,7 @@
 /* --- MOBIELE OPTIMALISATIE --- */
 @media (max-width: 768px) {
   .navbar-placeholder {
-    height: 87px; /* Mobiele hoogte */
+    height: 80px; /* Consistente mobiele hoogte */
   }
 
   .navbar {
@@ -282,8 +282,9 @@
   }
 
   .nav-links > li > a {
-    padding: 0.8rem 1.5rem; /* Nóg iets strakker voor dat echte 'native app' gevoel */
-    font-size: 1.05rem;
+    padding: 1.2rem 2rem; /* Grotere touch-targets voor duimen (min 44px) */
+    font-size: 1.1rem;
+    font-family: 'Outfit', sans-serif;
     justify-content: space-between;
   }
 

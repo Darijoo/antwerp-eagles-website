@@ -27,27 +27,21 @@
           ></textarea>
         </div>
 
-        <div
-          class="form-groep"
-          style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem"
-        >
+        <div class="form-groep checkbox-groep">
           <input
             type="checkbox"
             id="verplicht"
             name="verplicht"
             [(ngModel)]="nieuwOnderdeel.verplicht"
-            style="width: auto; transform: scale(1.5); cursor: pointer"
           />
-          <label for="verplicht" style="margin: 0; cursor: pointer"
-            >Dit kledingstuk is verplicht tijdens wedstrijden</label
-          >
+          <label for="verplicht">Dit kledingstuk is verplicht tijdens wedstrijden</label>
         </div>
 
         <div class="form-grid">
           <div class="form-groep">
             <label for="prijsIndicatie">Prijsindicatie</label>
-            <div style="display: flex; align-items: center; border: 1px solid #ccc; border-radius: 4px; overflow: hidden; background-color: #fff;">
-              <span style="padding: 0.75rem 1rem; background-color: #f8f9fa; border-right: 1px solid #ccc; font-weight: bold; color: #555;">&euro;</span>
+            <div class="prijs-input-wrapper">
+              <span class="munt-symbool">&euro;</span>
               <input
                 type="number"
                 min="0"
@@ -56,7 +50,6 @@
                 name="prijsIndicatie"
                 [(ngModel)]="nieuwOnderdeel.prijsIndicatie"
                 placeholder="0.00"
-                style="border: none; border-radius: 0; outline: none; margin: 0; width: 100%; box-shadow: none;"
                 required
               />
             </div>
@@ -70,114 +63,100 @@
           </div>
         </div>
 
-        <div class="form-groep" style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 2rem;">
-          <label style="color: var(--eagle-blue); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-shop"></i> Verkrijgbaar bij (Winkels)</label>
-          <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: #555;">Voeg hier de webshops of winkels toe op volgorde van beschikbaarheid.</p>
+        <div class="admin-sub-sectie">
+          <label class="sub-sectie-titel"><i class="fa-solid fa-shop"></i> Verkrijgbaar bij (Winkels)</label>
+          <p class="sub-sectie-uitleg">Voeg hier de webshops of winkels toe op volgorde van beschikbaarheid.</p>
 
-          @for (winkel of nieuwOnderdeel.winkels; track $index) {
-            <div style="display: flex; gap: 1rem; align-items: flex-end; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed #ccc;">
-              <div style="flex: 1;">
-                <label style="font-size: 0.9rem; color: #555;">Naam Winkel</label>
-                <input type="text" [(ngModel)]="winkel.naam" [name]="'winkelNaam_' + $index" placeholder="bv. Forelle" style="margin-bottom: 0;" required />
+          <div class="winkels-lijst">
+            @for (winkel of nieuwOnderdeel.winkels; track $index) {
+              <div class="winkel-rij">
+                <div class="winkel-veld">
+                  <label>Naam Winkel</label>
+                  <input type="text" [(ngModel)]="winkel.naam" [name]="'winkelNaam_' + $index" placeholder="bv. Forelle" required />
+                </div>
+                <div class="winkel-veld link-veld">
+                  <label>Directe Link (URL)</label>
+                  <input type="text" [(ngModel)]="winkel.link" [name]="'winkelLink_' + $index" placeholder="Optioneel (https://...)" />
+                </div>
+                <button type="button" class="btn-verwijderen-klein" (click)="verwijderWinkel($index)" title="Verwijder winkel">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
               </div>
-              <div style="flex: 2;">
-                <label style="font-size: 0.9rem; color: #555;">Directe Link (URL)</label>
-                <input type="text" [(ngModel)]="winkel.link" [name]="'winkelLink_' + $index" placeholder="Optioneel (https://...)" style="margin-bottom: 0;" />
-              </div>
-              <button type="button" class="btn-verwijderen" (click)="verwijderWinkel($index)" style="margin-bottom: 0; padding: 0.75rem 1rem;" title="Verwijder winkel">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </div>
-          }
+            }
+          </div>
           
-          <button type="button" (click)="voegWinkelToe()" style="display: inline-block; background: var(--eagle-blue); color: white; border: none; padding: 0.6rem 1rem; border-radius: 6px; font-weight: bold; cursor: pointer;">
-            <i class="fa-solid fa-plus" style="margin-right: 6px;"></i> Extra winkel toevoegen
+          <button type="button" class="btn-toevoegen-secundair" (click)="voegWinkelToe()">
+            <i class="fa-solid fa-plus"></i> Extra winkel toevoegen
           </button>
         </div>
 
-        <div
-          class="form-groep"
-          style="
-            background: var(--bg-light);
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-          "
-        >
-          <label style="color: var(--eagle-blue); font-size: 1.1rem; margin-bottom: 1rem"
-            ><i class="fa-solid fa-crosshairs"></i> Positie van de stip op de foto</label
-          >
-          <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: #555">
+        <div class="admin-sub-sectie">
+          <label class="sub-sectie-titel"><i class="fa-solid fa-crosshairs"></i> Positie van de stip op de foto</label>
+          <p class="sub-sectie-uitleg">
             Schuif de balkjes om te bepalen waar de interactieve rode stip op de uniform-foto moet
-            komen te staan. Je ziet hiernaast direct een live preview!
+            komen te staan. Je ziet hieronder direct een live preview!
           </p>
 
-          <div class="live-preview-sectie" style="display: flex; justify-content: center; margin-top: 1.5rem;">
-            <div style="display: flex; gap: 1.5rem; align-items: stretch;">
-              <!-- Y-Axis Slider (Vertical) -->
-              <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding-bottom: 2rem;">
-                <span style="font-weight: bold; color: var(--eagle-red); font-size: 0.9rem;">{{ nieuwOnderdeel.top }}%</span>
+          <div class="stip-positioneerder">
+            <div class="slider-vertical-container">
+              <span class="percentage-label">{{ nieuwOnderdeel.top }}%</span>
+              <input 
+                type="range" 
+                min="0" 
+                max="100" 
+                [(ngModel)]="nieuwOnderdeel.top" 
+                name="top" 
+                class="slider-vertical"
+              />
+              <span class="as-label">Boven / Onder</span>
+            </div>
+
+            <div class="preview-en-horizontal">
+              <div class="live-preview-box">
+                <img 
+                  [src]="huidigeAfbeeldingen[nieuwOnderdeel.categorie || 'Baseball'] || 'https://images.unsplash.com/photo-1508344928928-7165b67de128?auto=format&fit=crop&w=600&q=80'" 
+                  alt="Live Preview" 
+                />
+                <div class="interactieve-stip"
+                     [style.left.%]="nieuwOnderdeel.left"
+                     [style.top.%]="nieuwOnderdeel.top"
+                     [class.verplicht]="nieuwOnderdeel.verplicht">
+                </div>
+              </div>
+
+              <div class="slider-horizontal-container">
+                <span class="as-label">Links / Rechts</span>
                 <input 
                   type="range" 
                   min="0" 
                   max="100" 
-                  orient="vertical" 
-                  [(ngModel)]="nieuwOnderdeel.top" 
-                  name="top" 
-                  style="flex: 1; min-height: 250px; width: 20px; cursor: pointer; writing-mode: vertical-lr; direction: rtl; transform: rotate(180deg);" 
+                  [(ngModel)]="nieuwOnderdeel.left" 
+                  name="left" 
+                  class="slider-horizontal"
                 />
-                <span style="font-weight: bold; color: var(--text-dark); font-size: 0.9rem; writing-mode: vertical-lr; transform: rotate(180deg); margin-top: 0.5rem;">Boven / Onder</span>
+                <span class="percentage-label">{{ nieuwOnderdeel.left }}%</span>
               </div>
-
-              <!-- Image + X-Axis Slider -->
-              <div style="display: flex; flex-direction: column; gap: 1.5rem; align-items: center;">
-                <!-- LIVE PREVIEW -->
-                <div style="position: relative; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block;">
-                <img 
-                  [src]="huidigeAfbeeldingen[nieuwOnderdeel.categorie || 'Baseball'] || 'https://images.unsplash.com/photo-1508344928928-7165b67de128?auto=format&fit=crop&w=600&q=80'" 
-                  alt="Live Preview" 
-                  style="max-width: 100%; max-height: 400px; width: auto; height: auto; display: block; border-radius: 8px;" 
-                />
-                <div style="position: absolute; width: 20px; height: 20px; border: 3px solid white; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4); z-index: 10; transition: all 0.1s ease-out;"
-                     [style.left.%]="nieuwOnderdeel.left"
-                     [style.top.%]="nieuwOnderdeel.top"
-                     [style.background-color]="nieuwOnderdeel.verplicht ? 'var(--eagle-red)' : 'var(--eagle-blue)'">
-                </div>
-              </div>
-
-                <!-- X-Axis Slider (Horizontal) -->
-                <div style="display: flex; width: 100%; align-items: center; gap: 1rem;">
-                  <span style="font-weight: bold; color: var(--text-dark); font-size: 0.9rem;">Links / Rechts</span>
-                  <input 
-                    type="range" 
-                    min="0" 
-                    max="100" 
-                    [(ngModel)]="nieuwOnderdeel.left" 
-                    name="left" 
-                    style="flex: 1; cursor: pointer;" 
-                  />
-                  <span style="font-weight: bold; color: var(--eagle-red); font-size: 0.9rem; min-width: 35px;">{{ nieuwOnderdeel.left }}%</span>
-                </div>
             </div>
           </div>
         </div>
-      </div>
 
-        <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
-          <i class="fa-solid fa-floppy-disk"></i>
-          {{ isAanHetOpslaan ? 'Opslaan...' : 'Opslaan' }}
-        </button>
+        <div class="form-acties">
+          <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
+            <i class="fa-solid fa-floppy-disk"></i>
+            {{ isAanHetOpslaan ? 'Opslaan...' : 'Opslaan' }}
+          </button>
+        </div>
       </form>
     </div>
   } @else {
     <!-- FOTO UPLOAD SECTIE -->
-    <div style="background: white; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-      <h3 style="margin-top: 0; color: var(--eagle-blue); margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 1rem;">
+    <div class="admin-sub-sectie upload-kaarten">
+      <h3 class="sub-sectie-titel">
         <i class="fa-regular fa-image"></i> Achtergrondfoto per Categorie
       </h3>
       
-      <div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start;">
-        <div style="flex: 1; min-width: 250px;">
+      <div class="upload-grid">
+        <div class="upload-controls">
           <div class="form-groep">
             <label for="fotoCategorie">Kies een categorie</label>
             <select id="fotoCategorie" [(ngModel)]="geselecteerdeCategorieFoto">
@@ -196,15 +175,14 @@
           </button>
         </div>
         
-        <div style="flex: 1; min-width: 250px; text-align: center;">
-          <label style="display: block; font-weight: bold; margin-bottom: 0.5rem; color: var(--text-dark);">
-            Huidige Foto ({{ geselecteerdeCategorieFoto }})
-          </label>
-          
+        <div class="upload-preview-box">
+          <label>Huidige Foto ({{ geselecteerdeCategorieFoto }})</label>
           @if (huidigeAfbeeldingen[geselecteerdeCategorieFoto]) {
-            <img [src]="huidigeAfbeeldingen[geselecteerdeCategorieFoto]" alt="Preview" style="max-height: 200px; width: auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" />
+            <div class="preview-foto-container">
+              <img [src]="huidigeAfbeeldingen[geselecteerdeCategorieFoto]" alt="Preview" />
+            </div>
           } @else {
-            <div style="height: 200px; background: #f8f9fa; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999; padding: 1rem;">
+            <div class="geen-foto-placeholder">
               Geen eigen foto ingesteld (standaard stockfoto wordt gebruikt)
             </div>
           }
@@ -230,22 +208,18 @@
               <strong>{{ item.naam }}</strong>
             </td>
             <td>
-              <span class="badge" style="background: #e2e8f0; color: #333; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold;">{{ item.categorie || 'Baseball' }}</span>
+              <span class="badge">{{ item.categorie || 'Baseball' }}</span>
             </td>
             <td>
-              <span
-                style="padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold"
-                [style.background-color]="item.verplicht ? '#ffebee' : '#e3f2fd'"
-                [style.color]="item.verplicht ? 'var(--eagle-red)' : 'var(--eagle-blue)'"
-              >
+              <span class="badge" [class.is-verplicht]="item.verplicht">
                 {{ item.verplicht ? 'JA' : 'NEE' }}
               </span>
             </td>
             <td>
               @if (item.winkels && item.winkels.length > 0) {
-                <span style="font-size: 0.9rem;">{{ item.winkels.length }} winkel(s)</span>
+                <span>{{ item.winkels.length }} winkel(s)</span>
               } @else if (item.winkelNaam) {
-                <span style="font-size: 0.9rem;">{{ item.winkelNaam }}</span>
+                <span>{{ item.winkelNaam }}</span>
               } @else {
                 -
               }
@@ -261,7 +235,7 @@
           </tr>
         } @empty {
           <tr>
-            <td colspan="4">Je hebt nog geen uitrusting toegevoegd.</td>
+            <td colspan="5">Je hebt nog geen uitrusting toegevoegd.</td>
           </tr>
         }
       </tbody>

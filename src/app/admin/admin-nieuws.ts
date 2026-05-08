@@ -5,18 +5,20 @@ import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { map } from 'rxjs/operators';
+import { ImageOptimizerService } from '../diensten/image-optimizer.service';
 
 @Component({
   selector: 'app-admin-nieuws',
   standalone: true,
   imports: [AsyncPipe, FormsModule],
   templateUrl: './admin-nieuws.html',
-  styleUrls: ['./admin-nieuws.css'],
+  styleUrl: './admin-nieuws.scss',
 })
 export class AdminNieuws {
   private nieuwsService = inject(NieuwsService);
   private storage = inject(Storage);
   private cdr = inject(ChangeDetectorRef);
+  private imageOptimizer = inject(ImageOptimizerService);
 
   // Data direct ophalen tijdens de initialisatie (dit valt wél binnen de Injection Context)
   nieuwsberichten$: Observable<NieuwsBericht[]> = this.nieuwsService
@@ -102,10 +104,13 @@ export class AdminNieuws {
     try {
       // 1. Upload de afbeelding naar Firebase Storage als er een nieuwe is geselecteerd
       if (this.geselecteerdBestand) {
+        // Optimaliseer de afbeelding vóór de upload (max 1000px voor nieuws)
+        const geoptimaliseerdBestand = await this.imageOptimizer.resizeForNews(this.geselecteerdBestand);
+        
         const bestandsNaam = `nieuws/${Date.now()}_${this.geselecteerdBestand.name}`;
         const opslagRef = ref(this.storage, bestandsNaam);
 
-        const uploadResultaat = await uploadBytes(opslagRef, this.geselecteerdBestand);
+        const uploadResultaat = await uploadBytes(opslagRef, geoptimaliseerdBestand);
         const downloadUrl = await getDownloadURL(uploadResultaat.ref);
 
         // Vervang de Base64 tekst met de échte URL van Firebase
@@ -119,9 +124,12 @@ export class AdminNieuws {
         }
 
         for (const file of this.geselecteerdeExtraBestanden) {
+          // Optimaliseer ook de extra afbeeldingen (max 1000px)
+          const geoptimaliseerdBestand = await this.imageOptimizer.resizeForNews(file);
+          
           const bestandsNaam = `nieuws/galerij/${Date.now()}_${file.name}`;
           const opslagRef = ref(this.storage, bestandsNaam);
-          const uploadResultaat = await uploadBytes(opslagRef, file);
+          const uploadResultaat = await uploadBytes(opslagRef, geoptimaliseerdBestand);
           const url = await getDownloadURL(uploadResultaat.ref);
           this.nieuwBericht.extraAfbeeldingen.push(url);
         }

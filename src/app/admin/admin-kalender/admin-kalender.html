@@ -5,56 +5,43 @@
     </div>
   }
 
-  <h2>Kalender Beheren</h2>
-  <p>Voeg hier nieuwe wedstrijden toe of beheer bestaande wedstrijden.</p>
+  <h2>Agenda & Kalender</h2>
+  <p>Beheer hier alle wedstrijden, evenementen en club-activiteiten.</p>
 
   <div class="admin-grid">
     <!-- Formulier voor nieuwe wedstrijd -->
-    <div class="admin-kaart">
-      <h3>{{ bewerkId ? 'Wedstrijd Bewerken' : 'Nieuwe Wedstrijd Toevoegen' }}</h3>
+    <div class="admin-kaart reveal-animatie">
+      <h3>{{ bewerkId ? 'Bewerken' : 'Nieuw Item' }}</h3>
       <form [formGroup]="wedstrijdForm" (ngSubmit)="onSubmit()">
-        <div class="form-group type-switch">
+        <div class="type-switch">
           <label> <input type="radio" formControlName="type" value="wedstrijd" /> Wedstrijd </label>
           <label>
-            <input type="radio" formControlName="type" value="evenement" /> Evenement / Activiteit
+            <input type="radio" formControlName="type" value="evenement" /> Evenement
           </label>
         </div>
 
-        <div
-          class="form-group"
-          style="
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1.5rem;
-            background: #fdf2f2;
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid #fadbd8;
-          "
-        >
+        <div class="geannuleerd-check">
           <input
             type="checkbox"
             id="geannuleerd"
             formControlName="geannuleerd"
-            style="width: auto; transform: scale(1.5); cursor: pointer"
           />
-          <label for="geannuleerd" style="margin: 0; cursor: pointer; color: var(--eagle-red)">
-            Deze activiteit is geannuleerd
-          </label>
+          <label for="geannuleerd">Deze activiteit is geannuleerd</label>
         </div>
 
-        <div class="form-group">
-          <label for="datum">Datum</label>
-          <input type="date" id="datum" formControlName="datum" />
-        </div>
-        <div class="form-group">
-          <label for="tijd">Tijd</label>
-          <input type="time" id="tijd" formControlName="tijd" />
+        <div class="form-grid">
+          <div class="form-groep">
+            <label for="datum">Datum</label>
+            <input type="date" id="datum" formControlName="datum" />
+          </div>
+          <div class="form-groep">
+            <label for="tijd">Tijd</label>
+            <input type="time" id="tijd" formControlName="tijd" />
+          </div>
         </div>
 
         @if (wedstrijdForm.get('type')?.value === 'wedstrijd') {
-          <div class="form-group">
+          <div class="form-groep">
             <label for="team">Welk Team speelt er?</label>
             <select id="team" formControlName="team">
               <option value="">-- Geen specifiek team --</option>
@@ -63,41 +50,31 @@
               }
             </select>
           </div>
-          <div class="form-group">
-            <label for="thuisploeg">Thuisploeg</label>
-            <input type="text" id="thuisploeg" formControlName="thuisploeg" />
+          <div class="form-grid">
+            <div class="form-groep">
+              <label for="thuisploeg">Thuisploeg</label>
+              <input type="text" id="thuisploeg" formControlName="thuisploeg" />
+            </div>
+            <div class="form-groep">
+              <label for="uitploeg">Uitploeg</label>
+              <input type="text" id="uitploeg" formControlName="uitploeg" />
+            </div>
           </div>
-          <div class="form-group">
-            <label for="uitploeg">Uitploeg</label>
-            <input type="text" id="uitploeg" formControlName="uitploeg" />
-          </div>
-          <div class="form-group">
+          <div class="form-groep">
             <label for="uitslag">Uitslag (optioneel)</label>
             <input type="text" id="uitslag" formControlName="uitslag" placeholder="bv. 10 - 5" />
           </div>
-          <div class="form-group" style="margin-top: -0.5rem; margin-bottom: 1.5rem">
-            <label
-              style="
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                cursor: pointer;
-                font-weight: normal;
-                font-size: 0.9rem;
-                color: var(--eagle-blue);
-              "
-            >
-              <input
-                type="checkbox"
-                id="isHandmatigBewerkt"
-                formControlName="isHandmatigBewerkt"
-                style="width: auto; transform: scale(1.2); margin: 0; cursor: pointer"
-              />
-              Score vastzetten (niet meer overschrijven bij Kalender Sync)
-            </label>
-          </div>
+          
+          <label class="handmatig-check">
+            <input
+              type="checkbox"
+              id="isHandmatigBewerkt"
+              formControlName="isHandmatigBewerkt"
+            />
+            Score vastzetten (niet overschrijven bij Sync)
+          </label>
         } @else {
-          <div class="form-group">
+          <div class="form-groep">
             <label for="titel">Titel Evenement</label>
             <input
               type="text"
@@ -106,7 +83,7 @@
               placeholder="Bv. Clubfeest, Mosselfestijn"
             />
           </div>
-          <div class="form-group">
+          <div class="form-groep">
             <label for="omschrijving">Omschrijving (optioneel)</label>
             <textarea
               id="omschrijving"
@@ -115,7 +92,7 @@
               placeholder="Wat is er te doen?"
             ></textarea>
           </div>
-          <div class="form-group">
+          <div class="form-groep">
             <label for="inschrijfLink">Inschrijflink (optioneel)</label>
             <input
               type="url"
@@ -124,19 +101,11 @@
               placeholder="Bv. https://forms.gle/..."
             />
           </div>
-          <div class="form-group">
+          <div class="form-groep">
             <label for="posterUrl">Event Poster (optioneel)</label>
             @if (wedstrijdForm.get('posterUrl')?.value) {
-              <div class="afbeelding-preview" style="margin-bottom: 10px">
-                <img
-                  [src]="wedstrijdForm.get('posterUrl')?.value"
-                  alt="Poster Preview"
-                  style="
-                    max-height: 150px;
-                    border-radius: 4px;
-                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                  "
-                />
+              <div class="afbeelding-preview">
+                <img [src]="wedstrijdForm.get('posterUrl')?.value" alt="Poster Preview" />
               </div>
             }
             <input
@@ -148,17 +117,18 @@
           </div>
         }
 
-        <div class="form-group">
+        <div class="form-groep">
           <label for="locatie">Locatie</label>
           <input type="text" id="locatie" formControlName="locatie" />
         </div>
+
         <div class="form-acties">
           <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
             <i class="fa-solid fa-floppy-disk"></i>
-            {{ isAanHetOpslaan ? 'Opslaan...' : (bewerkId ? 'Opslaan' : 'Toevoegen') }}
+            {{ isAanHetOpslaan ? 'Bezig...' : (bewerkId ? 'Opslaan' : 'Toevoegen') }}
           </button>
           @if (bewerkId) {
-            <button type="button" class="btn-toevoegen" (click)="annuleerBewerken()">
+            <button type="button" class="btn-annuleren" (click)="annuleerBewerken()">
               <i class="fa-solid fa-xmark"></i> Annuleren
             </button>
           }
@@ -167,26 +137,15 @@
     </div>
 
     <!-- Lijst van bestaande wedstrijden -->
-    <div class="admin-kaart lijst-kaart">
-      <div
-        style="
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          border-bottom: 1px solid #eee;
-          margin-bottom: 1.5rem;
-          padding-bottom: 1rem;
-          flex-wrap: wrap;
-          gap: 1rem;
-        "
-      >
-        <h3 style="margin: 0; border-bottom: none; padding-bottom: 0">Bestaande Agenda Items</h3>
+    <div class="admin-kaart lijst-kaart reveal-animatie">
+      <div class="actie-balk">
+        <h3>Bestaande Items</h3>
         <button class="btn-verwijderen" (click)="verwijderGefilterd()">
           <i class="fa-solid fa-trash"></i>
           @if ((filterType$ | async) || (filterTeam$ | async)) {
-            Gefilterde Items Verwijderen
+            Gefilterd Wissen
           } @else {
-            Alles Verwijderen
+            Alles Wissen
           }
         </button>
       </div>
@@ -194,8 +153,8 @@
       <div class="admin-filters">
         <select (change)="onFilterTypeWijziging($event)" [value]="filterType$ | async">
           <option value="">Alle Types</option>
-          <option value="wedstrijd">Enkel Wedstrijden</option>
-          <option value="evenement">Enkel Evenementen</option>
+          <option value="wedstrijd">Wedstrijden</option>
+          <option value="evenement">Evenementen</option>
         </select>
 
         <select
@@ -209,25 +168,13 @@
           }
         </select>
 
-        <label
-          style="
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            white-space: nowrap;
-            font-weight: bold;
-            color: var(--eagle-blue);
-            padding: 0.5rem;
-          "
-        >
+        <label class="filter-label">
           <input
             type="checkbox"
             [checked]="toonVerledenEvents$ | async"
             (change)="toggleVerledenEvents()"
-            style="width: auto; transform: scale(1.2); padding: 0; margin: 0"
           />
-          Toon verleden events
+          Verleden tonen
         </label>
       </div>
 
@@ -237,33 +184,32 @@
             <div class="item-info">
               <strong>{{ getDatum(wedstrijd.datum) | date: 'dd-MM-yyyy' }}</strong> -
               @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
-                <span class="badge">Wedstrijd</span>
+                <span class="badge">Match</span>
                 @if (wedstrijd.team) {
                   <span class="badge team-badge">{{ wedstrijd.team }}</span>
                 }
                 @if ($any(wedstrijd).geannuleerd) {
-                  <span class="badge" style="background-color: var(--eagle-red)">Geannuleerd</span>
+                  <span class="badge geannuleerd">GEANNULEERD</span>
                 }
-                {{ cleanTeamNaam(wedstrijd.thuisploeg) }} vs
-                {{ cleanTeamNaam(wedstrijd.uitploeg) }}
+                {{ cleanTeamNaam(wedstrijd.thuisploeg) }} vs {{ cleanTeamNaam(wedstrijd.uitploeg) }}
               } @else {
-                <span class="badge evenement">Evenement</span> {{ wedstrijd.titel }}
+                <span class="badge evenement">EVENT</span> {{ wedstrijd.titel }}
                 @if ($any(wedstrijd).geannuleerd) {
-                  <span class="badge" style="background-color: var(--eagle-red)">Geannuleerd</span>
+                  <span class="badge geannuleerd">GEANNULEERD</span>
                 }
               }
             </div>
             <div class="item-acties">
-              <button (click)="bewerkWedstrijd(wedstrijd)" class="btn-bewerken">
-                <i class="fa-solid fa-pen-to-square"></i> Bewerken
+              <button (click)="bewerkWedstrijd(wedstrijd)" class="btn-bewerken" title="Bewerken">
+                <i class="fa-solid fa-pen-to-square"></i>
               </button>
-              <button (click)="verwijderWedstrijd(wedstrijd.id!)" class="btn-verwijderen">
-                <i class="fa-solid fa-trash"></i> Verwijder
+              <button (click)="verwijderWedstrijd(wedstrijd.id!)" class="btn-verwijderen" title="Verwijderen">
+                <i class="fa-solid fa-trash"></i>
               </button>
             </div>
           </div>
         } @empty {
-          <p>Nog geen wedstrijden toegevoegd.</p>
+          <p>Geen items gevonden.</p>
         }
       </div>
     </div>

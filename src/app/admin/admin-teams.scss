@@ -1,0 +1,115 @@
+@import './admin-shared.css';
+
+/* --- TEAM SPECIFIEKE FORM ELEMENTEN --- */
+.training-rij {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+  background: #fcfcfc;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+
+  .select-dag { flex: 2; }
+  input[type="time"] { flex: 1; }
+  .tot-separator { font-weight: 800; color: #888; font-size: 0.8rem; text-transform: uppercase; }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+    
+    .tot-separator {
+      text-align: center;
+      padding: 0.2rem 0;
+    }
+  }
+}
+
+.btn-verwijderen-klein {
+  background: rgba(211, 47, 47, 0.1);
+  color: var(--eagle-red);
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--eagle-red);
+    color: white;
+  }
+}
+
+.btn-toevoegen-secundair {
+  background: white;
+  color: var(--eagle-blue);
+  border: 2px dashed #e0e0e0;
+  padding: 1rem;
+  width: 100%;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  &:hover {
+    border-color: var(--eagle-blue);
+    background: rgba(21, 34, 105, 0.02);
+  }
+}
+
+.color-picker {
+  height: 50px !important;
+  padding: 0.5rem !important;
+  cursor: pointer;
+}
+
+/* --- NOTIFICATIE --- */
+.notificatie-banner {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 1.2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border-left: 6px solid #28a745;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  animation: fadeInOut 4s forwards;
+
+  &.is-fout {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left-color: #dc3545;
+  }
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-10px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* --- DRAG & DROP --- */
+.drag-handle {
+  cursor: grab;
+  color: #ccd1d9;
+  text-align: center;
+  font-size: 1.2rem;
+  transition: color 0.2s;
+
+  &:hover { color: var(--eagle-blue); }
+  &:active { cursor: grabbing; }
+}
+
+tr.dragging { opacity: 0.5; background: #f8f9fa !important; }
+tr.drag-over td { border-top: 2px solid var(--eagle-blue) !important; }
