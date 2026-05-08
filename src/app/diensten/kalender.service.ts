@@ -25,6 +25,8 @@ export interface Match {
   locatie: string;
   uitslag?: string; // Optioneel
   isHandmatigBewerkt?: boolean;
+  posterUrl?: string; // Voor evenementen
+  inschrijfLink?: string; // Voor evenementen
 }
 
 @Injectable({

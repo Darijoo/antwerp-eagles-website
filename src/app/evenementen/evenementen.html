@@ -1,0 +1,55 @@
+<div class="hero-sectie">
+  <h2>Evenementen</h2>
+  <p>Mis geen enkele activiteit van de Antwerp Eagles!</p>
+</div>
+
+<div class="evenementen-container">
+  @if ((evenementen$ | async)?.length === 0) {
+    <div class="lege-status">
+      <i class="fa-regular fa-calendar-xmark fa-3x"></i>
+      <p>Er staan momenteel geen evenementen gepland. Kom later nog eens terug!</p>
+    </div>
+  } @else {
+    <div class="evenementen-grid">
+      @for (evenement of evenementen$ | async; track evenement.id) {
+        <div class="evenement-kaart">
+          @if (evenement.posterUrl) {
+            <div class="kaart-afbeelding">
+              <img [src]="evenement.posterUrl" [alt]="evenement.titel" />
+            </div>
+          }
+          <div class="evenement-inhoud">
+            <div class="datum-badge">
+              <span class="dag">{{ getDatum(evenement.datum) | date: 'd' }}</span>
+              <span class="maand">{{ getDatum(evenement.datum) | date: 'MMM' }}</span>
+            </div>
+            
+            <div class="evenement-details">
+              <h3>{{ evenement.titel }}</h3>
+              
+              <div class="meta-info">
+                @if (evenement.tijd) {
+                  <span><i class="fa-regular fa-clock"></i> {{ evenement.tijd }}</span>
+                }
+                @if (evenement.locatie) {
+                  <span>
+                    <i class="fa-solid fa-location-dot"></i> 
+                    <a [href]="getGoogleMapsLink(evenement.locatie)" target="_blank">{{ evenement.locatie }}</a>
+                  </span>
+                }
+              </div>
+              
+              <p class="omschrijving">{{ evenement.omschrijving }}</p>
+              
+              @if (evenement.inschrijfLink) {
+                <a [href]="evenement.inschrijfLink" target="_blank" class="btn-inschrijven">
+                  Schrijf je in <i class="fa-solid fa-arrow-right"></i>
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

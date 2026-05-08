@@ -13,10 +13,11 @@ import { Aansluiten } from './aansluiten/aansluiten';
 import { HuishoudelijkReglement } from './huishoudelijk-reglement';
 import { Sportreglement } from './sportreglement';
 import { UnderConstruction } from './under-construction';
-import { Nieuws } from './nieuws';
 import { Privacybeleid } from '../privacybeleid';
 import { PaginaNietGevonden } from './footer/pagina-niet-gevonden';
 import { UniformGids } from './uniform-gids/uniform-gids';
+import { Evenementen } from './evenementen/evenementen';
+import { Nieuws } from './nieuws';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -32,11 +33,11 @@ export const routes: Routes = [
   { path: 'nieuws', component: Nieuws },
   { path: 'historiek', component: OverOns },
   { path: 'uniform', component: UniformGids },
+  { path: 'evenementen', component: Evenementen },
   
   // Tijdelijke 'In Aanbouw' pagina's voor de nieuwe navigatiebalk
   { path: 'klassementen', component: UnderConstruction },
   { path: 'toernooien', component: UnderConstruction },
-  { path: 'evenementen', component: UnderConstruction },
 
   { path: 'login', component: Login },
 

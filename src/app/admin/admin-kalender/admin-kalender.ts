@@ -4,7 +4,9 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Observable, BehaviorSubject, combineLatest, firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Firestore, collection, collectionData, Timestamp } from '@angular/fire/firestore';
+import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { KalenderService, Match } from '../../diensten/kalender.service';
+import { ImageOptimizerService } from '../../diensten/image-optimizer.service';
 
 @Component({
   selector: 'app-admin-kalender',
@@ -18,6 +20,8 @@ export class AdminKalender {
   private firestore = inject(Firestore);
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
+  private storage = inject(Storage);
+  private imageOptimizer = inject(ImageOptimizerService);
 
   notificatie: { bericht: string; type: 'succes' | 'fout' } | null = null;
   private notificatieTimer: any;
@@ -43,7 +47,12 @@ export class AdminKalender {
     uitslag: [''],
     isHandmatigBewerkt: [false],
     geannuleerd: [false],
+    inschrijfLink: [''],
+    posterUrl: [''],
   });
+
+  geselecteerdePoster: File | null = null;
+  isAanHetOpslaan = false;
 
   toonNotificatie(bericht: string, type: 'succes' | 'fout' = 'succes') {
     if (this.notificatieTimer) clearTimeout(this.notificatieTimer);
@@ -111,9 +120,21 @@ export class AdminKalender {
       uitslag: formValue.uitslag || '',
       isHandmatigBewerkt: formValue.isHandmatigBewerkt || false,
       geannuleerd: formValue.geannuleerd || false,
+      inschrijfLink: formValue.inschrijfLink || '',
+      posterUrl: formValue.posterUrl || '',
     };
 
     try {
+      this.isAanHetOpslaan = true;
+      this.cdr.detectChanges();
+
+      if (this.geselecteerdePoster) {
+        const gecomprimeerdBestand = await this.imageOptimizer.comprimeerAfbeelding(this.geselecteerdePoster);
+        const bestandsNaam = `evenementen/${Date.now()}_${this.geselecteerdePoster.name}`;
+        const opslagRef = ref(this.storage, bestandsNaam);
+        const uploadResultaat = await uploadBytes(opslagRef, gecomprimeerdBestand);
+        nieuweWedstrijd.posterUrl = await getDownloadURL(uploadResultaat.ref);
+      }
       if (this.bewerkId) {
         await this.kalenderService.updateWedstrijd(this.bewerkId, nieuweWedstrijd);
         this.toonNotificatie('Wedstrijd succesvol bijgewerkt!');
@@ -125,6 +146,21 @@ export class AdminKalender {
     } catch (error) {
       console.error('Fout bij opslaan:', error);
       this.toonNotificatie('Er ging iets mis bij het opslaan naar de database!', 'fout');
+    } finally {
+      this.isAanHetOpslaan = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.geselecteerdePoster = file;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.wedstrijdForm.patchValue({ posterUrl: e.target.result });
+      };
+      reader.readAsDataURL(file);
     }
   }
 
@@ -148,7 +184,10 @@ export class AdminKalender {
       uitslag: wedstrijd.uitslag || '',
       isHandmatigBewerkt: (wedstrijd as any).isHandmatigBewerkt || false,
       geannuleerd: (wedstrijd as any).geannuleerd || false,
+      inschrijfLink: wedstrijd.inschrijfLink || '',
+      posterUrl: wedstrijd.posterUrl || '',
     });
+    this.geselecteerdePoster = null;
 
     // Scroll even soepel omhoog naar het formulier
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -166,7 +205,10 @@ export class AdminKalender {
       locatie: 'Eglantierlaan, Wilrijk',
       isHandmatigBewerkt: false,
       geannuleerd: false,
+      inschrijfLink: '',
+      posterUrl: '',
     });
+    this.geselecteerdePoster = null;
   }
 
   async verwijderWedstrijd(id: string) {

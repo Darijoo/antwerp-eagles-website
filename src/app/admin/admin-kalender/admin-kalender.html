@@ -115,6 +115,37 @@
               placeholder="Wat is er te doen?"
             ></textarea>
           </div>
+          <div class="form-group">
+            <label for="inschrijfLink">Inschrijflink (optioneel)</label>
+            <input
+              type="url"
+              id="inschrijfLink"
+              formControlName="inschrijfLink"
+              placeholder="Bv. https://forms.gle/..."
+            />
+          </div>
+          <div class="form-group">
+            <label for="posterUrl">Event Poster (optioneel)</label>
+            @if (wedstrijdForm.get('posterUrl')?.value) {
+              <div class="afbeelding-preview" style="margin-bottom: 10px">
+                <img
+                  [src]="wedstrijdForm.get('posterUrl')?.value"
+                  alt="Poster Preview"
+                  style="
+                    max-height: 150px;
+                    border-radius: 4px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                  "
+                />
+              </div>
+            }
+            <input
+              type="file"
+              id="posterUrl"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+            />
+          </div>
         }
 
         <div class="form-group">
@@ -122,9 +153,9 @@
           <input type="text" id="locatie" formControlName="locatie" />
         </div>
         <div class="form-acties">
-          <button type="submit" class="btn-opslaan">
+          <button type="submit" class="btn-opslaan" [disabled]="isAanHetOpslaan">
             <i class="fa-solid fa-floppy-disk"></i>
-            {{ bewerkId ? 'Opslaan' : 'Toevoegen' }}
+            {{ isAanHetOpslaan ? 'Opslaan...' : (bewerkId ? 'Opslaan' : 'Toevoegen') }}
           </button>
           @if (bewerkId) {
             <button type="button" class="btn-toevoegen" (click)="annuleerBewerken()">
