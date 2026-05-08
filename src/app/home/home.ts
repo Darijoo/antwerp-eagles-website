@@ -145,7 +145,7 @@ export class Home implements OnInit, AfterViewChecked {
                 !(m as any).geannuleerd,
             )
             .sort((a, b) => b.datum.toDate().getTime() - a.datum.toDate().getTime())
-            .slice(0, 3);
+            .slice(0, 6);
         }
 
         return weekendMatches;
