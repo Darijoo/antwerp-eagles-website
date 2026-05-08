@@ -85,8 +85,8 @@ export class Home implements OnInit, AfterViewChecked {
     );
 
     this.weekendUitslagen$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
-      map((matches) => {
-        const alleUitslagen = matches.filter(
+      map((matches: Match[]) => {
+        const uitslagen = matches.filter(
           (m) =>
             (!m.type || m.type === 'wedstrijd') &&
             m.uitslag &&
@@ -94,17 +94,16 @@ export class Home implements OnInit, AfterViewChecked {
             !(m as any).geannuleerd,
         );
 
-        if (alleUitslagen.length === 0) return [];
+        if (uitslagen.length === 0) return [];
 
         // Zoek de meest recente datum van een wedstrijd met uitslag
-        const meestRecenteMatch = alleUitslagen.reduce((prev, curr) => {
+        const meestRecenteMatch = uitslagen.reduce((prev: Match, curr: Match) => {
           return curr.datum.toDate() > prev.datum.toDate() ? curr : prev;
         });
 
         const laatsteDatum = meestRecenteMatch.datum.toDate();
 
-        // Bepaal het weekend-venster van die laatste datum
-        // We gaan ervan uit dat een 'weekend' loopt van vrijdag t/m zondag
+        // Bepaal het weekend-venster van die laatste datum (vrijdag t/m zondag)
         const d = laatsteDatum.getDay(); // 0=zo, 1=ma, ..., 5=vr, 6=za
         const start = new Date(laatsteDatum);
         const einde = new Date(laatsteDatum);
@@ -127,13 +126,13 @@ export class Home implements OnInit, AfterViewChecked {
         start.setHours(0, 0, 0, 0);
         einde.setHours(23, 59, 59, 999);
 
-        // Geef ALLE matchen terug die in dat specifieke weekend (of die specifieke dag) vallen
-        return alleUitslagen
-          .filter((m) => {
+        // Geef ALLE matchen terug die in dat specifieke weekend vallen
+        return uitslagen
+          .filter((m: Match) => {
             const datum = m.datum.toDate();
             return datum >= start && datum <= einde;
           })
-          .sort((a, b) => a.datum.toDate().getTime() - b.datum.toDate().getTime());
+          .sort((a: Match, b: Match) => a.datum.toDate().getTime() - b.datum.toDate().getTime());
       }),
     );
   }
@@ -220,7 +219,7 @@ export class Home implements OnInit, AfterViewChecked {
     const scoreThuis = parseInt(parts[0].trim(), 10);
     const scoreUit = parseInt(parts[1].trim(), 10);
     if (isNaN(scoreThuis) || isNaN(scoreUit)) return false;
-    
+
     if (teamType === 'thuis') return scoreThuis > scoreUit;
     if (teamType === 'uit') return scoreUit > scoreThuis;
     return false;
