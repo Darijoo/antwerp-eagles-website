@@ -39,7 +39,12 @@ export class AutoSyncService {
       } else {
         console.log('Kalender is recent nog gesynct. Volgende automatische sync over:', Math.round((this.SYNC_INTERVAL_MS - (nu - laatsteSync)) / 1000 / 60), 'minuten.');
       }
-    } catch (err) {
+    } catch (err: any) {
+      // Negeren van permissie fouten: enkel ingelogde admins hebben rechten om de globale sync timestamp aan te passen
+      if (err?.code === 'permission-denied') {
+        // We loggen dit niet als error, want dit is verwacht gedrag voor normale bezoekers
+        return;
+      }
       console.error('Fout bij automatische kalender sync:', err);
     }
   }
