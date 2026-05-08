@@ -12,7 +12,7 @@ import { AutoSyncService } from './diensten/auto-sync.service';
   styleUrl: './app.scss',
 })
 export class App implements OnInit {
-  protected readonly title = signal('antwerp-eagles-website');
+  public readonly title = signal('antwerp-eagles-website');
   
   constructor(private autoSyncService: AutoSyncService) {}
 

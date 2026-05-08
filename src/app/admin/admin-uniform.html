@@ -204,18 +204,18 @@
       <tbody>
         @for (item of onderdelen$ | async; track item.id) {
           <tr>
-            <td>
+            <td data-label="Onderdeel">
               <strong>{{ item.naam }}</strong>
             </td>
-            <td>
+            <td data-label="Categorie">
               <span class="badge">{{ item.categorie || 'Baseball' }}</span>
             </td>
-            <td>
+            <td data-label="Verplicht">
               <span class="badge" [class.is-verplicht]="item.verplicht">
                 {{ item.verplicht ? 'JA' : 'NEE' }}
               </span>
             </td>
-            <td>
+            <td data-label="Winkel">
               @if (item.winkels && item.winkels.length > 0) {
                 <span>{{ item.winkels.length }} winkel(s)</span>
               } @else if (item.winkelNaam) {
@@ -224,7 +224,7 @@
                 -
               }
             </td>
-            <td class="tabel-acties">
+            <td data-label="Acties" class="tabel-acties">
               <button class="btn-bewerken" (click)="bewerkOnderdeel(item)">
                 <i class="fa-solid fa-pen-to-square"></i> Bewerken
               </button>

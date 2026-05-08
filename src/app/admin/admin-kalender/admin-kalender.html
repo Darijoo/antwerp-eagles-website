@@ -181,7 +181,7 @@
       <div class="item-lijst">
         @for (wedstrijd of wedstrijden$ | async; track wedstrijd.id) {
           <div class="item" [class.gespeeld]="isGespeeld(wedstrijd.datum)">
-            <div class="item-info">
+            <div class="item-info" data-label="Details">
               <strong>{{ getDatum(wedstrijd.datum) | date: 'dd-MM-yyyy' }}</strong> -
               @if (!wedstrijd.type || wedstrijd.type === 'wedstrijd') {
                 <span class="badge">Match</span>
@@ -199,12 +199,12 @@
                 }
               }
             </div>
-            <div class="item-acties">
+            <div class="item-acties" data-label="Acties">
               <button (click)="bewerkWedstrijd(wedstrijd)" class="btn-bewerken" title="Bewerken">
-                <i class="fa-solid fa-pen-to-square"></i>
+                <i class="fa-solid fa-pen-to-square"></i> <span>Bewerken</span>
               </button>
               <button (click)="verwijderWedstrijd(wedstrijd.id!)" class="btn-verwijderen" title="Verwijderen">
-                <i class="fa-solid fa-trash"></i>
+                <i class="fa-solid fa-trash"></i> <span>Verwijderen</span>
               </button>
             </div>
           </div>

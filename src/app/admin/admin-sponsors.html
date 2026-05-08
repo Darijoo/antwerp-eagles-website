@@ -63,15 +63,15 @@
       <tbody>
         @for (sponsor of sponsors$ | async; track sponsor.id) {
           <tr>
-            <td>{{ sponsor.naam }}</td>
-            <td>
+            <td data-label="Naam">{{ sponsor.naam }}</td>
+            <td data-label="Website">
               @if (sponsor.websiteUrl) {
                 <a [href]="sponsor.websiteUrl" target="_blank">{{ sponsor.websiteUrl }}</a>
               } @else {
                 -
               }
             </td>
-            <td class="tabel-acties">
+            <td data-label="Acties" class="tabel-acties">
               <button class="btn-bewerken" (click)="bewerkSponsor(sponsor)">
                 <i class="fa-solid fa-pen-to-square"></i> Bewerken
               </button>
