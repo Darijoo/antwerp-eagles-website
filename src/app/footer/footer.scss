@@ -172,12 +172,8 @@
   h4 { margin-bottom: 0.2rem; font-size: 1.4rem; }
   p { margin-bottom: 0; }
   .accent-footer {
-    font-family: var(--font-fun);
-    font-size: 1.4rem;
-    color: var(--eagle-accent);
-    opacity: 1;
-    transform: rotate(-2deg);
-    display: inline-block;
+    color: var(--eagle-red);
+    font-weight: 700;
   }
 }
 

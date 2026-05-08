@@ -44,12 +44,10 @@
   .hero-ondertitel { font-size: clamp(1.1rem, 2vw, 1.3rem); opacity: 0.9; margin-bottom: 0.5rem; }
 
   .accent-titel {
-    font-family: var(--font-fun);
-    font-size: 2rem;
-    color: var(--eagle-accent);
+    font-size: 1.8rem;
+    color: white;
     margin: 0;
-    transform: rotate(-2deg);
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+    font-weight: 700;
   }
 }
 
