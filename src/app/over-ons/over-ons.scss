@@ -1,11 +1,10 @@
 .historie-sectie {
-  background-color: var(--bg-light);
+  background-color: #f8fafc;
   min-height: 100vh;
-  padding-bottom: 4rem;
 }
 
 .container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
@@ -13,7 +12,7 @@
 /* --- IMMERSIVE HERO --- */
 .historie-hero {
   width: 100%;
-  min-height: 70vh; /* Iets groter voor meer impact */
+  min-height: 70vh;
   margin-top: -133px;
   padding-top: 133px;
   background-color: var(--eagle-blue);
@@ -30,7 +29,10 @@
 
   .hero-overlay {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: linear-gradient(to bottom, rgba(21, 34, 105, 0.75), rgba(21, 34, 105, 0.98));
   }
 
@@ -42,8 +44,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%;
-    justify-content: center;
   }
 
   .hero-text-wrapper {
@@ -73,6 +73,8 @@
     line-height: 1.05;
     background: linear-gradient(to right, #ffffff, #e0e0e0);
     -webkit-background-clip: text;
+    background-clip: text;
+    /* Fix compatibility warning */
     -webkit-text-fill-color: transparent;
     text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
@@ -85,7 +87,6 @@
     margin: 0 auto;
   }
 
-  /* Scroll Indicator */
   .scroll-indicator {
     position: absolute;
     bottom: -30px;
@@ -94,12 +95,7 @@
     align-items: center;
     gap: 1rem;
     opacity: 0.7;
-    transition: opacity 0.3s ease;
     animation: fadeUpIn 1s 0.8s backwards;
-
-    &:hover {
-      opacity: 1;
-    }
 
     .mouse {
       width: 30px;
@@ -132,13 +128,27 @@
 }
 
 @keyframes scrollWheel {
-  0% { top: 8px; opacity: 1; }
-  100% { top: 30px; opacity: 0; }
+  0% {
+    top: 8px;
+    opacity: 1;
+  }
+
+  100% {
+    top: 30px;
+    opacity: 0;
+  }
 }
 
 @keyframes fadeUpIn {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* --- VERTICALE TIJDLIJN --- */
@@ -151,9 +161,7 @@
 .timeline {
   position: relative;
   padding: 4rem 0;
-  overflow: visible;
 
-  /* De "Slalom" Lijn */
   &::before {
     content: '';
     position: absolute;
@@ -162,14 +170,8 @@
     transform: translateX(-50%);
     width: 6px;
     height: 100%;
-    background: linear-gradient(to bottom, 
-      transparent,
-      var(--eagle-red) 5%, 
-      var(--eagle-blue) 95%,
-      transparent
-    );
+    background: linear-gradient(to bottom, transparent, var(--eagle-red) 5%, var(--eagle-blue) 95%, transparent);
     border-radius: 20px;
-    box-shadow: 0 0 15px rgba(21, 34, 105, 0.15);
     z-index: 1;
   }
 }
@@ -179,11 +181,10 @@
   justify-content: flex-end;
   padding-right: calc(50% + 40px);
   position: relative;
-  margin-bottom: 5rem; /* Sterk gereduceerd van 14rem */
+  margin-bottom: 5rem;
   width: 100%;
   z-index: 2;
-  
-  /* De achtergrond-jaartal "Ghost" tekst - veel kleiner en compacter */
+
   &::after {
     content: attr(data-year);
     position: absolute;
@@ -201,7 +202,6 @@
     letter-spacing: -2px;
   }
 
-  /* Begin onzichtbaar voor de scroll-animatie! */
   opacity: 0;
   transform: translateY(50px) scale(0.98);
   transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -219,33 +219,33 @@
     .timeline-card {
       flex-direction: row;
       text-align: left;
-      transform: rotate(0.5deg); /* Veel subtielere rotatie */
-      
+      transform: rotate(0.5deg);
+
       &:hover {
         transform: translateY(-5px) rotate(0deg);
       }
     }
-    
+
     &::after {
-      left: 45%; 
+      left: 45%;
     }
   }
 
   &:nth-child(odd) {
     .timeline-card {
       transform: rotate(-0.5deg);
-      
+
       &:hover {
         transform: translateY(-5px) rotate(0deg);
       }
     }
+
     &::after {
-      left: 55%; 
+      left: 55%;
     }
   }
 }
 
-/* Het Bolletje op de lijn met het jaartal erin! */
 .timeline-marker {
   position: absolute;
   top: 20px;
@@ -263,7 +263,7 @@
   color: var(--eagle-red);
   font-weight: 900;
   font-size: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   &:hover {
@@ -272,88 +272,51 @@
     transform: translateX(-50%) scale(1.1);
     box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
   }
-  
-  &::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 30px;
-    border: 2px solid var(--eagle-red);
-    z-index: -1;
-    animation: pulse 2.5s infinite;
-  }
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 0.6; }
-  100% { transform: scale(1.4); opacity: 0; }
-}
-
-.timeline-content-wrapper {
-  width: 100%;
-  max-width: 650px;
 }
 
 .timeline-card {
   display: flex;
   align-items: center;
-  gap: 1.5rem; /* Kleiner gat tussen tekst en visual */
+  gap: 1.5rem;
   background: rgba(255, 255, 255, 0.65);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
-  padding: 1.8rem 2.2rem; /* Compacter padding */
+  padding: 1.8rem 2.2rem;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 
-    0 15px 35px rgba(21, 34, 105, 0.05),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 15px 35px rgba(21, 34, 105, 0.05);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   flex-direction: row-reverse;
   text-align: right;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    border-radius: 20px;
-    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.8), transparent);
-    pointer-events: none;
-  }
-
   &:hover {
     background: rgba(255, 255, 255, 0.98);
     box-shadow: 0 25px 50px rgba(21, 34, 105, 0.08);
-    border-color: rgba(21, 34, 105, 0.1);
 
     .timeline-visual {
       background: linear-gradient(135deg, var(--eagle-blue), #2a3b8f);
       color: white;
       transform: rotate(10deg) scale(1.05);
-      box-shadow: 0 10px 25px rgba(21, 34, 105, 0.2);
     }
   }
 }
 
 .timeline-tekst {
   flex: 1;
-  position: relative;
-  z-index: 2;
-  
+
   h3 {
     color: var(--eagle-blue);
-    font-size: 1.5rem; /* Iets kleinere titel */
+    font-size: 1.5rem;
     font-weight: 900;
     margin-bottom: 0.6rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    line-height: 1.1;
   }
+
   p {
     color: #4a5568;
     line-height: 1.6;
     font-size: 1.05rem;
-    margin: 0; /* Verwijder onnodige marge */
+    margin: 0;
   }
 
   .highlight {
@@ -362,12 +325,6 @@
     background: rgba(220, 38, 38, 0.08);
     padding: 0.1rem 0.3rem;
     border-radius: 4px;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      background: var(--eagle-red);
-      color: white;
-    }
   }
 
   strong {
@@ -377,7 +334,7 @@
 }
 
 .timeline-visual {
-  width: 75px; /* Compacter icoon/logo blok */
+  width: 75px;
   height: 75px;
   flex-shrink: 0;
   background: linear-gradient(135deg, #ffffff, #f0f4f8);
@@ -387,131 +344,82 @@
   justify-content: center;
   color: var(--eagle-red);
   font-size: 2.2rem;
-  box-shadow: 
-    4px 8px 20px rgba(0,0,0,0.06),
-    inset -2px -2px 8px rgba(0,0,0,0.03),
-    inset 2px 2px 8px rgba(255,255,255,0.9);
+  box-shadow: 4px 8px 20px rgba(0, 0, 0, 0.06);
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-  z-index: 2;
 
   .timeline-logo {
     width: 75%;
     height: 75%;
     object-fit: contain;
-    transition: all 0.3s ease;
   }
 }
 
-/* --- ELEVATED CTA BEMOEDIGING --- */
-
+/* --- CTA --- */
 .call-to-action-balk {
   text-align: center;
   background: linear-gradient(135deg, var(--eagle-blue), #1a2a6c);
   padding: 4rem 2rem;
   border-radius: 32px;
-  box-shadow: 0 40px 80px rgba(21, 34, 105, 0.4);
   color: white;
   position: relative;
   overflow: hidden;
-  margin: 4rem 0 2rem 0;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-    opacity: 0.1;
-  }
+  margin: 4rem 1.5rem 2rem 1.5rem;
 
   .cta-icon {
     position: absolute;
-    right: -50px; 
-    bottom: -50px;
+    right: -30px;
+    bottom: -30px;
     font-size: 15rem;
     color: white;
     opacity: 0.05;
     transform: rotate(-15deg);
     pointer-events: none;
-    transition: transform 1s ease;
-  }
-
-  &:hover .cta-icon {
-    transform: rotate(0deg) scale(1.1);
   }
 
   h3 {
-    color: white;
     font-size: clamp(1.8rem, 4vw, 2.5rem);
     font-weight: 900;
-    margin-bottom: 1rem;
     text-transform: uppercase;
-    position: relative;
-    letter-spacing: -1px;
+    margin-bottom: 1rem;
   }
+
   p {
-    color: rgba(255,255,255,0.85);
     font-size: 1.15rem;
     margin-bottom: 2rem;
-    max-width: 800px;
+    max-width: 600px;
     margin-left: auto;
     margin-right: auto;
-    position: relative;
-    line-height: 1.6;
   }
 }
 
 .btn-actie {
-  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 1rem;
   background: var(--eagle-red);
   color: white;
-  padding: 1.6rem 4.5rem;
+  padding: 1.2rem 3.5rem;
   border-radius: 60px;
   text-decoration: none;
   font-weight: 900;
-  font-size: 1.3rem;
   text-transform: uppercase;
-  letter-spacing: 2px;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 15px 35px rgba(220, 38, 38, 0.45);
-
-  .cta-arrow {
-    transition: transform 0.3s ease;
-  }
 
   &:hover {
     background-color: #ef4444;
-    transform: translateY(-8px) scale(1.05);
-    box-shadow: 0 25px 50px rgba(220, 38, 38, 0.55);
+    transform: translateY(-5px) scale(1.05);
 
     .cta-arrow {
-      transform: translateX(8px);
+      transform: translateX(5px);
     }
   }
 }
 
-/* --- MOBIELE OPTIMALISATIE --- */
-@media (max-width: 1200px) {
-  .timeline-item::after {
-    font-size: 8rem;
-    top: -20px;
-  }
-}
-
+/* --- MOBILE --- */
 @media (max-width: 768px) {
-  .historie-hero {
-    min-height: 50vh;
-  }
-
-  .timeline {
-    padding: 3rem 0;
-    &::before {
-      left: 30px;
-      transform: none;
-    }
+  .timeline::before {
+    left: 30px;
+    transform: none;
   }
 
   .timeline-item {
@@ -525,7 +433,6 @@
       left: 30px;
       top: -15px;
       transform: none;
-      letter-spacing: -1px;
     }
 
     .timeline-card {
@@ -534,7 +441,6 @@
       text-align: left !important;
       padding: 1.5rem;
       transform: none !important;
-      gap: 1rem;
     }
   }
 
@@ -544,18 +450,5 @@
     width: 70px;
     height: 30px;
     font-size: 0.9rem;
-    top: 5px;
-  }
-
-  .timeline-visual {
-    width: 60px; height: 60px; font-size: 1.8rem;
-  }
-  
-  .timeline-tekst h3 { font-size: 1.15rem; }
-  
-  .call-to-action-balk {
-    padding: 4rem 1.5rem;
-    border-radius: 24px;
-    margin: 4rem 0 2rem 0;
   }
 }
