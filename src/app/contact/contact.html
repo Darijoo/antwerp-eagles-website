@@ -106,15 +106,15 @@
 
       <div class="contact-form">
         <h3>Stuur een bericht</h3>
-        <form>
+        
+        <form [formGroup]="contactForm" (ngSubmit)="verstuur()">
           <div class="form-group">
             <label for="naam">Naam</label>
-            <input type="text" id="naam" placeholder="Jouw naam" />
-          </div>
-
-          <div class="form-group">
-            <label for="email">E-mailadres</label>
-            <input type="email" id="email" placeholder="jouw@email.com" />
+            <input type="text" id="naam" formControlName="naam" placeholder="Jouw naam" 
+                   [style.border-color]="contactForm.get('naam')?.invalid && contactForm.get('naam')?.touched ? '#dc3545' : null" />
+            @if (contactForm.get('naam')?.invalid && contactForm.get('naam')?.touched) {
+              <div style="color: #dc3545; font-size: 0.875em; margin-top: 4px;">Vul a.u.b. je naam in.</div>
+            }
           </div>
 
           <div class="form-group">
@@ -122,11 +122,18 @@
             <textarea
               id="bericht"
               rows="5"
+              formControlName="bericht"
               placeholder="Typ hier je vraag of opmerking..."
+              [style.border-color]="contactForm.get('bericht')?.invalid && contactForm.get('bericht')?.touched ? '#dc3545' : null"
             ></textarea>
+            @if (contactForm.get('bericht')?.invalid && contactForm.get('bericht')?.touched) {
+              <div style="color: #dc3545; font-size: 0.875em; margin-top: 4px;">Vul a.u.b. een bericht in.</div>
+            }
           </div>
 
-          <button type="button" class="submit-knop">Verstuur Bericht</button>
+          <button type="submit" class="submit-knop" [disabled]="contactForm.invalid">
+            Open in E-mail
+          </button>
         </form>
       </div>
     </div>
