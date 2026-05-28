@@ -1,11 +1,10 @@
 .historie-sectie {
-  background-color: var(--bg-light);
+  background-color: #f8fafc;
   min-height: 100vh;
-  padding-bottom: 4rem;
 }
 
 .container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
@@ -13,11 +12,11 @@
 /* --- IMMERSIVE HERO --- */
 .historie-hero {
   width: 100%;
-  min-height: 60vh;
-  margin-top: -133px; /* Trekt de sectie onder de navbar! */
+  min-height: 70vh;
+  margin-top: -133px;
   padding-top: 133px;
   background-color: var(--eagle-blue);
-  background-image: url('../../assets/bb_field.jpg'); /* Vervang indien je een oude historische foto hebt! */
+  background-image: url('../../assets/bb_field.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -26,262 +25,412 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding-bottom: 4rem;
+  padding-bottom: 6rem;
 
   .hero-overlay {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(to bottom, rgba(21, 34, 105, 0.8), rgba(21, 34, 105, 0.95));
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(21, 34, 105, 0.75), rgba(21, 34, 105, 0.98));
   }
 
   .hero-content {
     position: relative;
     z-index: 1;
     color: white;
-    max-width: 800px;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-text-wrapper {
+    margin-bottom: 4rem;
+    animation: fadeUpIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
 
   .hero-badge {
     display: inline-block;
     background-color: var(--eagle-red);
     color: white;
-    padding: 0.5rem 1.5rem;
-    border-radius: 30px;
+    padding: 0.6rem 2rem;
+    border-radius: 40px;
     font-size: 1.1rem;
     font-weight: 900;
     text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    letter-spacing: 2px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    margin-bottom: 2rem;
+    letter-spacing: 3px;
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
   }
 
   .hero-titel {
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-size: clamp(3rem, 6vw, 5.5rem);
     font-weight: 900;
     text-transform: uppercase;
-    margin: 0 0 1rem 0;
-    line-height: 1.1;
-    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    margin: 0 0 1.5rem 0;
+    line-height: 1.05;
+    background: linear-gradient(to right, #ffffff, #e0e0e0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
 
   .hero-ondertitel {
-    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
     opacity: 0.9;
+    font-weight: 300;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: -30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0.7;
+    animation: fadeUpIn 1s 0.8s backwards;
+
+    .mouse {
+      width: 30px;
+      height: 50px;
+      border: 2px solid white;
+      border-radius: 20px;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 6px;
+        height: 6px;
+        background-color: white;
+        border-radius: 50%;
+        animation: scrollWheel 2s infinite;
+      }
+    }
+
+    .scroll-text {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+    }
+  }
+}
+
+@keyframes scrollWheel {
+  0% {
+    top: 8px;
+    opacity: 1;
+  }
+  100% {
+    top: 30px;
+    opacity: 0;
+  }
+}
+
+@keyframes fadeUpIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 /* --- VERTICALE TIJDLIJN --- */
+.overlap-container {
+  margin-top: -60px;
+  position: relative;
+  z-index: 10;
+}
+
 .timeline {
   position: relative;
   padding: 4rem 0;
-  margin-top: -2rem; /* Trekt hem strakker tegen de hero aan */
 
-  /* De centrale lijn */
   &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 4px;
+    width: 6px;
     height: 100%;
-    background: linear-gradient(to bottom, var(--eagle-red), var(--eagle-blue));
-    border-radius: 4px;
+    background: linear-gradient(to bottom, transparent, var(--eagle-red) 5%, var(--eagle-blue) 95%, transparent);
+    border-radius: 20px;
+    z-index: 1;
   }
 }
 
 .timeline-item {
   display: flex;
   justify-content: flex-end;
-  padding-right: 50%;
+  padding-right: calc(50% + 40px);
   position: relative;
-  margin-bottom: 4rem;
+  margin-bottom: 5rem;
   width: 100%;
-  
-  /* Begin onzichtbaar voor de scroll-animatie! */
+  z-index: 2;
+
+  &::after {
+    content: attr(data-year);
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8rem;
+    font-weight: 900;
+    color: var(--eagle-blue);
+    opacity: 0.04;
+    z-index: -1;
+    pointer-events: none;
+    line-height: 1;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -2px;
+  }
+
   opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform: translateY(50px) scale(0.98);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 
   &.is-visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 
   &:nth-child(even) {
     justify-content: flex-start;
     padding-right: 0;
-    padding-left: 50%;
+    padding-left: calc(50% + 40px);
 
-    .timeline-content-wrapper {
-      flex-direction: row-reverse;
-      margin-left: 3rem;
-      margin-right: 0;
+    .timeline-card {
+      flex-direction: row;
       text-align: left;
+      transform: rotate(0.5deg);
+      &:hover {
+        transform: translateY(-5px) rotate(0deg);
+      }
+    }
+    &::after {
+      left: 45%;
+    }
+  }
+
+  &:nth-child(odd) {
+    .timeline-card {
+      transform: rotate(-0.5deg);
+      &:hover {
+        transform: translateY(-5px) rotate(0deg);
+      }
+    }
+    &::after {
+      left: 55%;
     }
   }
 }
 
-/* Het Bolletje op de lijn met het jaartal erin! */
 .timeline-marker {
   position: absolute;
-  top: 0;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80px;
-  height: 40px;
-  background-color: var(--eagle-red);
-  border: 4px solid white;
-  border-radius: 20px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 900;
-  font-size: 1rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.timeline-content-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  width: 100%;
-  max-width: 450px;
-  margin-right: 3rem;
-  text-align: right;
-}
-
-.timeline-tekst {
-  flex: 1;
-  
-  h3 {
-    color: var(--eagle-blue);
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-  }
-  p {
-    color: var(--text-dark);
-    line-height: 1.8;
-    font-size: 1.1rem;
-  }
-}
-
-.timeline-visual {
-  width: 100px;
-  height: 100px;
-  flex-shrink: 0;
-  background-color: white;
-  border-radius: 50%;
+  width: 90px;
+  height: 38px;
+  background: white;
+  border: 3px solid var(--eagle-red);
+  border-radius: 30px;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--eagle-red);
-  font-size: 2.5rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  border: 2px solid #f0f0f0;
-  transition: transform 0.3s ease;
+  font-weight: 900;
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   &:hover {
-    transform: scale(1.1) rotate(5deg);
-    color: var(--eagle-blue);
+    background: var(--eagle-red);
+    color: white;
+    transform: translateX(-50%) scale(1.1);
+    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
   }
 }
 
-/* --- ELEVATED CTA BEMOEDIGING --- */
+.timeline-card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  padding: 1.8rem 2.2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 15px 35px rgba(21, 34, 105, 0.05);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-direction: row-reverse;
+  text-align: right;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 25px 50px rgba(21, 34, 105, 0.08);
+    .timeline-visual {
+      background: linear-gradient(135deg, var(--eagle-blue), #2a3b8f);
+      color: white;
+      transform: rotate(10deg) scale(1.05);
+    }
+  }
+}
+
+.timeline-tekst {
+  flex: 1;
+  h3 {
+    color: var(--eagle-blue);
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+  }
+  p {
+    color: #4a5568;
+    line-height: 1.6;
+    font-size: 1.05rem;
+    margin: 0;
+  }
+  .highlight {
+    color: var(--eagle-red);
+    font-weight: 800;
+    background: rgba(220, 38, 38, 0.08);
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+  }
+  strong {
+    color: var(--eagle-blue);
+    font-weight: 800;
+  }
+}
+
+.timeline-visual {
+  width: 75px;
+  height: 75px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #ffffff, #f0f4f8);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--eagle-red);
+  font-size: 2.2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  .timeline-logo {
+    width: 75%;
+    height: 75%;
+    object-fit: contain;
+  }
+}
+
+/* --- CTA --- */
 .call-to-action-balk {
   text-align: center;
-  background: linear-gradient(135deg, var(--eagle-blue), #2a3b8f);
+  background: linear-gradient(135deg, var(--eagle-blue), #1a2a6c);
   padding: 4rem 2rem;
-  border-radius: 16px;
-  box-shadow: 0 15px 40px rgba(21, 34, 105, 0.2);
+  border-radius: 32px;
   color: white;
   position: relative;
   overflow: hidden;
-  margin-top: 2rem;
+  margin: 4rem 1.5rem 2rem 1.5rem;
 
   .cta-icon {
     position: absolute;
-    right: -20px; bottom: -20px;
-    font-size: 10rem;
+    right: -30px;
+    bottom: -30px;
+    font-size: 15rem;
     color: white;
     opacity: 0.05;
     transform: rotate(-15deg);
+    pointer-events: none;
   }
 
   h3 {
-    color: white;
-    font-size: 2.2rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 900;
+    text-transform: uppercase;
     margin-bottom: 1rem;
   }
   p {
-    color: rgba(255,255,255,0.8);
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
 .btn-actie {
-  display: inline-block;
-  background-color: var(--eagle-red);
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--eagle-red);
   color: white;
-  padding: 1rem 2.5rem;
-  border-radius: 6px;
+  padding: 1.2rem 3.5rem;
+  border-radius: 60px;
   text-decoration: none;
-  font-weight: 700;
-  font-size: 1.1rem;
+  font-weight: 900;
   text-transform: uppercase;
-  transition:
-    all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   &:hover {
-    background-color: #7a1414;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    background-color: #ef4444;
+    transform: translateY(-5px) scale(1.05);
+    .cta-arrow {
+      transform: translateX(5px);
+    }
   }
 }
 
-/* --- MOBIELE OPTIMALISATIE --- */
+/* --- MOBILE --- */
 @media (max-width: 768px) {
-  .historie-hero {
-    margin-top: -87px; padding-top: 87px;
-    min-height: 50vh;
+  .timeline::before {
+    left: 30px;
+    transform: none;
   }
-  
-  .timeline {
-    &::before {
-      left: 30px; /* Lijn verplaatst naar links op mobiel */
+  .timeline-item {
+    padding-left: 70px !important;
+    padding-right: 0 !important;
+    margin-bottom: 4rem;
+    justify-content: flex-start !important;
+    &::after {
+      font-size: 5rem;
+      left: 30px;
+      top: -15px;
+      transform: none;
+    }
+    .timeline-card {
+      flex-direction: column-reverse !important;
+      align-items: flex-start !important;
+      text-align: left !important;
+      padding: 1.5rem;
+      transform: none !important;
     }
   }
-
-  .timeline-item, .timeline-item:nth-child(even) {
-    justify-content: flex-start;
-    padding-right: 0;
-    padding-left: 80px; /* Ruimte voor de lijn en het bolletje */
-    margin-bottom: 3rem;
-
-    .timeline-content-wrapper {
-      flex-direction: column-reverse; /* Icon boven, tekst onder */
-      align-items: flex-start;
-      text-align: left;
-      margin: 0;
-      gap: 1rem;
-    }
-  }
-
   .timeline-marker {
-    left: 30px; /* Bolletje op de lijn aan de linkerkant */
-    width: 60px;
+    left: 30px;
+    transform: translateX(-50%);
+    width: 70px;
     height: 30px;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
-
-  .timeline-visual {
-    width: 60px; height: 60px; font-size: 1.5rem;
-  }
-  
-  .timeline-tekst h3 { font-size: 1.5rem; }
-  .timeline-tekst p { font-size: 1rem; }
 }

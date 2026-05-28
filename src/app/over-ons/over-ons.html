@@ -1,92 +1,125 @@
 <div class="historie-sectie">
-  <div class="pagina-hero">
+  <!-- IMMERSIVE HERO -->
+  <div class="historie-hero">
     <div class="hero-overlay"></div>
     <div class="container hero-content">
-      <span class="hero-badge">Est. 1923</span>
-      <h1 class="hero-titel">Geschiedenis Antwerp Eagles</h1>
-      <p class="hero-ondertitel">De absolute pioniers van het Belgische baseball en softball.</p>
+      <div class="hero-text-wrapper">
+        <span class="hero-badge">Est. 1923</span>
+        <h1 class="hero-titel">Geschiedenis<br>Antwerp Eagles</h1>
+        <p class="hero-ondertitel">De absolute pioniers van het Belgische baseball en softball.</p>
+      </div>
+      
+      <div class="scroll-indicator">
+        <div class="mouse"></div>
+        <span class="scroll-text">Ontdek onze reis</span>
+      </div>
     </div>
   </div>
 
   <div class="container overlap-container">
+    <!-- VERTICALE TIJDLIJN -->
+    <div class="timeline">
+      
       <!-- Tijdperk 1 -->
-      <div class="timeline-item" #timelineItem>
+      <div class="timeline-item" #timelineItem data-year="1920">
         <div class="timeline-marker">1920</div>
         <div class="timeline-content-wrapper">
-          <div class="timeline-tekst">
-            <h3>De Ontdekking</h3>
-            <p>
-              In het begin van de jaren twintig wandelden enkele jongeren langs het Wilrijkse Plein
-              in Antwerpen. Daar zagen zij een groepje Japanse zeelui een vreemd spel spelen en
-              besloten een kijkje te gaan nemen. De zeelui bleken baseball te spelen, een zeer
-              populaire sport in Japan. De jongeren speelden algauw een spelletje mee en werden zo
-              de allereerste "baseballers" van ons landje.
-            </p>
+          <div class="timeline-card">
+            <div class="timeline-tekst">
+              <h3>De Ontdekking</h3>
+              <p>
+                In het begin van de jaren twintig wandelden enkele jongeren langs het Wilrijkse Plein in Antwerpen. 
+                Daar zagen zij een groepje Japanse zeelui een vreemd spel spelen en besloten een kijkje te gaan nemen. 
+                De zeelui bleken baseball te spelen, een zeer populaire sport in Japan. De jongeren speelden 
+                algauw een spelletje mee en werden zo de allereerste <span class="highlight">"baseballers"</span> van ons landje.
+              </p>
+            </div>
+            <div class="timeline-visual"><i class="fa-solid fa-anchor"></i></div>
           </div>
-          <div class="timeline-visual"><i class="fa-solid fa-anchor"></i></div>
         </div>
       </div>
 
       <!-- Tijdperk 2 -->
-      <div class="timeline-item" #timelineItem>
+      <div class="timeline-item" #timelineItem data-year="1923">
         <div class="timeline-marker">1923</div>
         <div class="timeline-content-wrapper">
-          <div class="timeline-tekst">
-            <h3>De Oprichting</h3>
-            <p>
-              In 1923 besloten de Antwerpse jongeren, samen met Japanse zakenlui, om een officiële
-              baseballclub op te richten. Zo gezegd, zo gedaan: op 18 augustus 1923 werd de
-              allereerste baseballclub in België gesticht onder de naam
-              <strong>Antwerp Black Cats</strong>.
-            </p>
+          <div class="timeline-card">
+            <div class="timeline-tekst">
+              <h3>De Oprichting</h3>
+              <p>
+                In 1923 besloten de Antwerpse jongeren, samen met Japanse zakenlui, om een officiële baseballclub op te richten. 
+                Zo gezegd, zo gedaan: op <span class="highlight">18 augustus 1923</span> werd de allereerste baseballclub in België gesticht onder de naam 
+                <strong>Antwerp Black Cats</strong>.
+              </p>
+            </div>
+            <div class="timeline-visual"><i class="fa-solid fa-handshake-angle"></i></div>
           </div>
-          <div class="timeline-visual"><i class="fa-solid fa-handshake-angle"></i></div>
         </div>
       </div>
 
       <!-- Tijdperk 3 -->
-      <div class="timeline-item" #timelineItem>
+      <div class="timeline-item" #timelineItem data-year="1945">
         <div class="timeline-marker">1945</div>
         <div class="timeline-content-wrapper">
-          <div class="timeline-tekst">
-            <h3>Groei en Fusies (1945 - 1975)</h3>
-            <p>
-              Door de verspreiding van het baseball na de Tweede Wereldoorlog, ontstond een
-              regelmatige competitie. In 1950 behaalden we de kampioenstitel in de reservenreeks. In
-              1974 fuseerden R. Antwerp B.C. en Rizla B.C. tot de R.A.E. Scaldia Shipping B.C. Een
-              jaar later werd met succes een dames softbalploeg opgericht, waarna de club haar
-              definitieve naam kreeg:
-              <strong>Royal Antwerp Eagles Baseball & Softball Club</strong>.
-            </p>
+          <div class="timeline-card">
+            <div class="timeline-tekst">
+              <h3>Groei en Fusies</h3>
+              <p>
+                Door de verspreiding van het baseball na de Tweede Wereldoorlog, ontstond een regelmatige competitie. 
+                In 1950 behaalden we de kampioenstitel in de reservenreeks. In 1974 fuseerden R. Antwerp B.C. en Rizla B.C. 
+                tot de <span class="highlight">R.A.E. Scaldia Shipping B.C.</span>
+              </p>
+            </div>
+            <div class="timeline-visual"><i class="fa-solid fa-code-merge"></i></div>
           </div>
-          <div class="timeline-visual"><i class="fa-solid fa-code-merge"></i></div>
         </div>
       </div>
 
       <!-- Tijdperk 4 -->
-      <div class="timeline-item" #timelineItem>
-        <div class="timeline-marker">1980</div>
+      <div class="timeline-item" #timelineItem data-year="1975">
+        <div class="timeline-marker">1975</div>
         <div class="timeline-content-wrapper">
-          <div class="timeline-tekst">
-            <h3>De Gouden Jaren</h3>
-            <p>
-              De resultaten groeiden gestaag en de bekroning van het vele harde werk kwam in 1983:
-              het eerste team werd landskampioen! Deze majestueuze titel wisten we stevig in handen
-              te houden tot voor het seizoen 1989, met absolute topjaren in 1985 en 1987 waarin we
-              maarliefst drie kampioenstitels op rij behaalden.
-            </p>
+          <div class="timeline-card">
+            <div class="timeline-tekst">
+              <h3>Onze Naam</h3>
+              <p>
+                In 1975 werd met succes een dames softbalploeg opgericht, waarna de club haar definitieve naam kreeg: 
+                <strong>Royal Antwerp Eagles Baseball & Softball Club</strong>. De adelaar werd ons trotse symbool.
+              </p>
+            </div>
+            <div class="timeline-visual"><img src="/eagles_logo_transparant.png" alt="Antwerp Eagles Logo" class="timeline-logo"></div>
           </div>
-          <div class="timeline-visual"><i class="fa-solid fa-trophy"></i></div>
         </div>
       </div>
-    </div>
 
-    <div class="call-to-action-balk">
-      <div class="cta-icon"><i class="fa-solid fa-baseball-bat-ball"></i></div>
-      <h3>Klaar om geschiedenis te schrijven?</h3>
-      <p>
-        Word onderdeel van onze club en ontdek zelf waarom honkbal en softbal zo fantastisch zijn!
-      </p>
-      <a routerLink="/contact" class="btn-actie">Kom een keertje kijken</a>
+      <!-- Tijdperk 5 -->
+      <div class="timeline-item" #timelineItem data-year="1983">
+        <div class="timeline-marker">1983</div>
+        <div class="timeline-content-wrapper">
+          <div class="timeline-card">
+            <div class="timeline-tekst">
+              <h3>De Gouden Jaren</h3>
+              <p>
+                De bekroning van het vele harde werk kwam in <span class="highlight">1983</span>: het eerste team werd landskampioen! 
+                Deze majestueuze titel wisten we stevig in handen te houden tot voor het seizoen 1989, met absolute topjaren 
+                waarin we maarliefst drie kampioenstitels op rij behaalden.
+              </p>
+            </div>
+            <div class="timeline-visual"><i class="fa-solid fa-trophy"></i></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CALL TO ACTION -->
+  <div class="call-to-action-balk">
+    <div class="cta-icon"><i class="fa-solid fa-baseball-bat-ball"></i></div>
+    <h3>Klaar om geschiedenis te schrijven?</h3>
+    <p>Word onderdeel van onze club en ontdek zelf waarom honkbal en softbal zo fantastisch zijn!</p>
+    <a routerLink="/contact" class="btn-actie">
+      Kom een keertje kijken <i class="fa-solid fa-arrow-right cta-arrow"></i>
+    </a>
   </div>
 </div>
