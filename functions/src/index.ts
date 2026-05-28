@@ -91,7 +91,7 @@ async function voerWbscSyncUit() {
 
   try {
     const teamsSnapshot = await db.collection("teams").get();
-    const bestaandeMatchenSnapshot = await db.collection("kalender").get();
+    const bestaandeMatchenSnapshot = await db.collection("wedstrijden").get();
 
     // Zet bestaande databank matchen om in een makkelijk doorzoekbare array
     const bestaandeMatchen = bestaandeMatchenSnapshot.docs.map((doc) => ({
@@ -268,7 +268,7 @@ async function voerWbscSyncUit() {
               const behoudUitslag = bestaandeMatch.isHandmatigBewerkt;
               const nieuweUitslag = behoudUitslag ? bestaandeMatch.uitslag : match.uitslag;
               if (bestaandeMatch.uitslag !== nieuweUitslag || bestaandeMatch.tijd !== match.tijd || bestaandeMatch.locatie !== match.locatie) {
-                await db.collection("kalender").doc(bestaandeMatch.id).update({
+                await db.collection("wedstrijden").doc(bestaandeMatch.id).update({
                   uitslag: nieuweUitslag,
                   tijd: match.tijd,
                   locatie: match.locatie,
@@ -278,7 +278,7 @@ async function voerWbscSyncUit() {
                 bestaandeMatch.locatie = match.locatie;
               }
             } else {
-              const docRef = await db.collection("kalender").add({
+              const docRef = await db.collection("wedstrijden").add({
                 type: "wedstrijd",
                 team: team.naam,
                 thuisploeg: match.thuisploeg,
