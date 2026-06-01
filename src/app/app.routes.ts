@@ -34,7 +34,7 @@ export const routes: Routes = [
   { path: 'historiek', component: OverOns },
   { path: 'uniform', component: UniformGids },
   { path: 'evenementen', component: Evenementen },
-  
+
   // Tijdelijke 'In Aanbouw' pagina's voor de nieuwe navigatiebalk
   { path: 'klassementen', component: UnderConstruction },
   { path: 'toernooien', component: UnderConstruction },
@@ -46,29 +46,34 @@ export const routes: Routes = [
     loadComponent: () => import('./admin/admin').then(m => m.Admin),
     canActivate: [authGuard],
     children: [
-      { 
-        path: 'nieuws', 
-        loadComponent: () => import('./admin/admin-nieuws').then(m => m.AdminNieuws) 
+      {
+        path: 'nieuws',
+        loadComponent: () => import('./admin/admin-nieuws').then(m => m.AdminNieuws)
       },
-      { 
-        path: 'teams', 
-        loadComponent: () => import('./admin/admin-teams').then(m => m.AdminTeams) 
+      {
+        path: 'teams',
+        loadComponent: () => import('./admin/admin-teams').then(m => m.AdminTeams)
       },
       {
         path: 'uniform',
         loadComponent: () => import('./admin/admin-uniform').then((m) => m.AdminUniform),
       },
-      { 
-        path: 'sponsors', 
-        loadComponent: () => import('./admin/admin-sponsors').then(m => m.AdminSponsors) 
+      {
+        path: 'sponsors',
+        loadComponent: () => import('./admin/admin-sponsors').then(m => m.AdminSponsors)
       },
-      { 
-        path: 'kalender', 
-        loadComponent: () => import('./admin/admin-kalender/admin-kalender').then(m => m.AdminKalender) 
+      {
+        path: 'kalender',
+        loadComponent: () => import('./admin/admin-kalender/admin-kalender').then(m => m.AdminKalender)
       },
+      {
+        path: 'wachtwoord',
+        loadComponent: () => import('./admin/admin-wachtwoord').then(m => m.AdminWachtwoord)
+      }
     ],
   },
-  
+
   // De "Catch-all" 404 route (MOET altijd helemaal onderaan staan!)
   { path: '**', component: PaginaNietGevonden }
 ];
+

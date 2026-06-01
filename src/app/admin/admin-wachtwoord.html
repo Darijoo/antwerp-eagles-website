@@ -1,0 +1,41 @@
+<div class="admin-panel">
+  <div class="panel-header">
+    <h2>Wachtwoord Wijzigen</h2>
+    <p>Verander hier het wachtwoord van je account.</p>
+  </div>
+
+  <div class="form-container">
+    <div class="alert success" *ngIf="succesBericht">{{ succesBericht }}</div>
+    <div class="alert error" *ngIf="foutBericht">{{ foutBericht }}</div>
+
+    <form (ngSubmit)="opslaan()">
+      <div class="form-group">
+        <label for="nieuwWachtwoord">Nieuw wachtwoord</label>
+        <input 
+          type="password" 
+          id="nieuwWachtwoord" 
+          name="nieuwWachtwoord" 
+          [(ngModel)]="nieuwWachtwoord" 
+          required 
+          minlength="6">
+      </div>
+
+      <div class="form-group">
+        <label for="bevestigWachtwoord">Bevestig nieuw wachtwoord</label>
+        <input 
+          type="password" 
+          id="bevestigWachtwoord" 
+          name="bevestigWachtwoord" 
+          [(ngModel)]="bevestigWachtwoord" 
+          required>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="isAanHetOpslaan">
+          <i class="fa-solid fa-floppy-disk"></i>
+          {{ isAanHetOpslaan ? 'Bezig met opslaan...' : 'Wachtwoord wijzigen' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

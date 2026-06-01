@@ -1,5 +1,5 @@
 import { inject, Injectable, EnvironmentInjector, runInInjectionContext } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signOut, authState, User } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, signOut, authState, User, updatePassword } from '@angular/fire/auth';
 import { from, Observable } from 'rxjs';
 
 @Injectable({
@@ -21,5 +21,14 @@ export class AuthService {
     return runInInjectionContext(this.injector, () => {
       return from(signOut(this.auth));
     });
+  }
+
+  changePassword(newPassword: string) {
+    const user = this.auth.currentUser;
+    if (user) {
+      return from(updatePassword(user, newPassword));
+    } else {
+      throw new Error('Geen gebruiker ingelogd');
+    }
   }
 }

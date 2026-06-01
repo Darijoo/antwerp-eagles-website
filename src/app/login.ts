@@ -14,6 +14,11 @@ export class Login {
   email = '';
   password = '';
   errorMessage = '';
+  toonWachtwoord = false;
+
+  toggleWachtwoord() {
+    this.toonWachtwoord = !this.toonWachtwoord;
+  }
 
   authService = inject(AuthService);
   router = inject(Router);

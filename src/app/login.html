@@ -10,7 +10,19 @@
 
       <div class="form-group">
         <label for="password">Wachtwoord</label>
-        <input type="password" id="password" name="password" [(ngModel)]="password" required autocomplete="current-password" />
+        <div class="password-wrapper">
+          <input 
+            [type]="toonWachtwoord ? 'text' : 'password'" 
+            id="password" 
+            name="password" 
+            [(ngModel)]="password" 
+            required 
+            autocomplete="current-password" 
+          />
+          <button type="button" class="toggle-password-btn" (click)="toggleWachtwoord()">
+            <i class="fa-solid" [class.fa-eye]="!toonWachtwoord" [class.fa-eye-slash]="toonWachtwoord"></i>
+          </button>
+        </div>
       </div>
 
       <button type="submit">Inloggen</button>
