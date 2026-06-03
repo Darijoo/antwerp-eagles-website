@@ -251,14 +251,14 @@
 .info-paneel {
   display: flex;
   flex-direction: column;
-  max-height: 82vh; /* Groeit netjes mee met de nieuwe afbeelding hoogte */
+  height: 82vh; /* Vastzetten zodat het paneel altijd even hoog is */
 }
 
 /* --- LIJST WEERGAVE KANT --- */
 .item-lijst-publiek {
   background: white;
   padding: 1.5rem;
-  border-radius: 12px;
+  border-radius: 3rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   margin-bottom: 1.5rem; /* Iets compacter */
   animation: slideIn 0.3s ease-out;
@@ -267,7 +267,7 @@
   display: flex;
   flex-direction: column;
   flex: 1; /* Neemt automatisch de resterende ruimte in */
-  min-height: 0; /* CRUCIAAL: Zorgt dat de lijst écht kleiner kan krimpen dan de inhoud! */
+  min-height: 30vh; /* CRUCIAAL: Zorgt dat de lijst NOOIT te klein wordt! */
   
   /* De scroll-logica zit nu in deze binnenste wrapper */
   .scrollbare-lijst {
@@ -367,6 +367,8 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   border-left: 5px solid var(--eagle-blue);
   animation: slideIn 0.3s ease-out;
+  max-height: 45vh; /* Voorkomt dat een te lange beschrijving de lijst platdrukt */
+  overflow-y: auto; /* Zorgt dat je in de kaart kunt scrollen als er veel winkels/tekst is */
 
   /* Dynamische border gebaseerd op type kledingstuk! */
   border-left: 5px solid var(--eagle-blue);
@@ -568,9 +570,11 @@
     order: 2;
     width: 100%;
     max-height: none; /* Geen beperking op mobiel */
+    height: auto;
   }
   .item-lijst-publiek {
     flex: none; /* Reset flex-gedrag voor mobiel */
+    min-height: auto;
   }
   .item-lijst-publiek .scrollbare-lijst {
     overflow-y: visible; /* Geen aparte scroll in het blokje op mobiel */
@@ -578,6 +582,8 @@
   }
   .info-kaart {
     padding: 1.5rem;
+    max-height: none;
+    overflow-y: visible;
     .kaart-header {
       flex-direction: column;
       gap: 0.5rem;
