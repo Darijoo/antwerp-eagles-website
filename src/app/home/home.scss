@@ -7,7 +7,7 @@
       rgba(21, 34, 105, 0.4) 50%,
       rgba(21, 34, 105, 0.75)
     ),
-    url('/eagles_field.jpg');
+    url('/eagles_field_opt.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed; /* Zorgt voor een subtiel parallax effect */
@@ -29,7 +29,7 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Voor nog betere leesbaarheid */
 }
 
-.hero-sectie h2 {
+.hero-sectie h1 {
   font-size: clamp(2.5rem, 5vw, 4.5rem); /* Responsieve tekstgrootte */
   font-weight: 900;
   text-transform: uppercase;
@@ -623,6 +623,7 @@
 @media (max-width: 768px) {
   .hero-sectie {
     margin-top: -87px; /* Aangepast voor de dunnere mobiele menubalk */
+    background-attachment: scroll; /* Fix voor scroll jank op iOS Safari */
   }
 
   .aankomend-sectie {

@@ -1,5 +1,5 @@
 <div class="hero-sectie">
-  <h2>Play Ball! ⚾</h2>
+  <h1>Play Ball! ⚾</h1>
   <p>Welkom op de officiële website van de Royal Antwerp Eagles.</p>
   <a routerLink="/aansluiten" class="cta-knop">Word Lid</a>
   <div class="scroll-indicator">
@@ -48,7 +48,7 @@
                   {{ isThuisMatch(item) ? 'THUIS' : 'UIT' }}
                 </span>
                 @if ($any(item).geannuleerd) {
-                  <span class="badge" style="background-color: var(--eagle-red)">GEANNULEERD</span>
+                  <span class="badge bg-red">GEANNULEERD</span>
                 }
               </div>
               <h4>{{ item.thuisploeg }} vs {{ item.uitploeg }}</h4>
@@ -57,9 +57,8 @@
               <span class="badge evenement">Evenement</span>
               @if ($any(item).geannuleerd) {
                 <span
-                  class="badge"
+                  class="badge bg-red"
                   style="
-                    background-color: var(--eagle-red);
                     margin-bottom: 0.5rem;
                     margin-left: 0.5rem;
                   "

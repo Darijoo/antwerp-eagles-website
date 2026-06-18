@@ -3,7 +3,7 @@
     <h4>Onze Partners & Sponsors</h4>
     <div class="sponsor-logos">
       @for (sponsor of sponsors$ | async; track sponsor.id) {
-        <a [href]="sponsor.websiteUrl" target="_blank" rel="noopener" class="sponsor-logo-link">
+        <a [attr.href]="sponsor.websiteUrl || null" target="_blank" rel="noopener" class="sponsor-logo-link">
           @if (sponsor.afbeeldingUrl) {
             <img [src]="sponsor.afbeeldingUrl" [alt]="sponsor.naam" class="sponsor-logo-img" />
           } @else {
@@ -38,7 +38,7 @@
 
     <div class="footer-sectie">
       <h4>Algemeen</h4>
-      <div class="social-links" style="flex-direction: column; gap: 0.5rem">
+      <div class="social-links flex-col gap-1">
         <a routerLink="/">Homeplate</a>
         <a routerLink="/nieuws">Nieuws</a>
         <a routerLink="/kalender">Kalender & Uitslagen</a>
@@ -48,7 +48,7 @@
 
     <div class="footer-sectie">
       <h4>Club Info</h4>
-      <div class="social-links" style="flex-direction: column; gap: 0.5rem">
+      <div class="social-links flex-col gap-1">
         <a routerLink="/historiek">Over Ons / Historie</a>
         <a routerLink="/teams">Onze Teams</a>
         <a routerLink="/aansluiten">Lid Worden / Tarieven</a>
@@ -59,7 +59,7 @@
 
     <div class="footer-sectie">
       <h4>Seizoen</h4>
-      <div class="social-links" style="flex-direction: column; gap: 0.5rem">
+      <div class="social-links flex-col gap-1">
         <a routerLink="/klassementen">Klassementen</a>
         <a routerLink="/evenementen">Evenementen</a>
         <a routerLink="/toernooien">Eagles Toernooien</a>
@@ -69,12 +69,12 @@
     <div class="footer-sectie">
       <h4>Locatie & Volg Ons</h4>
       <p>Eglantierlaan, 2610 Wilrijk</p>
-      <div class="social-links" style="margin-top: 1rem">
-        <a href="https://www.facebook.com/AntwerpEagles" target="_blank" rel="noopener noreferrer">
-          <i class="fa-brands fa-facebook fa-2x" aria-label="Facebook"></i>
+      <div class="social-links mt-2">
+        <a href="https://www.facebook.com/AntwerpEagles" target="_blank" rel="noopener noreferrer" aria-label="Volg ons op Facebook">
+          <i class="fa-brands fa-facebook fa-2x" aria-hidden="true"></i>
         </a>
-        <a href="https://www.instagram.com/antwerpeagles/" target="_blank" rel="noopener noreferrer">
-          <i class="fa-brands fa-instagram fa-2x" aria-label="Instagram"></i>
+        <a href="https://www.instagram.com/antwerpeagles/" target="_blank" rel="noopener noreferrer" aria-label="Volg ons op Instagram">
+          <i class="fa-brands fa-instagram fa-2x" aria-hidden="true"></i>
         </a>
       </div>
     </div>

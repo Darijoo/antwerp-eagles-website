@@ -3,8 +3,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { NieuwsService, NieuwsBericht } from '../diensten/nieuws';
 import { DatePipe, AsyncPipe, LowerCasePipe } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { KalenderService, Match } from '../diensten/kalender.service';
 import { TeamService } from '../diensten/team';
 
@@ -21,6 +22,7 @@ export class Home implements OnInit, AfterViewChecked {
   private kalenderService = inject(KalenderService);
   private teamService = inject(TeamService);
   private destroyRef = inject(DestroyRef);
+  private titleService = inject(Title);
 
   teamsKleurMap: Record<string, string> = {};
 
@@ -32,7 +34,9 @@ export class Home implements OnInit, AfterViewChecked {
   private viewCheckedTimer: any;
 
   constructor() {
-    this.aankomendWeekend$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
+    const alleWedstrijden$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(shareReplay(1));
+
+    this.aankomendWeekend$ = alleWedstrijden$.pipe(
       map((matches) => {
         const nu = new Date();
         const dagVanWeek = nu.getDay(); // 0=zo, 1=ma, ..., 5=vr, 6=za
@@ -84,7 +88,7 @@ export class Home implements OnInit, AfterViewChecked {
       }),
     );
 
-    this.weekendUitslagen$ = this.kalenderService.haalAlleWedstrijdenOp().pipe(
+    this.weekendUitslagen$ = alleWedstrijden$.pipe(
       map((matches: Match[]) => {
         const uitslagen = matches.filter(
           (m) =>
@@ -138,6 +142,8 @@ export class Home implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Royal Antwerp Eagles | Baseball & Softball Club');
+    
     // Haal de teams op om hun specifiek gekozen kalenderkleur te onthouden
     this.teamService.haalAlleTeamsOp().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((teams) => {
       teams.forEach((t) => {

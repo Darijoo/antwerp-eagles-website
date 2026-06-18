@@ -79,18 +79,20 @@
   .filter-knop {
     background-color: white;
     color: var(--eagle-blue);
-    border: 2px solid #e2e8f0;
+    border: 2px solid transparent;
     padding: 0.6rem 1.5rem;
     border-radius: var(--radius-round);
     font-weight: 700;
     font-size: 0.95rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     text-transform: uppercase;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 
     &:hover {
       border-color: var(--eagle-blue);
       transform: translateY(-2px);
+      box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1);
     }
 
     &:focus-visible {
@@ -102,7 +104,7 @@
       background-color: var(--eagle-blue);
       color: white;
       border-color: var(--eagle-blue);
-      box-shadow: 0 8px 16px -4px rgba(21, 34, 105, 0.3);
+      box-shadow: 0 8px 20px -5px rgba(21, 34, 105, 0.3);
     }
   }
 }

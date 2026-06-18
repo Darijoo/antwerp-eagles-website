@@ -72,19 +72,26 @@
   border-radius: 50px;
 
   .pill-btn {
-    background: transparent;
-    border: none;
+    background: white;
+    border: 1px solid #e2e8f0;
     padding: 0.6rem 1.2rem;
     border-radius: 50px;
     font-weight: 700;
     color: var(--text-dark);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
 
     &.actief {
       background-color: var(--eagle-blue);
       color: white;
-      box-shadow: 0 4px 10px rgba(21, 34, 105, 0.2);
+      border-color: var(--eagle-blue);
+      box-shadow: 0 4px 12px rgba(21, 34, 105, 0.3);
     }
   }
 
@@ -574,7 +581,7 @@
 
 /* Styling voor wedstrijden die al gespeeld zijn */
 .wedstrijd-kaart.gespeeld {
-  opacity: 0.85; /* Maar een héél klein beetje transparant, zodat je kleuren nog goed ziet! */
+  opacity: 0.85; /* Maar een hÃ©Ã©l klein beetje transparant, zodat je kleuren nog goed ziet! */
   background-color: #fcfcfc; 
 
   &:hover {
@@ -930,4 +937,19 @@
   .locatie-tijd {
     text-decoration: line-through;
   }
+}
+
+.mobiel-filters-toggle {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.btn-filter-mobiel {
+  width: 100%;
+  border-radius: 8px;
+  padding: 0.8rem;
+  background-color: white;
+  border: 2px solid #e2e8f0;
+  color: var(--eagle-blue);
+  font-weight: bold;
 }

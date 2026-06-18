@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-contact',
@@ -7,13 +8,18 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
 })
-export class Contact {
+export class Contact implements OnInit {
   private fb = inject(FormBuilder);
+  private titleService = inject(Title);
 
   contactForm: FormGroup = this.fb.group({
     naam: ['', Validators.required],
     bericht: ['', Validators.required]
   });
+
+  ngOnInit() {
+    this.titleService.setTitle('Royal Antwerp Eagles | Contact');
+  }
 
   verstuur() {
     if (this.contactForm.invalid) {

@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, ChangeDetectorRef, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { TeamService, Team } from '../diensten/team'; // Onze nieuwe postbode
 
@@ -14,6 +15,7 @@ export class Teams implements OnInit {
   private teamService = inject(TeamService);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
+  private titleService = inject(Title);
 
   // We maken een lijst (array) aan om alle teams in op te slaan
   alleTeams: Team[] = [];
@@ -37,6 +39,8 @@ export class Teams implements OnInit {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Royal Antwerp Eagles | Onze Teams');
+
     this.teamService.haalAlleTeamsOp().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         // Sorteer op jouw nieuwe drag & drop volgorde

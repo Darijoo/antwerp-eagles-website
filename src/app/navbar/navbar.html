@@ -6,7 +6,7 @@
   </a>
 
   <!-- De hamburger knop voor mobiel -->
-  <button class="hamburger" (click)="toggleMenu()" [class.actief]="menuOpen">
+  <button class="hamburger" (click)="toggleMenu()" [class.actief]="menuOpen" [attr.aria-expanded]="menuOpen" aria-label="Navigatiemenu" aria-controls="nav-links">
     <span></span>
     <span></span>
     <span></span>
@@ -24,9 +24,9 @@
     </li>
 
     <li class="dropdown" [class.open]="activeDropdown === 'seizoen'">
-      <a href="#" (click)="toggleDropdown('seizoen', $event)"
-        >Seizoen <i class="fa-solid fa-chevron-down"></i
-      ></a>
+      <a href="#" (click)="toggleDropdown('seizoen', $event)" aria-haspopup="true" [attr.aria-expanded]="activeDropdown === 'seizoen'">
+        Seizoen <i class="fa-solid fa-chevron-down"></i>
+      </a>
       <ul class="dropdown-menu">
         <li>
           <a routerLink="/teams" routerLinkActive="actief-link" (click)="sluitMenu()">Teams</a>
@@ -59,9 +59,9 @@
     </li>
 
     <li class="dropdown" [class.open]="activeDropdown === 'club'">
-      <a href="#" (click)="toggleDropdown('club', $event)"
-        >Club info <i class="fa-solid fa-chevron-down"></i
-      ></a>
+      <a href="#" (click)="toggleDropdown('club', $event)" aria-haspopup="true" [attr.aria-expanded]="activeDropdown === 'club'">
+        Club info <i class="fa-solid fa-chevron-down"></i>
+      </a>
       <ul class="dropdown-menu">
         <li>
           <a routerLink="/nieuws" routerLinkActive="actief-link" (click)="sluitMenu()">Nieuws</a>
@@ -85,9 +85,9 @@
     </li>
 
     <li class="dropdown" [class.open]="activeDropdown === 'playBall'">
-      <a href="#" (click)="toggleDropdown('playBall', $event)"
-        >Play Ball! <i class="fa-solid fa-chevron-down"></i
-      ></a>
+      <a href="#" (click)="toggleDropdown('playBall', $event)" aria-haspopup="true" [attr.aria-expanded]="activeDropdown === 'playBall'">
+        Play Ball! <i class="fa-solid fa-chevron-down"></i>
+      </a>
       <ul class="dropdown-menu">
         <li>
           <a routerLink="/aansluiten" routerLinkActive="actief-link" (click)="sluitMenu()"

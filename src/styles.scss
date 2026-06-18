@@ -146,3 +146,41 @@ h1 {
     padding: 0 1rem;
   }
 }
+
+/* --- UTILITY CLASSES --- */
+.bg-red { background-color: var(--eagle-red) !important; }
+.text-red { color: var(--eagle-red) !important; }
+.bg-blue { background-color: var(--eagle-blue) !important; }
+.text-blue { color: var(--eagle-blue) !important; }
+.w-100 { width: 100% !important; }
+.flex-col { display: flex; flex-direction: column; }
+.gap-1 { gap: 0.5rem; }
+.gap-2 { gap: 1rem; }
+.align-start { align-items: flex-start; }
+.mt-2 { margin-top: 1rem !important; }
+
+/* --- GLOBALE LEGE STATUS (Empty State) --- */
+.lege-status {
+  text-align: center;
+  padding: 4rem 1rem;
+  background-color: white;
+  border-radius: var(--radius-md);
+  border: 2px dashed #e2e8f0;
+  color: #718096;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  grid-column: 1 / -1; /* For css grids */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+  
+  i {
+    opacity: 0.4;
+    color: var(--eagle-blue);
+  }
+  p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}

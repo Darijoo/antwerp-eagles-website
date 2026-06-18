@@ -72,10 +72,12 @@ export class ImageOptimizerService {
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
+          if (!ctx) return resolve(file); // Origineel behouden bij fout
+          ctx.drawImage(img, 0, 0, width, height);
 
-          // Comprimeer naar JPEG met 80% kwaliteit (drastisch kleinere bestandsgrootte)
-          canvas.toBlob((blob) => resolve(blob || file), 'image/jpeg', 0.8);
+          // Comprimeer naar JPEG met 80% kwaliteit (of PNG voor transparantie)
+          const outputFormat = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+          canvas.toBlob((blob) => resolve(blob || file), outputFormat, 0.85);
         };
         img.onerror = () => resolve(file);
       };

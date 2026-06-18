@@ -1,6 +1,6 @@
 import { inject, Injectable, EnvironmentInjector, runInInjectionContext } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, signOut, authState, User, updatePassword } from '@angular/fire/auth';
-import { from, Observable } from 'rxjs';
+import { from, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +28,7 @@ export class AuthService {
     if (user) {
       return from(updatePassword(user, newPassword));
     } else {
-      throw new Error('Geen gebruiker ingelogd');
+      return throwError(() => new Error('Geen gebruiker ingelogd'));
     }
   }
 }
