@@ -502,74 +502,45 @@
   text-transform: uppercase;
 }
 
-/* We maken weer een mooi grid voor de nieuwskaartjes */
+/* Premium news grid */
 .nieuws-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Past beter op smalle telefoons */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
 }
 
 .nieuws-kaart {
   background-color: white;
-  border-radius: 8px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   position: relative;
   display: flex;
   flex-direction: column;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-  }
-  .wedstrijd-status-kolom {
-    padding: 0.5rem;
-    .resultaat-badge {
-      padding: 0.4rem 0.6rem;
-      font-size: 0.85rem;
-    }
-  }
-}
-
-/* De 'Empty States' liefde! */
-.lege-status {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 3rem 1rem;
-  background-color: white;
-  border-radius: 8px;
-  border: 2px dashed #e2e8f0;
-  color: #7f8c8d;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-
-  i {
-    color: #bdc3c7;
-    opacity: 0.5;
-  }
-
-  p {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: 500;
+    transform: translateY(-8px);
+    box-shadow: 0 20px 30px -10px rgba(21, 34, 105, 0.12), 0 10px 15px -5px rgba(0, 0, 0, 0.08);
   }
 }
 
 .kaart-afbeelding {
+  position: relative;
   width: 100%;
-  height: 200px; /* Een mooie, vaste hoogte voor alle thumbnails */
+  height: 220px;
+  background-color: var(--eagle-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.2);
 
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Snijdt de foto perfect bij als een uitsnede, zonder hem plat te drukken! */
-    transition: transform 0.5s ease; /* Zorgt voor de vloeiende zoom */
+    object-fit: cover;
     display: block;
+    transition: transform 0.5s ease;
   }
 }
 
@@ -578,26 +549,37 @@
 }
 
 .nieuws-datum {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
   background-color: var(--eagle-red);
   color: white;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  font-weight: 900;
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  letter-spacing: 0.5px;
 }
 
 .nieuws-inhoud {
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Zorgt dat de knop altijd mooi onderaan staat */
+  flex-grow: 1;
 
   h3 {
     color: var(--eagle-blue);
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
     line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   p {
@@ -605,7 +587,24 @@
     line-height: 1.6;
     margin-bottom: 1.5rem;
     flex-grow: 1;
+    font-size: 0.95rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
+}
+
+.kaart-acties {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.nieuws-kaart:hover .kaart-afbeelding img {
+  transform: scale(1.08);
 }
 
 .lees-meer {
@@ -615,7 +614,7 @@
   align-items: center;
   gap: 0.4rem;
   font-weight: bold;
-  align-self: flex-start; /* Zet de link netjes links uitgelijnd */
+  align-self: flex-start;
   transition: color 0.3s ease;
 
   .arrow {
@@ -626,10 +625,11 @@
     color: var(--eagle-blue);
 
     .arrow {
-      transform: translateX(4px); /* Pijltje schuift opzij */
+      transform: translateX(4px);
     }
   }
 }
+
 
 /* --- MOBIELE OPTIMALISATIE --- */
 @media (max-width: 768px) {

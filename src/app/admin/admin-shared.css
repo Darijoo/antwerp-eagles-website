@@ -57,12 +57,12 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-.btn-toevoegen { background: var(--eagle-blue); color: white; }
-.btn-opslaan { background: #27ae60; color: white; }
-.btn-bewerken { background: #f39c12; color: white; }
-.btn-verwijderen { background: var(--eagle-red); color: white; }
-.btn-sync { background: #008ecc; color: white; }
-.btn-annuleren { background: #95a5a6; color: white; }
+.btn-toevoegen { background: linear-gradient(135deg, var(--eagle-blue), #1e3eb8); color: white; }
+.btn-opslaan { background: linear-gradient(135deg, #27ae60, #1e8449); color: white; }
+.btn-bewerken { background: linear-gradient(135deg, #f39c12, #d68910); color: white; }
+.btn-verwijderen { background: linear-gradient(135deg, var(--eagle-red), #a50f1b); color: white; }
+.btn-sync { background: linear-gradient(135deg, #008ecc, #006fa3); color: white; }
+.btn-annuleren { background: linear-gradient(135deg, #95a5a6, #7f8c8d); color: white; }
 
 /* --- MODERNE TABEL --- */
 .beheer-tabel {
@@ -93,8 +93,9 @@
 .beheer-tabel tr td:last-child { border-right: 1px solid #f0f0f0; border-radius: 0 12px 12px 0; }
 
 .beheer-tabel tr:hover td {
-  background: #fcfcfc;
-  border-color: #e0e0e0;
+  background: linear-gradient(90deg, rgba(21, 34, 105, 0.02) 0%, #fcfcfc 100%);
+  border-color: rgba(21, 34, 105, 0.08);
+  transform: scale(1);
 }
 
 /* --- AFBEELDING PREVIEW --- */
@@ -201,18 +202,23 @@
 .form-groep select {
   width: 100%;
   padding: 1rem;
-  border: 1px solid #e0e0e0;
+  border: 1.5px solid #e8e8f0;
   border-radius: 12px;
   font-family: inherit;
   font-size: 1rem;
-  transition: all 0.2s ease;
-  background: #f9f9f9;
+  transition: all 0.25s ease;
+  background: #f8f9fc;
+  color: var(--text-dark);
 
   &:focus {
     outline: none;
     border-color: var(--eagle-blue);
     background: white;
-    box-shadow: 0 0 0 4px rgba(21, 34, 105, 0.05);
+    box-shadow: 0 0 0 4px rgba(21, 34, 105, 0.08), 0 2px 8px rgba(21, 34, 105, 0.04);
+  }
+
+  &::placeholder {
+    color: #b0bac9;
   }
 }
 

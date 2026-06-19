@@ -146,25 +146,27 @@
     <div class="nieuws-grid">
       @for (bericht of laatsteNieuws; track bericht.id) {
         <article class="nieuws-kaart reveal-on-scroll">
-          @if (bericht.afbeeldingUrl) {
-            <div class="kaart-afbeelding">
+          <div class="kaart-afbeelding">
+            <span class="nieuws-datum">{{ bericht.datum | date: 'd MMM yyyy' }}</span>
+            @if (bericht.afbeeldingUrl) {
               <img [src]="bericht.afbeeldingUrl" [alt]="bericht.titel" />
-            </div>
-          }
+            }
+          </div>
 
-          <div class="nieuws-datum">{{ bericht.datum | date: 'dd-MM-yyyy' }}</div>
           <div class="nieuws-inhoud">
             <h3>{{ bericht.titel }}</h3>
             <p>{{ bericht.samenvatting }}</p>
-            <a [routerLink]="['/nieuws', bericht.id]" class="lees-meer"
-              >Lees verder <span class="arrow">&rarr;</span></a
-            >
+            <div class="kaart-acties">
+              <a [routerLink]="['/nieuws', bericht.id]" class="lees-meer"
+                >Lees verder <span class="arrow">&rarr;</span></a
+              >
+            </div>
           </div>
         </article>
       }
     </div>
 
-    <div class="actie-link" style="margin-top: 2rem">
+    <div class="actie-link mt-2">
       <a routerLink="/nieuws">Bekijk alle artikelen &rarr;</a>
     </div>
   </div>
