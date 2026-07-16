@@ -24,6 +24,7 @@ export interface Match {
   tijd: string;
   locatie: string;
   uitslag?: string; // Optioneel
+  geannuleerd?: boolean;
   isHandmatigBewerkt?: boolean;
   posterUrl?: string; // Voor evenementen
   inschrijfLink?: string; // Voor evenementen

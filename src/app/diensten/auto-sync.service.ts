@@ -45,6 +45,11 @@ export class AutoSyncService {
     }
   }
 
+  // Verwijder artefacten zoals 'flag' die WBSC soms in teamnamen scrapet (van img alt-attributen)
+  private cleanTeamNaam(naam: string): string {
+    return naam.replace(/flag/gi, '').trim();
+  }
+
   private async voerSyncUit() {
     const teams = await firstValueFrom(this.teamService.haalAlleTeamsOp());
     const teamsMetUrl = teams.filter((t) => !!t.wbscTeamUrl);
@@ -65,6 +70,10 @@ export class AutoSyncService {
           const result = await firstValueFrom(this.wbscService.haalTeamMatchenOp(fetchUrl));
           if (result.matchen && result.matchen.length > 0) {
             for (const match of result.matchen) {
+              // Opgeschoonde namen van de WBSC scraper (verwijder 'flag'-artefacten)
+              const schoneThuisploeg = this.cleanTeamNaam(match.thuisploeg);
+              const schoneUitploeg = this.cleanTeamNaam(match.uitploeg);
+
               const bestaandeMatch = bestaandeMatchen.find((m: any) => {
                 if (m.type !== 'wedstrijd' || m.team !== team.naam) return false;
                 const mDatum = m.datum.toDate();
@@ -72,8 +81,8 @@ export class AutoSyncService {
                   mDatum.getDate() === match.datum.getDate() &&
                   mDatum.getMonth() === match.datum.getMonth() &&
                   mDatum.getFullYear() === match.datum.getFullYear() &&
-                  m.thuisploeg === match.thuisploeg &&
-                  m.uitploeg === match.uitploeg &&
+                  m.thuisploeg === schoneThuisploeg &&
+                  m.uitploeg === schoneUitploeg &&
                   m.tijd === match.tijd
                 );
               });
@@ -81,28 +90,33 @@ export class AutoSyncService {
               if (bestaandeMatch) {
                 const behoudUitslag = (bestaandeMatch as any).isHandmatigBewerkt;
                 const nieuweUitslag = behoudUitslag ? bestaandeMatch.uitslag : match.uitslag;
+                const nieuweGeannuleerd = match.geannuleerd ?? (bestaandeMatch as any).geannuleerd ?? false;
 
                 if (
                   bestaandeMatch.uitslag !== nieuweUitslag ||
                   bestaandeMatch.tijd !== match.tijd ||
-                  bestaandeMatch.locatie !== match.locatie
+                  bestaandeMatch.locatie !== match.locatie ||
+                  (bestaandeMatch as any).geannuleerd !== nieuweGeannuleerd
                 ) {
                   await this.kalenderService.updateWedstrijd(bestaandeMatch.id!, {
                     uitslag: nieuweUitslag,
                     tijd: match.tijd,
                     locatie: match.locatie,
+                    geannuleerd: nieuweGeannuleerd,
                   });
                 }
               } else {
+                // Nieuwe wedstrijd: sla op met schone teamnamen
                 await this.kalenderService.voegWedstrijdToe({
                   type: 'wedstrijd',
                   team: team.naam,
-                  thuisploeg: match.thuisploeg,
-                  uitploeg: match.uitploeg,
+                  thuisploeg: schoneThuisploeg,
+                  uitploeg: schoneUitploeg,
                   datum: match.datum,
                   tijd: match.tijd,
                   locatie: match.locatie,
                   uitslag: match.uitslag,
+                  geannuleerd: match.geannuleerd ?? false,
                 });
               }
             }

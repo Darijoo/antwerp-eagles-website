@@ -192,20 +192,35 @@ export class WbscService {
             geparsteDatum.setHours(parseInt(t.split(':')[0], 10), parseInt(t.split(':')[1], 10), 0);
           }
 
-          // Uitslag ophalen
+          // Uitslag ophalen — probeer meerdere selectors voor het geval WBSC hun HTML aanpast
           let uitslag = '';
-          const scoreText = rij
-            .querySelector('.baseball-score-bug > div:nth-child(2) p')
-            ?.textContent?.trim();
+          const scoreBug = rij.querySelector('.baseball-score-bug');
+          let scoreText: string | undefined;
+
+          if (scoreBug) {
+            // Primaire selector: score staat in de 2e div van de score-bug
+            scoreText = scoreBug.querySelector('div:nth-child(2) p')?.textContent?.trim();
+            // Fallback: neem gewoon alle cijfers uit de score-bug met een ':' ertussen
+            if (!scoreText) {
+              const scoreBugTekst = (scoreBug.textContent || '').replace(/\s+/g, ' ').trim();
+              const scoreMatch = scoreBugTekst.match(/(\d+)\s*:\s*(\d+)/);
+              if (scoreMatch) scoreText = `${scoreMatch[1]} : ${scoreMatch[2]}`;
+            }
+          }
+
           if (scoreText) {
-            if (scoreText !== '0 : 0') {
+            // Normaliseer (verwijder extra spaties) voor de vergelijking
+            const genormaliseerd = scoreText.replace(/\s+/g, ' ').trim();
+            const isNulNul = /^0\s*:\s*0$/.test(genormaliseerd);
+
+            if (!isNulNul) {
               // WBSC toont de score als "Uitploeg : Thuisploeg" (bv 3 : 23).
               // Wij draaien dit om naar onze standaard "Thuisploeg - Uitploeg" (23 - 3).
-              const parts = scoreText.split(':');
+              const parts = genormaliseerd.split(':');
               if (parts.length === 2) {
                 uitslag = `${parts[1].trim()} - ${parts[0].trim()}`;
               } else {
-                uitslag = scoreText.replace(':', '-').replace(/\s+/g, ' ');
+                uitslag = genormaliseerd.replace(':', '-');
               }
             } else {
               if (geparsteDatum.getTime() < new Date().getTime()) {
