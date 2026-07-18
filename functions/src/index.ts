@@ -1,6 +1,6 @@
-import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import {onSchedule} from "firebase-functions/v2/scheduler";
+import {onRequest} from "firebase-functions/v2/https";
 import * as cheerio from "cheerio";
 import cors = require("cors");
 
@@ -8,7 +8,8 @@ admin.initializeApp();
 const corsHandler = cors({origin: true});
 
 // Dit is jouw eigen razendsnelle proxy-server in TypeScript!
-export const wbscProxy = functions.https.onRequest((req, res) => {
+// invoker: "public" zorgt dat Cloud Run de functie toegankelijk maakt zonder authenticatie (fix voor 403)
+export const wbscProxy = onRequest({invoker: "public", cors: true}, (req, res) => {
   corsHandler(req, res, async () => {
     // In TypeScript moeten we expliciet aangeven dat de URL een string is
     const targetUrl = req.query.url as string;
